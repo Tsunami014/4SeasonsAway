@@ -1,0 +1,5 @@
+# NES build stuff
+*.fns
+*.nes
+*.fdb
+myBuild*
