@@ -1,0 +1,3 @@
+#!/bin/sh
+rm ./code.nes ./code.fns
+wine ./NESASM3.exe ./code.asm
