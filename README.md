@@ -10,18 +10,6 @@ A platformer for the NES about finding a friend.
 
 **To run**: Run `code.nes` using an NES emulator (after building). `nester.exe` is provided, but for debugging another such as [FCEUX](https://fceux.com/web/download.html) is recommended.
 
-## Opcode table
-![Opcode table](./6502-opcode-table-grouped.png)
-```
-types:
-a   - absolute address (2 bytes)
-#i  - immediate value (1 byte)
-d   - zero page address (1 byte)
-*+d - relative address (1 byte)
-y   - the y register (0 bytes, as it's implied)
-x   - the x register (0 bytes, as it's implied)
+## Opcodes
+A very nice list of opcodes for the NES' hardware can be found [here](https://wiki.preterhuman.net/NES_Programming_Guide).
 
-syntax:
-($a)  - absolute address at $a (dereference)
-$l,$r - add $l and $r
-```

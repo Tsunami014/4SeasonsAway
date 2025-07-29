@@ -15,6 +15,7 @@
 tmp1       .rs 1  ; Some temporary variables
 tmp2       .rs 1
 
+
 buttons1   .rs 1  ; player 1 gamepad buttons, one bit per button
 
 
@@ -108,8 +109,7 @@ LoadPalettesLoop:
   STA $2005
   STA $2005
 
-Forever:
-  JMP Forever     ; Infinite loop. This is because the on tick code happens in the NMI func
+  JMP GAME
 
 
 
@@ -125,9 +125,13 @@ NMI:  ; During VBLANK
    
   JSR ReadController  ;;get the current button data for player 1
   
-  ;; Do stuff here
+  JSR VBLANK
 
   RTI             ; return from interrupt
+
+
+
+  .include "game.asm" ;; Includes the labels for VBLANK and GAME
 
 
 
