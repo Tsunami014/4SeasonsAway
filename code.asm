@@ -36,7 +36,7 @@ BTN_LEFT   = %00000010
 BTN_RIGHT  = %00000001
 
 xspeedchng = $01
-maxxspeed  = $05
+maxxspeed  = $08
 
 
 

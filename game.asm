@@ -14,35 +14,47 @@ HandleMovement:
   LDA #00
   STA tmp1 ; Store whether to update the scroll
 
-  LDA buttons1
+  LDA buttons1  ; Check button state
   AND #BTN_RIGHT
   BEQ noR
   LDA playerxspeed
-  CMP #maxxspeed
+  CMP #maxxspeed  ; Ensure it doesn't go higher than the max speed
   BPL noR
   CLC
   ADC #xspeedchng
-  STA playerxspeed
-  JMP aftR2
+  STA playerxspeed  ; Store the new player speed
+  JMP aftX2
 noR:
+  LDA buttons1  ; Check button state
+  AND #BTN_LEFT
+  BEQ noL
+  LDA playerxspeed
+  CMP #-maxxspeed  ; Ensure it doesn't go lower than negative max speed
+  BMI noL
+  CLC
+  SBC #xspeedchng
+  STA playerxspeed  ; Store the new player speed
+  JMP aftX2
+noL:
+  ; Handle slowing down
   LDX playerxspeed
   TXA
-  BEQ aftR2
-  BMI minXspd
-  DEX
-  JMP aftR1
+  BEQ aftX2  ; If zero continue
+  BMI minXspd  ; If negative, increase
+  DEX  ; If positive, decrease
+  JMP aftX1
 minXspd:
   INX
-aftR1:
-  STX playerxspeed
-aftR2:
+aftX1:
+  STX playerxspeed  ; Store the player x speed when changed (from slowdown)
+aftX2:
   LDA playerx
   CLC
-  ADC playerxspeed
+  ADC playerxspeed  ; Calculate new player speed
   CMP playerx
-  BEQ aftsetx
+  BEQ aftsetx  ; If nothing changed, skip
   STA playerx
-  LDA #01
+  LDA #01  ; Remember we changed something, so update scroll later
   STA tmp1
 aftsetx:
 
