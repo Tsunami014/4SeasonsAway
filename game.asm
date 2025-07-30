@@ -1,4 +1,4 @@
-GAME:
+;; Main game code
   JSR RewriteScreen
   JSR EnableRendering
 Forever:
@@ -9,7 +9,53 @@ Forever:
 
 
 VBLANK:
-  RTS   ;; Finish
+
+HandleMovement:
+  LDA #00
+  STA tmp1 ; Store whether to update the scroll
+
+  LDA buttons1
+  AND #BTN_RIGHT
+  BEQ noR
+  LDA playerxspeed
+  CMP #maxxspeed
+  BPL noR
+  CLC
+  ADC #xspeedchng
+  STA playerxspeed
+  JMP aftR2
+noR:
+  LDX playerxspeed
+  TXA
+  BEQ aftR2
+  BMI minXspd
+  DEX
+  JMP aftR1
+minXspd:
+  INX
+aftR1:
+  STX playerxspeed
+aftR2:
+  LDA playerx
+  CLC
+  ADC playerxspeed
+  CMP playerx
+  BEQ aftsetx
+  STA playerx
+  LDA #01
+  STA tmp1
+aftsetx:
+
+  LDA tmp1
+  BEQ aftMvement
+  ; Update scroll
+  LDA playerx
+  STA $2005
+  LDA $00
+  STA $2005 
+aftMvement:
+
+  RTI             ; return from interrupt
 
 
 RewriteScreen:
@@ -25,7 +71,7 @@ RowLoop:
     LDX #$00
 ColLoop:
     TXA
-    AND #%00000001  ; For an alternating pattern; 0, 1, 0, 1, ...
+    AND #%00000111
     STA $2007       ; push one tile
 
     INX

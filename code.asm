@@ -15,7 +15,10 @@
 tmp1       .rs 1  ; Some temporary variables
 tmp2       .rs 1
 
-
+playerx    .rs 1
+playerxspeed .rs 1
+playery    .rs 1
+playeryspeed .rs 1
 buttons1   .rs 1  ; player 1 gamepad buttons, one bit per button
 
 
@@ -31,6 +34,9 @@ BTN_UP     = %00001000
 BTN_DOWN   = %00000100
 BTN_LEFT   = %00000010
 BTN_RIGHT  = %00000001
+
+xspeedchng = $01
+maxxspeed  = $05
 
 
 
@@ -105,7 +111,7 @@ LoadPalettesLoop:
   STA $2005
   STA $2005
 
-  JMP GAME
+  .include "game.asm" ;; Includes the labels for VBLANK and continues this function
 
 EnableRendering:
   LDA #%10010000   ; enable NMI, sprites from Pattern Table 0, background from Pattern Table 1
@@ -132,13 +138,7 @@ NMI:  ; During VBLANK
    
   JSR ReadController  ;;get the current button data for player 1
   
-  JSR VBLANK
-
-  RTI             ; return from interrupt
-
-
-
-  .include "game.asm" ;; Includes the labels for VBLANK and GAME
+  JMP VBLANK  ; Returning from interrupt should occur here
 
 
 
