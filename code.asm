@@ -101,15 +101,22 @@ LoadPalettesLoop:
 
 
 
-  LDA #%10010000   ; enable NMI, sprites from Pattern Table 0, background from Pattern Table 1
-  STA $2000
-  LDA #%00011110   ; enable sprites, enable background, no clipping on left side
-  STA $2001
-  LDA #$00        ;;tell the ppu there is no background scrolling
+  LDA #$00         ; start with no scroll (set scroll bytes to 0)
   STA $2005
   STA $2005
 
   JMP GAME
+
+EnableRendering:
+  LDA #%10010000   ; enable NMI, sprites from Pattern Table 0, background from Pattern Table 1
+  STA $2000
+  LDA #%00011110   ; enable sprites, enable background, no clipping on left side
+  STA $2001
+  RTS
+DisableRendering:
+  LDA #$00
+  STA $2000
+  STA $2001
 
 
 
