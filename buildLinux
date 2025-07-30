@@ -1,3 +1,4 @@
 #!/bin/sh
-rm ./code.nes ./code.fns
+set -e
+rm ./code.nes ./code.fns || true
 wine ./NESASM3.exe ./code.asm
