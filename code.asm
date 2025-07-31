@@ -17,6 +17,7 @@ tmp2       .rs 1
 
 playerx    .rs 1
 playerxspeed .rs 1
+playerscrn .rs 1
 playery    .rs 1
 playeryspeed .rs 1
 buttons1   .rs 1  ; player 1 gamepad buttons, one bit per button
