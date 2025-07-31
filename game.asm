@@ -95,6 +95,11 @@ aftsetx3:
   STA $2005
   LDA $00
   STA $2005 
+  ; Update bit 8 of scroll
+  LDA playerscrn
+  AND #%00000001   ; A = 0000000S
+  ORA #PPUCTRLBASE ; A = CCCCCCCS
+  STA $2000
 aftMvement:
 
   RTI  ; return from interrupt

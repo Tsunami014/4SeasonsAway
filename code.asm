@@ -26,6 +26,9 @@ buttons1   .rs 1  ; player 1 gamepad buttons, one bit per button
 ;;;;;;;;; Constants
 
 
+PPUCTRLBASE = %10010000   ; enable NMI, sprites from Pattern Table 0, background from Pattern Table 1
+PPUMASKBASE = %00011110   ; enable sprites, enable background, no clipping on left side
+
 ;; Controller inputs
 BTN_A      = %10000000
 BTN_B      = %01000000
@@ -115,9 +118,9 @@ LoadPalettesLoop:
   .include "game.asm" ;; Includes the labels for VBLANK and continues this function
 
 EnableRendering:
-  LDA #%10010000   ; enable NMI, sprites from Pattern Table 0, background from Pattern Table 1
+  LDA #PPUCTRLBASE
   STA $2000
-  LDA #%00011110   ; enable sprites, enable background, no clipping on left side
+  LDA #PPUMASKBASE
   STA $2001
   RTS
 DisableRendering:
