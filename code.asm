@@ -1,32 +1,18 @@
-  .inesprg 1   ; 1x 16KB PRG code
-  .ineschr 1   ; 1x  8KB CHR data
-  .inesmap 0   ; mapper 0 = NROM, no bank swapping
-  .inesmir 1   ; background mirroring
+PRG_COUNT = 2 ;1 = 16KB, 2 = 32KB
+CHR_COUNT = 1 ;1 = 8KB, 2 = 16KB, 4 = 32KB
+MIRRORING = %0001 ;%0000 = horizontal, %0001 = vertical, %1000 = four-screen
+
+; NES Header
+	.db "NES", $1a ;identification of the iNES header
+	.db PRG_COUNT ;number of 16KB PRG-ROM pages
+	.db CHR_COUNT ;number of 8KB CHR-ROM pages
+	.db $00|MIRRORING ;mapper 0 and mirroring
+	.dsb 9, $00 ;clear the remaining bytes
 
 
 
-;;;;;;;;;;;;;;;;;; Declarations
+;;;;;;;;;;;;;;;;;; Constants
 
-
-
-  .rsset $0000  ;;start variables at ram location 0
-; .rs 1 means reserve one byte of space, .rs 2 means reserve 2 bytes (pointer)
-tmp1       .rs 1  ; Some temporary variables
-tmp2       .rs 1
-
-nxtCol     .rs 1  ; Next column id 00SCCCCC (C = column num, S = screen num (yes they are separate))
-nxtItPtr   .rs 2  ; Pointer to memory where next item for screen rendering is located
-
-playerx    .rs 1
-playerxspeed .rs 1
-playerscrn .rs 1
-lastXpos   .rs 1
-playery    .rs 1
-playeryspeed .rs 1
-buttons1   .rs 1  ; player 1 gamepad buttons, one bit per button
-
-
-;;;;;;;;; Constants
 
 
 Tilemap    = $F000  ; Location of the start of the tilemap data
@@ -49,12 +35,35 @@ maxxspeed  = $08
 
 
 
+;;;;;;;;;;;;;;;;;; Variables
+
+
+
+.enum $0000  ;;start variables at ram location 0
+; .dsb 1 means reserve one byte of space, .dsb 2 means reserve 2 bytes (pointer)
+tmp1       .dsb 1  ; Some temporary variables
+tmp2       .dsb 1
+
+nxtCol     .dsb 1  ; Next column id 00SCCCCC (C = column num, S = screen num (yes they are separate))
+nxtItPtr   .dsb 2  ; Pointer to memory where next item for screen rendering is located
+
+playerx    .dsb 1
+playerxspeed .dsb 1
+playerscrn .dsb 1
+lastXpos   .dsb 1
+playery    .dsb 1
+playeryspeed .dsb 1
+buttons1   .dsb 1  ; player 1 gamepad buttons, one bit per button
+
+.ende
+
+
+
 ;;;;;;;;;;;;;;;;;; initialisation
 
 
 
-  .bank 0
-  .org $C000 
+.org $8000  ; Program ROM ($8000 for 2 banks, $C000 for 1)
 
 RESET:
   SEI          ; disable IRQs
@@ -185,7 +194,6 @@ ReadControllerLoop:
 
 
 
-  .bank 1
   .org $E000
 palette:
   .db $22,$29,$1A,$0F,  $22,$36,$17,$0F,  $22,$30,$21,$0F,  $22,$27,$17,$0F   ;;background palette
@@ -210,13 +218,7 @@ sprites:
                    ;processor will jump to the label NMI:
   .dw RESET      ;when the processor first turns on or is reset, it will jump
                    ;to the label RESET:
-  .dw 0
+  .dw 0          ;this one's for IRQ, but isn't used
 
 
-;;;;;;;;; 
-
-
-  .bank 2
-  .org $0000
-  .incbin "tiles.chr"   ;includes the graphics file
-
+  .incbin "tiles.chr"  ; Include the graphics file at the end

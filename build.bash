@@ -1,3 +1,3 @@
 set -e
-rm ./code.nes ./code.fns || true
-./NESASM3.exe ./code.asm
+rm ./code.nes || true
+./asm6.exe ./code.asm ./code.nes

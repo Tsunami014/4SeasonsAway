@@ -1,4 +1,4 @@
 #!/bin/sh
 set -e
-rm ./code.nes ./code.fns || true
-wine ./NESASM3.exe ./code.asm
+rm ./code.nes || true
+wine ./asm6.exe ./code.asm ./code.nes
