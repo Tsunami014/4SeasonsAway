@@ -10,14 +10,17 @@
 
 
   .rsset $0000  ;;start variables at ram location 0
-
-; .rs 1 means reserve one byte of space
+; .rs 1 means reserve one byte of space, .rs 2 means reserve 2 bytes (pointer)
 tmp1       .rs 1  ; Some temporary variables
 tmp2       .rs 1
+
+nxtCol     .rs 1  ; Next column id 00SCCCCC (C = column num, S = screen num (yes they are separate))
+nxtItPtr   .rs 2  ; Pointer to memory where next item for screen rendering is located
 
 playerx    .rs 1
 playerxspeed .rs 1
 playerscrn .rs 1
+lastXpos   .rs 1
 playery    .rs 1
 playeryspeed .rs 1
 buttons1   .rs 1  ; player 1 gamepad buttons, one bit per button
@@ -26,7 +29,9 @@ buttons1   .rs 1  ; player 1 gamepad buttons, one bit per button
 ;;;;;;;;; Constants
 
 
-PPUCTRLBASE = %10010000   ; enable NMI, sprites from Pattern Table 0, background from Pattern Table 1
+Tilemap    = $F000  ; Location of the start of the tilemap data
+
+PPUCTRLBASE = %10010100   ; enable NMI, sprites from Pattern Table 0, background from Pattern Table 1
 PPUMASKBASE = %00011110   ; enable sprites, enable background, no clipping on left side
 
 ;; Controller inputs
@@ -115,18 +120,10 @@ LoadPalettesLoop:
   STA $2005
   STA $2005
 
-  .include "game.asm" ;; Includes the labels for VBLANK and continues this function
+  LDA #%00000100
+  STA $2000
 
-EnableRendering:
-  LDA #PPUCTRLBASE
-  STA $2000
-  LDA #PPUMASKBASE
-  STA $2001
-  RTS
-DisableRendering:
-  LDA #$00
-  STA $2000
-  STA $2001
+  .include "game.asm" ;; Includes the labels for VBLANK and continues this function
 
 
 
@@ -143,6 +140,14 @@ NMI:  ; During VBLANK
   JSR ReadController  ;;get the current button data for player 1
   
   JMP VBLANK  ; Returning from interrupt should occur here
+
+
+
+;;;;;;;;;;;;;;;;;; Utility functions
+
+
+
+; For later functions
 
 
 
@@ -192,6 +197,12 @@ sprites:
   .db $80, $33, $00, $88   ;sprite 1
   .db $88, $34, $00, $80   ;sprite 2
   .db $88, $35, $00, $88   ;sprite 3
+
+
+
+  .org Tilemap  ; Tilemap data will **ALWAYS** be located starting from the constant Tilemap
+  .include "tilemap.asm"  ; Includes Tilemap label
+
 
 
   .org $FFFA     ;first of the three vectors starts here
