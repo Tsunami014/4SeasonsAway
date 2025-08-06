@@ -1,11 +1,4 @@
 ;; Main game code
-  ; Set some vars
-  LDA #00
-  STA playerx
-  STA playerxspeed
-  STA playerscrn
-
-  STA nxtCol
   ; Set initial pointer to base address of Tilemap label
   LDA #<Tilemap  ; Low byte of Tilemap label memory location
   STA nxtItPtr
@@ -13,7 +6,7 @@
   STA nxtItPtr+1
 
   ; Write to the sreen and then enable it
-  LDA #36  ; 32 columns per screen; draw one whole screen plus a couple extra columns after
+  LDA #32 + 6  ; 32 columns per screen; draw one whole screen plus a couple extra columns after
   STA tmp1
   JSR DrawCols
   JSR UpdateScroll  ; Update scrolling afterwards, fixing any other issues
@@ -106,6 +99,7 @@ VBLANK:
   STA tmp1
 @aftsetx3:
 
+; Check scrolling
   LDA tmp1
   BEQ +  ; Only update scroll if moved
   JSR UpdateScroll
@@ -115,23 +109,33 @@ VBLANK:
 
 
 UpdateScroll:
-  LDA $2002  ; read PPU status to reset the high/low latch
   ; Set x scroll
   LDA playerx
-  STA $2005
   ; Check x change
   AND #%11111000
   SEC
   SBC lastXpos
-  BEQ +next
+  BEQ ++
   ; There was a change
-  BPL +  ; If it's minus, swap the current and last x so you can increment
-  ; TODO:
+  .REPT 3
+  LSR A
+  .ENDR
+  BPL +
+  ORA #%10000000
++ STA tmp1  ; Store the amount of x change to fix next update
+  JSR DrawCols
+  LDA playerx  ; Now we update lastXpos and x scroll
+  STA $2005
+  AND #%11111000
+  STA lastXpos
+  JMP +next
 
-+ STA lastXpos
-  
-  ; Set y scroll to 0
+++  ; Change happened within a tile, not across multiple tiles
+  LDA $2002  ; read PPU status to reset the high/low latch
+  LDA playerx  ; Update x scroll
+  STA $2005
 +next
+  ; Set y scroll to 0
   LDA #$00
   STA $2005
   ; Update bit 8 of scroll
@@ -139,7 +143,7 @@ UpdateScroll:
   AND #%00000001   ; A = 0000000S
   ORA #PPUCTRLBASE ; A = CCCCCCCS
   STA $2000
- 
+  
   RTS
 
 
@@ -175,14 +179,13 @@ DrawCols:
   CLC
   ADC #$01
   STA nxtItPtr
-  BCC LoopTls  ; Don't add to next one if don't need to
+  BCC +  ; Don't add to next one if don't need to
   LDA nxtItPtr+1
   ADC #$00  ; Propagate the carry
   STA nxtItPtr+1
-  LDY #$00
++ LDY #$00
 LoopTls:
-  TYA
-  CMP tmp2
+  CPY tmp2
   BMI +eq
   ; tile y pos != tmp2
   LDA #$00
