@@ -98,6 +98,8 @@ visible only between non-local labels.  Names of local labels may be reused.
 Labels beginning with one or more '+' or '-' characters are nameless labels,
 especially useful for forward and reverse branches.
 
+FYI these don't mix well with temporary labels, best to keep them separate
+
     example:
 
       --  ldx #0

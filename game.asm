@@ -115,6 +115,7 @@ VBLANK:
 
 
 UpdateScroll:
+  LDA $2002  ; read PPU status to reset the high/low latch
   ; Set x scroll
   LDA playerx
   STA $2005
@@ -131,7 +132,7 @@ UpdateScroll:
   
   ; Set y scroll to 0
 +next
-  LDA $00
+  LDA #$00
   STA $2005
   ; Update bit 8 of scroll
   LDA playerscrn
@@ -162,11 +163,11 @@ DrawCols:
   AND #%00011111
   STA $2006
 
-  ;LDY #$00
+  LDY #$00
+  STY $2007  ; First column is offscreen, so we write a 0 to it
 
   ; <testing>
 
-  LDY #0
   LDA (nxtItPtr),Y  ; Put the value at nxtItPtr into tmp2
   STA tmp2
   ; Add 1 to pointer
