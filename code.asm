@@ -15,8 +15,6 @@ MIRRORING = %0001 ;%0000 = horizontal, %0001 = vertical, %1000 = four-screen
 
 
 
-Tilemap    = $F000  ; Location of the start of the tilemap data
-
 PPUCTRLBASE = %10010100   ; enable NMI, sprites from Pattern Table 0, background from Pattern Table 1
 PPUMASKBASE = %00011110   ; enable sprites, enable background, no clipping on left side
 
@@ -39,7 +37,7 @@ maxxspeed  = $08
 
 
 
-.enum $0000  ;;start variables at ram location 0
+.enum $0000  ; Start variables at ram location 0
 ; .dsb 1 means reserve one byte of space, .dsb 2 means reserve 2 bytes (pointer)
 tmp1       .dsb 1  ; Some temporary variables
 tmp2       .dsb 1
@@ -77,11 +75,11 @@ RESET:
   STX $2001    ; disable rendering
   STX $4010    ; disable DMC IRQs
 
-vblankwait1:       ; First wait for vblank to make sure PPU is ready
+@vblankwait1:  ; First wait for vblank to make sure PPU is ready
   BIT $2002
-  BPL vblankwait1
+  BPL @vblankwait1
 
-clrmem:
+@clrmem:
   LDA #$00
   STA $0000, x
   STA $0100, x
@@ -93,30 +91,26 @@ clrmem:
   LDA #$FE
   STA $0200, x
   INX
-  BNE clrmem
-   
-vblankwait2:      ; Second wait for vblank, PPU is ready after this
+  BNE @clrmem
+  
+@vblankwait2:  ; Second wait for vblank, PPU is ready after this
   BIT $2002
-  BPL vblankwait2
+  BPL @vblankwait2
 
 
-LoadPalettes:
+@LoadPalettes:
   LDA $2002             ; read PPU status to reset the high/low latch
   LDA #$3F
   STA $2006             ; write the high byte of $3F00 address
   LDA #$00
   STA $2006             ; write the low byte of $3F00 address
   LDX #$00              ; start out at 0
-LoadPalettesLoop:
-  LDA palette, x        ; load data from address (palette + the value in x)
-                          ; 1st time through loop it will load palette+0
-                          ; 2nd time through loop it will load palette+1
-                          ; 3rd time through loop it will load palette+2
-                          ; etc
+@LoadPalettesLoop:
+  LDA palette, X        ; load data from address (palette + the value in x (which is the loop index))
   STA $2007             ; write to PPU
   INX                   ; X = X + 1
   CPX #$20              ; Compare X to hex $10, decimal 16 - copying 16 bytes = 4 sprites
-  BNE LoadPalettesLoop  ; Branch to LoadPalettesLoop if compare was Not Equal to zero
+  BNE @LoadPalettesLoop ; Branch to LoadPalettesLoop if compare was Not Equal to zero
                         ; if compare was equal to 32, keep going down
 
 
@@ -178,14 +172,14 @@ ReadController:
   LDA #$00
   STA buttons1    ; clear previous frame’s bits
 
-ReadControllerLoop:
+@ReadControllerLoop:
   LDA $4016
   AND #%00000001  ; isolate bit0 (next button)
   LSR A           ; shift bit0 → Carry
   ROL buttons1    ; shift buttons1 left, carry→bit0
 
   DEX
-  BNE ReadControllerLoop
+  BNE @ReadControllerLoop
   RTS
 
 
@@ -207,18 +201,14 @@ sprites:
   .db $88, $35, $00, $88   ;sprite 3
 
 
-
-  .org Tilemap  ; Tilemap data will **ALWAYS** be located starting from the constant Tilemap
   .include "tilemap.asm"  ; Includes Tilemap label
 
 
 
-  .org $FFFA     ;first of the three vectors starts here
-  .dw NMI        ;when an NMI happens (once per frame if enabled) the 
-                   ;processor will jump to the label NMI:
-  .dw RESET      ;when the processor first turns on or is reset, it will jump
-                   ;to the label RESET:
-  .dw 0          ;this one's for IRQ, but isn't used
+  .org $FFFA     ; Three vectors starts here
+  .dw NMI        ; NMI label (once per frame) 
+  .dw RESET      ; Initialisation or reset
+  .dw 0          ; IRQ (isn't used)
 
 
   .incbin "tiles.chr"  ; Include the graphics file at the end
