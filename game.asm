@@ -54,7 +54,7 @@ VBLANK:
   LDA playerxspeed
   CMP #-maxxspeed  ; Ensure it doesn't go lower than negative max speed
   BMI @noL
-  CLC
+  SEC
   SBC #xspeedchng
   STA playerxspeed  ; Store the new player speed
   JMP @aftX2
@@ -121,7 +121,7 @@ UpdateScroll:
   STA $2005
   ; Check x change
   AND #%11111000
-  CLC
+  SEC
   SBC lastXpos
   BEQ +next
   ; There was a change
@@ -210,7 +210,7 @@ LoopTls:
   STX nxtCol
   ; Check amount of columns remaining
   LDA tmp1
-  CLC
+  SEC
   SBC #$01
   STA tmp1
   BNE DrawCols  ; DrawCols for each column in tmp1
