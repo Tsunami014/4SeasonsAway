@@ -98,8 +98,6 @@ visible only between non-local labels.  Names of local labels may be reused.
 Labels beginning with one or more '+' or '-' characters are nameless labels,
 especially useful for forward and reverse branches.
 
-FYI these don't mix well with temporary labels, best to keep them separate
-
     example:
 
       --  ldx #0
@@ -117,6 +115,36 @@ FYI these don't mix well with temporary labels, best to keep them separate
        +  ldx #0
    +here  nop
         
+FYI these don't mix well with temporary labels, best to keep them separate.
+I think the way to put it is after the definition for the nameless label (not the usage `BNE +` but the definition `+ ...`) then there's a new context and temporary labels are no longer in scope. Or something like that.
+
+Simplified example: (also works with `JMP`)
+```
+; Does work
+BEQ +
+BNE @label
+@label:
++
+
+; Does NOT work
+BEQ @label
+BNE +
++
+@label:
+
+; Does work
+BEQ @nxt
+BNE +
+@nxt:
++
+
+; Does NOT work
+BEQ +
+BNE @nxt
++
+@nxt:
+```
+
 --------------------------------------------------------------
 Assembler directives (in no particular order)
 --------------------------------------------------------------
