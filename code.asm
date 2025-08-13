@@ -209,7 +209,7 @@ sprites:
   .db $88, $35, $00, $88   ;sprite 3
 
 
-  .include "tilemap.asm"  ; Includes Tilemap label
+  .include "tilemap/tilemap.asm"  ; Includes Tilemap label
 
 
 
