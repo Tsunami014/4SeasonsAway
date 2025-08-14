@@ -211,28 +211,33 @@ DrawCols:
   LDA (prevItPtr),Y
   STA tmp2
   ; Decrease 1 from both pointers
-  LDA nxtItPtr
-  BNE +
-  DEC nxtItPtr+1  ; If current value == 0 (so it will wrap around) then decrease bottom pointer by 1
-+ DEC nxtItPtr
-
+  LDA prevItPtr+1  ; If high byte of prevItPtr is 0, don't increment as this is in the initialisation
+  BEQ ++
   LDA prevItPtr
   BNE +
-  DEC prevItPtr+1  ; Same here
+  DEC prevItPtr+1  ; If current value == 0 (so it will wrap around) then decrease bottom pointer by 1
 + DEC prevItPtr
+++
+  LDA nxtItPtr
+  BNE +
+  DEC nxtItPtr+1  ; Same here
++ DEC nxtItPtr
+
   JMP +nxt
 +positive
   ; Put the value at nxtItPtr into tmp2
   LDA (nxtItPtr),Y
   STA tmp2
   ; Add 1 to both pointers
-  INC nxtItPtr
-  BNE +
-  INC nxtItPtr+1  ; If updated value == 0 (so it did wrap around) then increase bottom pointer by 1
-+
+  LDA prevItPtr+1  ; Same as before; skip if initialisation.
+  BEQ +
   INC prevItPtr
+  BNE +
+  INC prevItPtr+1  ; If updated value == 0 (so it did wrap around) then increase bottom pointer by 1
++
+  INC nxtItPtr
   BNE +nxt
-  INC prevItPtr+1  ; Same here
+  INC nxtItPtr+1  ; Same here
 
 +nxt
   LDY #$00  ; Y is already 0, if you're wondering
