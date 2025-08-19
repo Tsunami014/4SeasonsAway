@@ -212,7 +212,8 @@ ENDM
 
 
 ; Decrease the temp item pointer by 1 item.
-; Assumes Y=0, writes over X, tmp3 and tmpPtr. tmpPtr becomes the pointer to the previous item and X&tmp3 become the amount of bytes-1
+; Assumes Y=0, writes over X or Y, tmp3 and tmpPtr. tmpPtr becomes the pointer to the previous item and X&tmp3 become the amount of bytes-1
+UseX = 1
 MACRO DecTmpItPtr
   LDA tmpPtr
   BNE +
@@ -222,12 +223,21 @@ MACRO DecTmpItPtr
   LDA (tmpPtr),Y
   AND #%11110000
   CMP #%11110000
+IF UseX==1
   BEQ +
   LDX #$01
   JMP +aft
 + LDX #$02
 +aft
   STX tmp3
+ELSE
+  BEQ +
+  LDY #$01
+  JMP +aft
++ LDY #$02
++aft
+  STY tmp3
+ENDIF
   SEC
   LDA tmpPtr
   SBC tmp3
@@ -327,8 +337,10 @@ DrawCols:
   JMP +aft
 + LDA nxtCol
 +aft
+  AND #%00111110
   STA tmp2  ; tmp2 now contains the column index
-  ; Y is already 0, if you're wondering
+
+  LDX #28  ; 28 visible tiles in a column (30 - 2 invisible extras)
 LoopTls:
   ; Here we use tmp2 and tmp3 as a temporary pointer, as they are next to each other in memory.
   LDA #$00
@@ -349,7 +361,10 @@ LoopTls:
 
 LoopIts:  ; Loop over every item on-screenish backwards (later items override previous ones)
   ; Decrement tmp pointer
+  LDY #$00  ; Requires Y=0
+  UseX = 0  ; Go clobber Y instead of my precious X!
   DecTmpItPtr
+  UseX = 1
   HandleTile  ; Macro defined in tiles.asm
   LDA tmp1
   BNE +write
@@ -364,12 +379,12 @@ LoopIts:  ; Loop over every item on-screenish backwards (later items override pr
   BCS LoopIts ; if tmpPtr+0 > prevItPtr+0 then tmpPtr > prevItPtr so continue
 
 +cont
-  LDA #$00  ; If no object wants it, draw a blank
+  LDA #$02  ; If no object wants it, draw a blank (modified for testing)
 +write
   STA $2007
  
-  INY
-  CPY #29  ; 30 tiles in a column
+  DEX
+  TXA  ; Keep going until 0
   BNE +loopTls
 
   PLA

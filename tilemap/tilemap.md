@@ -46,6 +46,7 @@ Where:
 ## Reasoning
 - The X and Y values are 4 bits as the screen is 32x30 tiles, but each block is a 2x2 tile so it ends out being 16x15, enough for 4 bits
 - The reason it's `SXXXX0` is the next column value is `SXXXXX`, but as explained before the tiles are 2x2. This means that the lowest bit is not used (it's ANDed out anyway).
+- The Y is before the T so it can quickly check whether to run or not, but have to roll over for the T when it does. This is faster than rolling over the Y every single tile.
 - D is at the start so I can go 2 + (byte1 AND 00000001) to get either 2 or 3 depending on whether it has data bits or not - the correct number!
 - I is at the end as I can do `BPL` or `BMI` instead of an `AND` then `BNE`
 
