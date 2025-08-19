@@ -18,6 +18,19 @@ Built using the ASM6 compiler.
 
 **To run**: Run `code.nes` using an NES emulator (after building). `nester.exe` is provided, but for debugging another such as [FCEUX](https://fceux.com/web/download.html) is recommended.
 
+### Tilemaps
+You will notice a tilemap folder. In it contains;
+- `tilemap.asm`; the generated asm file. This contains the data the game will use when compiling, and is auto generated.
+- `tilemap.dat`; the original tilemap data in a form that is easy to see and use
+- `tilemap.py`; the conversion script to convert the `tilemap.dat` into the `tilemap.asm`
+- `tilemap.md`; helpful documentation on how the original and converted forms of the tilemap data look like
+
+To edit the tilemap;
+1. Read up in `tilemap.md` about the format required, *only need to know about the `.dat` format though*
+2. Write tilemap data in `tilemap.dat`
+3. Convert it by running the `tilemap.py`. This will work without any external libraries.
+4. Compile and run the main code (see above)
+
 ## Opcodes
 A very nice list of opcodes for the NES' hardware can be found [here](https://wiki.preterhuman.net/NES_Programming_Guide), and the instructions for the specific ASM6 assembler can be found [here](./Instructs.txt).
 

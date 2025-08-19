@@ -45,10 +45,14 @@ Offset     = 6  ; The number of tiles forwards to draw new tiles
 ; Temporary vars with various uses
 tmp1         .dsb 1
 tmp2         .dsb 1
+tmp3         .dsb 1
+
+tmpPtr       .dsb 2
 
 ; Rendering stuff
 nxtCol       .dsb 1  ; Next column id JJSCCCCC (C = column num, S = screen num (yes they are separate), J = junk (can be anything, doesn't affect execution))
 nxtItPtr     .dsb 2  ; Pointer to memory where the next screen rendering item is located (for the right side of the screen)
+prevCol      .dsb 1  ; The previous column id, just like before; but for the left side of the screen instead of the right.
 prevItPtr    .dsb 2  ; Same, but the item on the left side
 
 ; Player stuff

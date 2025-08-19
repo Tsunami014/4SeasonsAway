@@ -2,22 +2,16 @@
   ; Set initial pointer to base address of Tilemap label
   LDA #<Tilemap  ; Low byte of Tilemap label memory location
   STA nxtItPtr
+  STA prevItPtr
   LDA #>Tilemap  ; High byte
   STA nxtItPtr+1
+  STA prevItPtr+1
 
   ; Write to the sreen and then enable it
   LDA #32 + Offset  ; 32 columns per screen; draw one whole screen plus a couple extra columns after
   STA tmp1
   JSR DrawCols
   JSR UpdateScroll  ; Update scrolling afterwards, fixing any other issues
-
-  ; Set initial prev item pointer to base address of Tilemap label
-  ; The pointer would've changed (but not actually been used, as it starts generating forwards) due to initial generation, so here we're setting it properly.
-  LDA #<(Tilemap - Offset)  ; Low byte of Tilemap label memory location
-  STA prevItPtr
-  LDA #>(Tilemap - Offset)  ; High byte
-  STA prevItPtr+1
-  ; HACK: This will have a gap of `Offset` tiles behind the start, but because we will never go further back than where we started, this is ok.
 
   ; Enable rendering
   LDA #PPUCTRLBASE
@@ -135,13 +129,12 @@ UpdateScroll:
   LSR A
 .ENDR
   STA tmp1  ; Store the amount of x change to fix next update
-  ORA #%10000000  ; Signal that it is decreasing
-  TAX  ; Because we can't subtract the x change when the last bit is set, we store it to set again later
+  LDA #%10000001  ; It is decreasing and is NOT initialisation
+  STA tmp2
   LDA nxtCol
   SEC
   SBC #ScreenSze + Offset  ; The next column to update should now be the old index (right side of the screen) - the screen size (32 columns)
   STA nxtCol      ; This needed to be changed so it would be adding columns to the left side of the screen. Due to the decreasing bit being set, everything else is ok
-  STX tmp1
   JSR DrawCols
   LDA nxtCol  ; Now increase by screen size (32) to find the new nxtCols index! (should be old index - amount of tiles drawn)
   CLC
@@ -153,6 +146,8 @@ UpdateScroll:
   LSR A
 .ENDR
   STA tmp1  ; Store the amount of x change to fix next update
+  LDA #%00000001  ; It is not decreasing and is NOT initialisation
+  STA tmp2
   JSR DrawCols
 +aftdraw
   LDA playerx  ; Now we update lastXpos and x scroll
@@ -178,9 +173,110 @@ UpdateScroll:
   RTS
 
 
+; All these macros are faster ways of separating code that will only be used in one spot
+; This ust be before DrawCols as it has macros that need to be defined beforehand
+  .include "tiles.asm" ;; Includes functions for drawing tiles and stuff
+
+
+; Assumes Y=0, writes over X&tmp3
+MACRO ChkIncItPtr itPtr,colIdx  ; Check and increase an item pointer (check if need to) in a loop. Continues until next item is not ok.
+Start:
+  LDA colIdx
+  AND #%00111110
+  STA tmp3  ; tmp3 = Current screen. But, only the part of the screen.
+
+  LDA (itPtr),Y  ; Load first byte of the previous object
+  TAX  ; Required for macro
+  AND #%00111110  ; Filter out for the X and screen
+  CMP tmp3
+  BNE End  ; This only works when going forwards; when going backwards, the objects would be added when they're half a block too early
+
+  ; The next item is now on screen! (Exactly on the screen edge)
+  TXA
+  AND #%00000001
+  ORA #%00000010  ; Add 2
+  STA tmp3
+  LDA itPtr
+  CLC
+  ADC tmp3  ; Now A = itPtr + 2 + (1 if there is a data byte in the object else 0)
+  STA itPtr
+  BCC End
+  LDA itPtr+1
+  ADC #$00  ; Propagate the carry
+  STA itPtr+1
+
+  JMP Start
+
+End:
+ENDM
+
+
+; Decrease the temp item pointer by 1 item.
+; Assumes Y=0, writes over X, tmp3 and tmpPtr. tmpPtr becomes the pointer to the previous item and X&tmp3 become the amount of bytes-1
+MACRO DecTmpItPtr
+  LDA tmpPtr
+  BNE +
+  DEC tmpPtr+1
++ DEC tmpPtr
+  ; Load last value of previous byte
+  LDA (tmpPtr),Y
+  AND #%11110000
+  CMP #%11110000
+  BEQ +
+  LDX #$01
+  JMP +aft
++ LDX #$02
++aft
+  STX tmp3
+  SEC
+  LDA tmpPtr
+  SBC tmp3
+  STA tmpPtr
+  LDA tmpPtr+1
+  SBC #$00
+  STA tmpPtr+1
+ENDM
+
+ChkDecItPtrRout:  ; Is the routine internals for the ChkDecItPtr. This is a subroutine.
+  DecTmpItPtr itPtr  ; Sets X
+  INX  ; Now X is correct
+
+  LDA tmp1
+  AND #%00111110
+  STA tmp3  ; tmp3 = Current screen. But, only the part of the screen. 
+
+  LDA (tmpPtr),Y
+  AND #%00111111  ; So if it ends with 1 then it won't work
+  CMP tmp3
+  BEQ ChkDecItPtrRout  ; Keep going while the objects are on the edge of the screen
+  RTS
+
+; Assumes Y=0, writes over X,tmp1,tmp3 and tmpPtr
+MACRO ChkDecItPtr itPtr,colIdx  ; Check and decrease an item pointer (check if need to) in a loop. Continues until next item is not ok.
+  LDA itPtr
+  STA tmpPtr
+  LDA itPtr+1
+  STA tmpPtr+1
+
+  LDA colIdx
+  STA tmp1  ; Store colIdx in tmp1 for use in the routine
+  JSR ChkDecItPtrRout
+  ; Object is not correct, so now go back.
+  STX tmp3
+  LDA tmpPtr
+  CLC
+  ADC tmp3
+  STA itPtr
+  LDA tmpPtr+1
+  ADC #$00  ; Propagate carry
+  STA itPtr+1
+ENDM
+
 
 DrawCols:
   ; Draws the amount of columns as specified in the tmp1 memory location
+  ; Also, tmp2 stores whether this is NOT Initialisation or not and also the Direction (D000000I) (So when initialisation, everything=0)
+  ; Both are stored in the stack when looping
   LDA $2002  ; read PPU status to reset the high/low latch
 
   ; Get pointer value
@@ -198,85 +294,103 @@ DrawCols:
   AND #%00011111
   STA $2006
 
-  LDY #$00
+  LDY #$00  ; Now Y is $00. This will be used a lot.
   STY $2007  ; First column is offscreen, so we write a 0 to it
 
-  ; The next code is slightly testing code; it will be *similar* later.
-
-  ; Handle next code differently if going forwards or backwards
+  ; Store tmp1 to the stack before running this so tmp1 is free (tmp2 is used)
   LDA tmp1
+  PHA
+  ; Handle next code differently if going forwards or backwards
+  LDA tmp2
   BPL +positive
 ;negative
-  ; Put the value at prevItPtr into tmp2
-  LDA (prevItPtr),Y
-  STA tmp2
   ; Decrease 1 from both pointers
-  LDA prevItPtr+1  ; If high byte of prevItPtr is 0, don't increment as this is in the initialisation
-  BEQ ++
-  LDA prevItPtr
-  BNE +
-  DEC prevItPtr+1  ; If current value == 0 (so it will wrap around) then decrease bottom pointer by 1
-+ DEC prevItPtr
-++
-  LDA nxtItPtr
-  BNE +
-  DEC nxtItPtr+1  ; Same here
-+ DEC nxtItPtr
+  ; We do not need to check for initialisation here as in initialisation it only generates forwards
+  ChkDecItPtr prevItPtr,prevCol
+  ChkDecItPtr nxtItPtr,nxtCol
 
   JMP +nxt
 +positive
-  ; Put the value at nxtItPtr into tmp2
-  LDA (nxtItPtr),Y
-  STA tmp2
+  LDA tmp2  ; Check for initialisation (everything is 0)
+  BNE +  ; Skip increasing backward pointer
   ; Add 1 to both pointers
-  LDA prevItPtr+1  ; Same as before; skip if initialisation.
-  BEQ +
-  INC prevItPtr
-  BNE +
-  INC prevItPtr+1  ; If updated value == 0 (so it did wrap around) then increase bottom pointer by 1
-+
-  INC nxtItPtr
-  BNE +nxt
-  INC nxtItPtr+1  ; Same here
-
+  ChkIncItPtr prevItPtr,prevCol  ; Increase prevItPtr if required
++ ChkIncItPtr nxtItPtr,nxtCol  ; Increase nxtItPtr if required
 +nxt
-  LDY #$00  ; Y is already 0, if you're wondering
-LoopTls:
-  CPY tmp2
-  BMI @eq
-  ; tile y pos != tmp2
-  LDA #$00
-  JMP @aft
-@eq:
-  ; tile y pos == tmp2
-  LDA #$01
 
-@aft:
+  LDA tmp2  ; Now store tmp2
+  PHA
+
+  LDA tmp2
+  BPL +
+  LDA prevCol
+  JMP +aft
++ LDA nxtCol
++aft
+  STA tmp2  ; tmp2 now contains the column index
+  ; Y is already 0, if you're wondering
+LoopTls:
+  ; Here we use tmp2 and tmp3 as a temporary pointer, as they are next to each other in memory.
+  LDA #$00
+  STA tmp1
+  LDA nxtItPtr+1
+  STA tmpPtr+1
+  LDA nxtItPtr
+  STA tmpPtr
+
+  ; Check if it's equal right now to ensure nothing bad happens when 0 items are on-screen
+  CMP prevItPtr
+  BNE LoopIts
+  LDA tmpPtr+1
+  CMP prevItPtr+1
+  BNE LoopIts
+  ; There is nothing; skip whole loop
+  JMP +cont
+
+LoopIts:  ; Loop over every item on-screenish backwards (later items override previous ones)
+  ; Decrement tmp pointer
+  DecTmpItPtr
+  HandleTile  ; Macro defined in tiles.asm
+  LDA tmp1
+  BNE +write
+  ; If is still 0, check if temp pointer is still greater than the initial; and if so, keep looping
+  LDA tmpPtr+1  ; compare high bytes
+  CMP prevItPtr+1
+  BCC +cont ; if tmpPtr+1 < prevItPtr+1 then tmpPtr < prevItPtr so exit loop
+  BNE LoopIts ; if tmpPtr+1 != prevItPtr+1 then tmpPtr > prevItPtr so continue
+  LDA tmpPtr  ; compare low bytes
+  CMP prevItPtr
+  BEQ +cont  ; if tmpPtr+0 == prevItPtr+0 then tmpPtr == prevItPtr so exit
+  BCS LoopIts ; if tmpPtr+0 > prevItPtr+0 then tmpPtr > prevItPtr so continue
+
++cont
+  LDA #$00  ; If no object wants it, draw a blank
++write
   STA $2007
  
-  INY  ; TODO: Maybe just decrement???
+  INY
   CPY #29  ; 30 tiles in a column
-  BNE LoopTls
+  BNE +loopTls
 
-  LDA tmp1
+  PLA
+  STA tmp2
+  PLA
+  STA tmp1
+
+  LDA tmp2
   BMI +
-  ; Increase next col pointer
-  INC nxtCol
-  ; Check amount of columns remaining
-  SEC  ; If tmp1 is positive, -1
-  SBC #$01
-  STA tmp1
-  BNE +loop  ; DrawCols for each column in tmp1
+  INC nxtCol  ; Increase next col pointer if going forwards
+  JMP +aft
++ DEC nxtCol  ; Decrease next col pointer if going backwards
++aft
+  ; Decrease tmp1 and check if need to continue
+  DEC tmp1
+  LDA tmp1
+  BNE +loopCols  ; DrawCols for each column in tmp1
   RTS
-+ ; Decrease next col pointer
-  DEC nxtCol
-  ; Check amount of columns remaining
-  SEC  ; If tmp1 is negative, -1 still, but
-  SBC #$01
-  STA tmp1
-  AND #%01111111  ; Then later when checking ignore the extra bit
-  BNE +loop
-  RTS
-+loop  ; This is required as Branch instructions are relative, but this subroutine is so long it becomes out of range
+; These are required as Branch instructions are relative, but this subroutine is so long it becomes out of range
++loopCols
   JMP DrawCols
++loopTls
+  JMP LoopTls
 
