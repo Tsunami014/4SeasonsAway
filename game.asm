@@ -310,7 +310,7 @@ DrawCols:
   LDY #$00  ; Now Y is $00. This will be used a lot.
   STY $2007  ; First column is offscreen, so we write a 0 to it
 
-  ; Store tmp1 to the stack before running this so tmp1 is free (tmp2 is used)
+  ; Store tmp1 to the stack before running this so tmp1 is free (tmp2 is still used)
   LDA tmp1
   PHA
   ; Handle next code differently if going forwards or backwards
@@ -345,7 +345,7 @@ DrawCols:
 
   LDX #28  ; 28 visible tiles in a column (30 - 2 invisible extras)
 LoopTls:
-  LDA #$00  ; TODO: WHY IS THIS STILL INPUTTING 1?!?!?!?
+  LDA #$00
   STA tmp1
   LDA nxtItPtr+1
   STA tmpPtr+1
@@ -361,14 +361,13 @@ LoopTls:
 
 LoopIts:  ; Loop over every item on-screenish backwards (later items override previous ones)
   ; Decrement tmp pointer
-  ; TODO: Y is 0 when looping for the first time. LDY #$00 when you need to loop again.
   HandleTile  ; Macro defined in tiles.asm
   LDA tmp1
   BNE +write
   ; If is still 0, decrease then check if temp pointer is still greater than the initial; and if so, keep looping
   LDY #$00  ; Requires Y=0
   UseX = 0  ; Go clobber Y instead of my precious X!
-  DecTmpItPtr  ; TODO: After handle
+  DecTmpItPtr
   UseX = 1
   ; Check if tmpPtr <= prevItPtr
   LDA tmpPtr+1  ; compare high bytes
@@ -381,7 +380,7 @@ LoopIts:  ; Loop over every item on-screenish backwards (later items override pr
   BCS LoopIts ; if tmpPtr+0 > prevItPtr+0 then tmpPtr > prevItPtr so continue
 
 +cont
-  LDA #$02  ; If no object wants it, draw a blank (modified for testing)
+  LDA #$00  ; If no object wants it, draw a blank
 +write
   STA $2007
  
@@ -395,10 +394,10 @@ LoopIts:  ; Loop over every item on-screenish backwards (later items override pr
   STA tmp1
 
   LDA tmp2
-  BMI +
-  INC nxtCol  ; Increase next col pointer if going forwards
+  BPL +
+  DEC nxtCol  ; Decrease next col pointer if going backwards
   JMP +aft
-+ DEC nxtCol  ; Decrease next col pointer if going backwards
++ INC nxtCol  ; Increase next col pointer if going forwards
 +aft
   ; Decrease tmp1 and check if need to continue
   DEC tmp1
@@ -406,8 +405,8 @@ LoopIts:  ; Loop over every item on-screenish backwards (later items override pr
   BNE +loopCols  ; DrawCols for each column in tmp1
   RTS
 ; These are required as Branch instructions are relative, but this subroutine is so long it becomes out of range
-+loopCols
-  JMP DrawCols
 +loopTls
   JMP LoopTls
++loopCols
+  JMP DrawCols
 
