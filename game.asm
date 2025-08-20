@@ -178,36 +178,38 @@ UpdateScroll:
   .include "tiles.asm" ;; Includes functions for drawing tiles and stuff
 
 
-; Assumes Y=0, writes over X&tmp3
+; Assumes Y=0, writes over X&tmp3&tmpPtr
 MACRO ChkIncItPtr itPtr,colIdx  ; Check and increase an item pointer (check if need to) in a loop. Continues until next item is not ok.
 Start:
   LDA colIdx
   AND #%00111110
   STA tmp3  ; tmp3 = Current screen. But, only the part of the screen.
-
   LDA (itPtr),Y  ; Load first byte of the previous object
-  TAX  ; Required for macro
-  AND #%00111110  ; Filter out for the X and screen
-  CMP tmp3
-  BNE End  ; This only works when going forwards; when going backwards, the objects would be added when they're half a block too early
-
-  ; The next item is now on screen! (Exactly on the screen edge)
-  TXA
   AND #%00000001
-  ORA #%00000010  ; Add 2
-  STA tmp3
+  ORA #%00000010  ; Now should be a number between 2&3 - the number of bytes
+  TAY
+  LDA (itPtr),Y  ; Load first byte of next object
+  AND #%00111110  ; Filter out for the X and screen
+  ; TODO: Cache in tmp1 for quicker subsequent loop
+  CMP tmp3  ; This only works when going forwards; when going backwards, the objects would be added when they're half a block too early
+  BNE End
+  ; The next item is now on screen! (Exactly on the screen edge)
+  ; Update itPtr to be the next obj
+  STY tmp3
   LDA itPtr
   CLC
   ADC tmp3  ; Now A = itPtr + 2 + (1 if there is a data byte in the object else 0)
   STA itPtr
-  BCC End
+  BCC +
   LDA itPtr+1
   ADC #$00  ; Propagate the carry
   STA itPtr+1
 
-  JMP Start
++ LDY #$00  ; So the next loop will work
+  JMP Start  ; Keep going until the next item is not on the screen edge
 
 End:
+  LDY #$00
 ENDM
 
 
@@ -248,7 +250,7 @@ ENDIF
 ENDM
 
 ChkDecItPtrRout:  ; Is the routine internals for the ChkDecItPtr. This is a subroutine.
-  DecTmpItPtr itPtr  ; Sets X
+  DecTmpItPtr  ; Sets X
   INX  ; Now X is correct
 
   LDA tmp1
@@ -259,10 +261,11 @@ ChkDecItPtrRout:  ; Is the routine internals for the ChkDecItPtr. This is a subr
   AND #%00111111  ; So if it ends with 1 then it won't work
   CMP tmp3
   BEQ ChkDecItPtrRout  ; Keep going while the objects are on the edge of the screen
-  RTS
+  RTS  ; TODO: Check length; keep going down while object x + length is on the left, not just x
 
 ; Assumes Y=0, writes over X,tmp1,tmp3 and tmpPtr
 MACRO ChkDecItPtr itPtr,colIdx  ; Check and decrease an item pointer (check if need to) in a loop. Continues until next item is not ok.
+  ; TODO: Every loop, it decrements tmpItPtr and only if it was successful does it then update itPtr. It updates itPtr every loop. This means we don't have to un-add it later.
   LDA itPtr
   STA tmpPtr
   LDA itPtr+1
@@ -321,17 +324,17 @@ DrawCols:
 
   JMP +nxt
 +positive
-  LDA tmp2  ; Check for initialisation (everything is 0)
-  BNE +  ; Skip increasing backward pointer
+  ; Check for initialisation (everything is 0) (tmp2 is still loaded)
+  BEQ +  ; Skip increasing backward pointer if initialisation
   ; Add 1 to both pointers
-  ChkIncItPtr prevItPtr,prevCol  ; Increase prevItPtr if required
+  ; TODO: Make ChkIncItPtr not a macro. Also, for prevItPtr, do not just increase it when the next column increases but instead increase it when the next object is 1 column offscreen. Make a macro in tilles.asm for getting the tile width.
+  ;ChkIncItPtr prevItPtr,prevCol  ; Increase prevItPtr if required
 + ChkIncItPtr nxtItPtr,nxtCol  ; Increase nxtItPtr if required
 +nxt
 
   LDA tmp2  ; Now store tmp2
   PHA
 
-  LDA tmp2
   BPL +
   LDA prevCol
   JMP +aft
@@ -342,8 +345,7 @@ DrawCols:
 
   LDX #28  ; 28 visible tiles in a column (30 - 2 invisible extras)
 LoopTls:
-  ; Here we use tmp2 and tmp3 as a temporary pointer, as they are next to each other in memory.
-  LDA #$00
+  LDA #$00  ; TODO: WHY IS THIS STILL INPUTTING 1?!?!?!?
   STA tmp1
   LDA nxtItPtr+1
   STA tmpPtr+1
@@ -355,20 +357,20 @@ LoopTls:
   BNE LoopIts
   LDA tmpPtr+1
   CMP prevItPtr+1
-  BNE LoopIts
-  ; There is nothing; skip whole loop
-  JMP +cont
+  BEQ +cont  ; If end == start, skip whole loop
 
 LoopIts:  ; Loop over every item on-screenish backwards (later items override previous ones)
   ; Decrement tmp pointer
-  LDY #$00  ; Requires Y=0
-  UseX = 0  ; Go clobber Y instead of my precious X!
-  DecTmpItPtr
-  UseX = 1
+  ; TODO: Y is 0 when looping for the first time. LDY #$00 when you need to loop again.
   HandleTile  ; Macro defined in tiles.asm
   LDA tmp1
   BNE +write
-  ; If is still 0, check if temp pointer is still greater than the initial; and if so, keep looping
+  ; If is still 0, decrease then check if temp pointer is still greater than the initial; and if so, keep looping
+  LDY #$00  ; Requires Y=0
+  UseX = 0  ; Go clobber Y instead of my precious X!
+  DecTmpItPtr  ; TODO: After handle
+  UseX = 1
+  ; Check if tmpPtr <= prevItPtr
   LDA tmpPtr+1  ; compare high bytes
   CMP prevItPtr+1
   BCC +cont ; if tmpPtr+1 < prevItPtr+1 then tmpPtr < prevItPtr so exit loop

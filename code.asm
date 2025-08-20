@@ -54,6 +54,7 @@ nxtCol       .dsb 1  ; Next column id JJSCCCCC (C = column num, S = screen num (
 nxtItPtr     .dsb 2  ; Pointer to memory where the next screen rendering item is located (for the right side of the screen)
 prevCol      .dsb 1  ; The previous column id, just like before; but for the left side of the screen instead of the right.
 prevItPtr    .dsb 2  ; Same, but the item on the left side
+; VERY IMPORTANT: prevItPtr is NOT rendered. The rendered objects are prevItPtr < item <= nxtItPtr. But when nxtItPtr == prevItPtr nothing should be rendered.
 
 ; Player stuff
 playerx      .dsb 1
@@ -213,7 +214,7 @@ sprites:
   .db $88, $35, $00, $88   ;sprite 3
 
 
-  .include "tilemap/tilemap.asm"  ; Includes Tilemap label
+  .include "tilemap/tilemap.asm"  ; Includes Tilemap&PrevTilemap label
 
 
 

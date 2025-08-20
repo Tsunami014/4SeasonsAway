@@ -7,12 +7,12 @@ MACRO HandleTile  ; Handle drawing a tile. Is a macro as this is only used once 
   LDY #$00
   LDA (tmpPtr),Y
   TAY
-  BMI +
+  BPL +
   AND #%00000001
-  BEQ Horiz
+  BEQ Struct
   JMP Vert
 + AND #%00000001
-  BNE Struct
+  BNE Horiz
 
 Single:  ; A single block
   JMP Aft

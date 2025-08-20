@@ -32,7 +32,7 @@ def makeHex(fmt, *args):
             numbits += 1
     o = hex(int(tmp, 2))[2:].upper()
     o = '0'*(math.floor(tmp.index('1')/4)) + o
-    return ['$'+o[i*2]+o[i*2+1] for i in range(len(o)//2)]
+    return ', '.join('$'+o[i*2]+o[i*2+1] for i in range(len(o)//2))
 
 pth = os.path.abspath(__file__+'/../')+'/'
 with open(pth+'tilemap.dat') as f:
@@ -67,11 +67,13 @@ outdat = [
     for ln in dat if ln != '' and ln[0] != '#'
 ]
 
+prevTlmp = handleLn('> 0,0 - Wall: 1')  # This is so when starting the first item is never seen. TODO: Can we do something else instead?
+
 out = 'Tilemap:\n' + \
-    '\n'.join('  .db ' + \
-        ',    '.join(
-            ', '.join(outdat[i*5+j])
-        for j in range(min(len(outdat)-i*5, 5)))
+    '  .db '+prevTlmp+'\n' + \
+    '\n'.join(
+        '  .db ' + \
+        ',    '.join(outdat[i*5+j] for j in range(min(len(outdat)-i*5, 5)))
     for i in range(math.ceil(len(outdat)/5)))
 
 with open(pth+'tilemap.asm', 'w+') as f:
