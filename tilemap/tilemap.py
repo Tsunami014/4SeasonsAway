@@ -43,23 +43,28 @@ def handleLn(ln):
     scrc, ln = ln[0], ln[1:]
     scr = {'<': 0, '>': 1}[scrc]
     coords, typ = ln.split('-')
+    x, y = (int(i) for i in coords.split(','))
     dat = 0
     hstr = 'I0SXXXXD TTTTYYYY'
     datstr = ' 1111DDDD'
     if ':' in typ:
         typ, dat = typ.split(':')
+        dat = int(dat)
         d = types[typ]
         if d[1] == 0:
             raise ValueError(
                 f'Object {typ} cannot have data, but has been provided some!'
             )
+        if d[0] == 0:
+            dat = x + dat
+        else:
+            dat = y + dat
         hstr += datstr
     else:
         d = types[typ]
         if d[1] == 1:
             dat = 0
             hstr += datstr
-    x, y = coords.split(',')
     return makeHex(hstr, d[0], scr, x, d[1], d[2], y, dat)
 
 outdat = [

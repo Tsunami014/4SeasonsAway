@@ -19,10 +19,12 @@ Single:  ; A single block
 Struct:  ; A structure of blocks
   JMP Aft
 Horiz:  ; A horizontal row of blocks
+  ; Skip if x < tile x
   TYA
   AND #%00111110
   CMP tmp2
-  BPL Aft  ; Skip if x < tile x
+  BPL Aft
+  ; Skip if not the right Y pos
   LDY #$01
   LDA (tmpPtr),Y
   AND #%00001111
@@ -31,7 +33,14 @@ Horiz:  ; A horizontal row of blocks
   AND #%00011110  ; Get top 4 bits of Y
   LSR
   CMP tmp3
-  BNE Aft  ; Skip if not the right Y pos
+  BNE Aft
+  ; Skip if x > tile position of x + width
+  LDY #$02
+  LDA (tmpPtr),Y
+  AND #%00001111
+  ASL
+  CMP tmp2
+  BMI Aft
   LDA #$01  ; TODO: Fill with the correct tile value
   STA tmp1
   JMP Aft
