@@ -31,7 +31,7 @@ BTN_RIGHT  = %00000001
 xspeedchng = $01
 maxxspeed  = $08
 
-Offset     = 6  ; The number of tiles forwards to draw new tiles
+Offset     = 30;6  ; The number of tiles forwards to draw new tiles
 
 
 

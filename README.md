@@ -10,7 +10,7 @@ Built using the ASM6 compiler.
 4. Play!
 
 ## Editing/Running
-**To edit the code**: Edit the `code.asm` file.
+**To edit the code**: Edit the `.asm` files in the main folder. `code.asm` is the main file which includes other files in the folder.
 
 **To edit the tileset**: A program such as yychr is required. Use it to edit `tiles.chr`.
 
