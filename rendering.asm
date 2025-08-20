@@ -196,6 +196,7 @@ DrawCols:
   AND #%00011111
   STA $2006
 
+  ; TODO: Can we just start 32 blocks down instead of writing a blank?
   LDY #$00  ; Now Y is $00. This will be used a lot.
   STY $2007  ; First column is offscreen, so we write a 0 to it
 
@@ -246,7 +247,8 @@ LoopTls:
   BNE LoopIts
   LDA tmpPtr+1
   CMP prevItPtr+1
-  BEQ +cont  ; If end == start, skip whole loop
+  BNE LoopIts  ; If end != start, continue
+  JMP +cont  ; Because HandleTile is so big
 
 LoopIts:  ; Loop over every item on-screenish backwards (later items override previous ones)
   ; Decrement tmp pointer
@@ -269,7 +271,7 @@ LoopIts:  ; Loop over every item on-screenish backwards (later items override pr
   BCS LoopIts ; if tmpPtr+0 > prevItPtr+0 then tmpPtr > prevItPtr so continue
 
 +cont
-  LDA #$00  ; If no object wants it, draw a blank
+  LDA #$02  ; If no object wants it, draw a blank
 +write
   STA $2007
  

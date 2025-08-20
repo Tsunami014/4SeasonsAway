@@ -14,8 +14,7 @@
   JSR UpdateScroll  ; Update scrolling afterwards, fixing any other issues
 
   ; Enable rendering
-  LDA #PPUCTRLBASE
-  STA $2000
+  ; UpdateScroll sets $2000 at end
   LDA #PPUMASKBASE
   STA $2001
   ; Main loop
