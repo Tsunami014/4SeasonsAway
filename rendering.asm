@@ -92,8 +92,9 @@ MACRO PointPPU colIdx  ; Writes over A
 ENDM
 
 
-; Assumes Y=0, writes over X&tmp3&tmp4&tmpPtr
+; Sets Y->0, writes over Y&X&tmp3&tmp4&tmpPtr
 MACRO ChkIncItPtr itPtr,colIdx  ; Check and increase an item pointer (check if need to) in a loop. Continues until next item is not ok.
+  LDY #$00
   LDA colIdx
   AND #%00111110
   STA tmp4  ; tmp4 = Current screen. But, only the part of the screen.
