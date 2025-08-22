@@ -33,6 +33,13 @@ maxxspeed  = $08
 
 Offset     = 20;6  ; The number of tiles forwards to draw new tiles
 
+; Memory addresses for cache
+CacheColumns = $0300
+CacheDrawFrom  = $030C
+CacheDrawTo    = $030D
+CacheMakeFrom  = $030E
+CacheMakeTo    = $030F
+
 
 
 ;;;;;;;;;;;;;;;;;; Variables
@@ -42,12 +49,15 @@ Offset     = 20;6  ; The number of tiles forwards to draw new tiles
 ; Please note these variables all default to 0
 .enum $0000  ; Start variables at ram location 0
 ; .dsb 1 means reserve one byte of space, .dsb 2 means reserve 2 bytes (pointer)
-; Temporary vars with various uses
+; Temporary vars with various uses OUTSIDE VBLANK
 tmp1         .dsb 1
 tmp2         .dsb 1
 tmp3         .dsb 1
+tmp4         .dsb 1
 
 tmpPtr       .dsb 2
+; Temporary variables FOR VBLANK
+vtmp1        .dsb 1
 
 ; Rendering stuff
 nxtCol       .dsb 1  ; Next column id JJSCCCCC (C = column num, S = screen num (yes they are separate), J = junk (can be anything, doesn't affect execution))
@@ -85,6 +95,7 @@ buttons1     .dsb 1  ; player 1 gamepad buttons, one bit per button
 
 
 
+  .include "rendering.asm"  ;; Includes UpdateScroll, DrawCols, etc.
 RESET:
   SEI          ; disable IRQs
   CLD          ; disable decimal mode
@@ -103,15 +114,15 @@ RESET:
 
 ; Clear all memory
 - LDA #$00
-  STA $0000, x
-  STA $0100, x
-  STA $0300, x
-  STA $0400, x
-  STA $0500, x
-  STA $0600, x
-  STA $0700, x
+  STA $0000,X
+  STA $0100,X
+  STA $0300,X
+  STA $0400,X
+  STA $0500,X
+  STA $0600,X
+  STA $0700,X
   LDA #$FE
-  STA $0200, x
+  STA $0200,X
   INX
   BNE -
   
@@ -128,7 +139,7 @@ RESET:
   STA $2006         ; write the low byte of $3F00 address
   LDX #$00          ; start out at 0
 ; Load pallete loop
-- LDA palette, X    ; load data from address (palette + the value in x (which is the loop index))
+- LDA palette,X     ; load data from address (palette + the value in x (which is the loop index))
   STA $2007         ; write to PPU
   INX
   CPX #$20          ; Only copy until hex $10, decimal 16 - copying 16 bytes = 4 sprites

@@ -9,8 +9,7 @@
 
   ; Write to the sreen and then enable it
   LDA #32 + Offset  ; 32 columns per screen; draw one whole screen plus a couple extra columns after
-  STA tmp1
-  JSR DrawCols
+  DrawInit
   JSR UpdateScroll  ; Update scrolling afterwards, fixing any other issues
 
   ; Enable rendering
@@ -18,18 +17,28 @@
   LDA #PPUMASKBASE
   STA $2001
   ; Main loop
-Forever:
-  JMP Forever  ;; Infinite loop
+Loop:
+  LDX CacheMakeFrom
+  CPX CacheMakeTo
+  BEQ Loop
+  ; Need to queue more columns!
+  JMP Loop
 
 
 ;-------------------------------------------------------------------------------------
 
 
 VBLANK:
+  ; Store registers to the stack
+  PHA
+  TXA
+  PHA
+  TYA
+  PHA
 
 ; Handle Movement
   LDA #00
-  STA tmp1 ; Store whether to update the scroll
+  STA vtmp1 ; Store whether to update the scroll
 
   LDA buttons1  ; Check button state
   AND #BTN_RIGHT
@@ -97,16 +106,23 @@ VBLANK:
 @aftsetx2:
   STA playerx
   LDA #01  ; Remember we changed something, so update scroll later
-  STA tmp1
+  STA vtmp1
 @aftsetx3:
 
 ; Check scrolling
-  LDA tmp1
+  LDA vtmp1
   BEQ +  ; Only update scroll if moved
   JSR UpdateScroll
 + ; After movement
+  
+  handleDrawingVBLANK  ; Draw any columns that were queued
+
+  ; Restore registers from stack
+  PLA
+  TAY
+  PLA
+  TAX
+  PLA
 
   RTI  ; return from interrupt
-
-  .include "rendering.asm"  ;; Includes UpdateScroll, DrawCols, etc.
 
