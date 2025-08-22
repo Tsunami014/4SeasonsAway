@@ -67,19 +67,24 @@ def handleLn(ln):
             hstr += datstr
     return makeHex(hstr, d[0], scr, x, d[1], d[2], y, dat)
 
-outdat = [
-    handleLn(ln)
-    for ln in dat if ln != '\n' and ln[0] != '#'
-]
+outdat = []
+chr = None
+tmp = []
+for ln in dat:
+    if ln == '\n' or ln[0] == '#':
+        continue
+    if chr != ln[0]:
+        outdat.append(tmp)
+        tmp = []
+        chr = ln[0]
+    tmp.append(handleLn(ln))
+outdat.append(tmp)
 
 prevTlmp = handleLn('> 0,0 - Wall: 1')  # This is so when starting the first item is never seen. TODO: Can we do something else instead?
 
 out = '; NOTE: Auto generated with `tilemap.py`, will be written over next run of that file\nTilemap:\n' + \
-    '  .db '+prevTlmp+'  ; To ensure the code still works. This will never be visible.\n' + \
-    '\n'.join(
-        '  .db ' + \
-        ',    '.join(outdat[i*5+j] for j in range(min(len(outdat)-i*5, 5)))
-    for i in range(math.ceil(len(outdat)/5)))
+    '  .db '+prevTlmp+'  ; Offscreen tile to ensure the code still works. This will never be visible.\n' + \
+    '\n'.join('  .db ' + ',    '.join(i) for i in outdat[1:])
 
 with open(pth+'tilemap.asm', 'w+') as f:
     f.write(out + '\n\n')
