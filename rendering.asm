@@ -313,8 +313,6 @@ DrawCol:
   AND #%00111110
   STA tmp4  ; Now tmp4 contains only the column index!
 LoopTls:
-  LDA #$00
-  STA tmp2
   LDA nxtItPtr+1
   STA tmpPtr+1
   LDA nxtItPtr
