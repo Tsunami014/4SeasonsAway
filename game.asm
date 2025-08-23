@@ -13,15 +13,13 @@
   JSR UpdateScroll  ; Update scrolling afterwards, fixing any other issues
 
   ; Enable rendering
-  ; UpdateScroll sets $2000 at end
   LDA #PPUMASKBASE
   STA $2001
   ; Main loop
 Loop:
-  LDX CacheMakeFrom
-  CPX CacheMakeTo
+  LDA CacheMake
   BEQ Loop
-  ; Need to queue more columns!
+  drawColMain
   JMP Loop
 
 

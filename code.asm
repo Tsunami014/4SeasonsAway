@@ -31,14 +31,15 @@ BTN_RIGHT  = %00000001
 xspeedchng = $01
 maxxspeed  = $08
 
-Offset     = 20;6  ; The number of tiles forwards to draw new tiles
+Offset     = 6  ; The number of tiles forwards to draw new tiles
 
 ; Memory addresses for cache
 CacheColumns = $0300
-CacheDrawFrom  = $030C
-CacheDrawTo    = $030D
-CacheMakeFrom  = $030E
-CacheMakeTo    = $030F
+; Cache memory location of the column (0-6)
+CacheDrawFrom  = $030D
+CacheDrawTo    = $030E
+; Amount of tiles to cache forwards or backwards (signed)
+CacheMake      = $030F
 
 
 
@@ -217,12 +218,8 @@ palette:
   .db $22,$29,$1A,$0F,  $22,$36,$17,$0F,  $22,$30,$21,$0F,  $22,$27,$17,$0F   ;;background palette
   .db $22,$1C,$15,$14,  $22,$02,$38,$3C,  $22,$1C,$15,$14,  $22,$02,$38,$3C   ;;sprite palette
 
-sprites:
-     ;vert tile attr horiz
-  .db $80, $32, $00, $80   ;sprite 0
-  .db $80, $33, $00, $88   ;sprite 1
-  .db $88, $34, $00, $80   ;sprite 2
-  .db $88, $35, $00, $88   ;sprite 3
+CacheIdxToAddr:  ; Exactly what it sounds like.
+  .db $10, $30, $50, $70, $90, $B0, $D0
 
 
   .include "tilemap/tilemap.asm"  ; Includes Tilemap&PrevTilemap label

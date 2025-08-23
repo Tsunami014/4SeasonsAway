@@ -1,7 +1,6 @@
 ScreenSze = 38  ; HACK: Please ignore this is 38, for some reason this is required to be this way.
 
 UpdateScroll:
-; TODO: Add to queue instead of calling subroutine directly
   ; Set x scroll
   LDA playerx
   ; Check x change
@@ -10,47 +9,32 @@ UpdateScroll:
   SBC lastXpos
   BEQ ++
   ; There was a change
-  BPL @plus
-; If going backwards
+  BPL @positive
+;negative
   EOR #$FF
   CLC
-  ADC #$01  ; Negate the value (get two's complement) so it always draws tiles forwards
-.REPT 3
+  ADC #$01  ; Find two's complement to negate the value
+.REPT 3  ; Shift to the right spot
   LSR A
 .ENDR
-  STA tmp1  ; Store the amount of x change to fix next update
-  LDA #%10000001  ; It is decreasing and is NOT initialisation
-  STA tmp2
-  LDA nxtCol
+  STA tmp3
+  LDA CacheMake
   SEC
-  SBC #ScreenSze + Offset  ; The next column to update should now be the old index (right side of the screen) - the screen size (32 columns)
-  STA nxtCol      ; This needed to be changed so it would be adding columns to the left side of the screen. Due to the decreasing bit being set, everything else is ok
-  JSR DrawCol
-  LDA nxtCol  ; Now increase by screen size (32) to find the new nxtCols index! (should be old index - amount of tiles drawn)
-  CLC
-  ADC #ScreenSze + Offset
-  STA nxtCol
-  JMP +aftdraw
-@plus:
+  SBC tmp3  ; Subtract the now positive tile count
+  STA CacheMake
+  JMP ++
+@positive:
 .REPT 3
   LSR A
 .ENDR
-  STA tmp1  ; Store the amount of x change to fix next update
-  LDA #%00000001  ; It is not decreasing and is NOT initialisation
-  STA tmp2
-  JSR DrawCol
-+aftdraw
-  LDA playerx  ; Now we update lastXpos and x scroll
-  STA $2005
-  AND #%11111000
-  STA lastXpos
-  JMP +next
+  CLC
+  ADC CacheMake  ; Add the positive tile count
+  STA CacheMake
 
-++  ; Change happened within a tile, not across multiple tiles
+++
   LDA $2002  ; read PPU status to reset the high/low latch
   LDA playerx  ; Update x scroll
   STA $2005
-+next
   ; Set y scroll to 0
   LDA #$00
   STA $2005
@@ -60,6 +44,10 @@ UpdateScroll:
   ORA #PPUCTRLBASE ; A = CCCCCCCS
   STA $2000
   
+  LDA playerx
+  AND #%11111000
+  STA lastXpos
+
   RTS
 
 
@@ -92,39 +80,42 @@ MACRO PointPPU colIdx  ; Writes over A
 ENDM
 
 
-; Sets Y->0, writes over Y&X&tmp3&tmp4&tmpPtr
-MACRO ChkIncItPtr itPtr,colIdx  ; Check and increase an item pointer (check if need to) in a loop. Continues until next item is not ok.
+; Sets Y->0, writes over Y&tmp3&tmp4&tmpPtr
+; Then calls the PointPPU to tmp1
+; Uses nxtCol and writes to nxtItPtr
+ChkIncNxtItPtr:  ; Check and increase an item pointer (check if need to) in a loop. Continues until next item is not ok.
   LDY #$00
-  LDA colIdx
+  LDA nxtCol
   AND #%00111110
   STA tmp4  ; tmp4 = Current screen. But, only the part of the screen.
-Start:
-  LDA (itPtr),Y  ; Load first byte of the previous object
+-loop
+  LDA (nxtItPtr),Y  ; Load first byte of the previous object
   AND #%00000001
   ORA #%00000010  ; Now should be a number between 2&3 - the number of bytes
   TAY
-  LDA (itPtr),Y  ; Load first byte of next object
+  LDA (nxtItPtr),Y  ; Load first byte of next object
   AND #%00111110  ; Filter out for the X and screen
   CMP tmp4  ; This only works when going forwards; when going backwards, the objects would be added when they're half a block too early
-  BNE End
+  BNE +End
   ; The next item is now on screen! (Exactly on the screen edge)
-  ; Update itPtr to be the next obj
+  ; Update nxtItPtr to be the next obj
   STY tmp3
-  LDA itPtr
+  LDA nxtItPtr
   CLC
-  ADC tmp3  ; Now A = itPtr + 2 + (1 if there is a data byte in the object else 0)
-  STA itPtr
+  ADC tmp3  ; Now A = nxtItPtr + 2 + (1 if there is a data byte in the object else 0)
+  STA nxtItPtr
   BCC +
-  LDA itPtr+1
+  LDA nxtItPtr+1
   ADC #$00  ; Propagate the carry
-  STA itPtr+1
+  STA nxtItPtr+1
 
 + LDY #$00  ; So the next loop will work
-  JMP Start  ; Keep going until the next item is not on the screen edge
+  JMP -loop  ; Keep going until the next item is not on the screen edge
 
-End:
++End:
+  PointPPU tmp1  ; Saves having to jump to it again after
   LDY #$00
-ENDM
+  RTS
 
 
 ; Decrease the temp item pointer by 1 item.
@@ -200,87 +191,19 @@ MACRO ChkDecItPtr itPtr,colIdx  ; Check and decrease an item pointer (check if n
 ENDM
 
 
-Other:
-
-  ; Store tmp1 to the stack before running this so tmp1 is free (tmp2 is still used)
-  LDA tmp1
-  PHA
-  ; Handle next code differently if going forwards or backwards
-  LDA tmp2
-  BPL +positive
-;negative
-  ; Decrease 1 from both pointers
-  ; We do not need to check for initialisation here as in initialisation it only generates forwards
-  ChkDecItPtr prevItPtr,prevCol
-  ChkDecItPtr nxtItPtr,nxtCol
-
-  JMP +nxt
-+positive
-  ; Check for initialisation (everything is 0) (tmp2 is still loaded)
-  BEQ +  ; Skip increasing backward pointer if initialisation
-  ; Add 1 to both pointers
-  ; TODO: Make ChkIncItPtr not a macro. Also, for prevItPtr, do not just increase it when the next column increases but instead increase it when the next object is 1 column offscreen. Make a macro in tilles.asm for getting the tile width.
-  ;ChkIncItPtr prevItPtr,prevCol  ; Increase prevItPtr if required
-+ ChkIncItPtr nxtItPtr,nxtCol  ; Increase nxtItPtr if required
-+nxt
-
-  LDA tmp2  ; Now store tmp2
-  PHA
-
-  BPL +
-  LDA prevCol
-  JMP +aft
-+ LDA nxtCol
-+aft
-  AND #%00111110
-  STA tmp2  ; tmp2 now contains the column index
-
-
-
-MACRO handleDrawingVBLANK
-  LDX CacheDrawFrom
-Loop1:
-  CPX CacheDrawTo
-  BEQ End
-  INX
-  LDA $0300,X
-  STA vtmp1  ; Use vtmp1 as temp storage for the column index
-  PointPPU vtmp1
-  ; X is a number from 0-6 labelling which column in cache to use.
-  ; Each column in cache has a column index stored at $030? where ? = X (0-6)
-  ; The columns are stored in memory as a list of every byte making up the column (28 in total) starting from $0310, $0330, $0350, etc.
-  ; This low byte is stored in a table below this macro for ease of use
-  TXA
-  PHA  ; Store X on the stack, it will be used as the loop counter below
-  LDY CacheIdxToAddr,X  ; Now Y is the low byte of the address!
-  LDX #28  ; Draw 28 tiles (30 (screen size) - 2 (2 offscreen tiles))
-Loop2:
-  LDA ($0300),Y  ; Load tile
-  STA $2007  ; Store tile in PPU
-  INY  ; Point to next tile
-  DEX
-  CPX #00
-  BNE Loop2  ; Keep looping until done all tiles
-  JMP Loop1
-End:
-  STX CacheDrawFrom  ; Now hould be equal
-ENDM
-; This table will end up far away from the code but oh well, doesn't affect anything
-CacheIdxToAddr:
-  .db $10, $30, $50, $70, $90, $B0, $D0
-
 
 
 MACRO DrawInit
   ; A is the amount of columns to increment by
 Loop:
   PHA  ; Keep A for later
-  ChkIncItPtr nxtItPtr,nxtCol  ; Increase nxtItPtr if required
-  PointPPU nxtCol
-  LDA nxtCol
+  LDX nxtCol
+  STX tmp1  ; Point to correct column
+  JSR ChkIncNxtItPtr  ; Increase nxtItPtr if required. Also points the PPU to tmp1
+  TXA  ; X is unchanged
   ORA #%10000000
-  STA tmp1
-  JSR DrawCol  ; Draw column
+  STA tmp1  ; Store column in addition to a 'write directly to the screen' bit
+  JSR DrawCol  ; Draw column to the right memory spot
   LDA nxtCol  ; Now increase column idx
   CLC
   ADC #$01
@@ -293,25 +216,93 @@ Loop:
 ENDM
 
 
+
+MACRO handleDrawingVBLANK
+  LDX CacheDrawFrom
+Loop1:
+  CPX CacheDrawTo
+  BEQ End
+  INX
+  CPX #$07  ; Handle overflow
+  BNE +
+  LDX #$00
++ LDA $0300,X
+  STA vtmp1  ; Use vtmp1 as temp storage for the column index
+  PointPPU vtmp1
+  ; X is a number from 0-6 labelling which column in cache to use.
+  ; Each column in cache has a column index stored at $030? where ? = X (0-6)
+  ; The columns are stored in memory as a list of every byte making up the column (28 in total) starting from $0310, $0330, $0350, etc. (but NOTE they're backwards)
+  ; This low byte is stored in a table below this macro for ease of use
+  TXA
+  PHA  ; Store X on the stack, it will be used as the loop counter below
+  LDA CacheIdxToAddr,X  ; Now A is the low byte of the address!
+  CLC
+  ADC #28  ; Draw 28 tiles (30 (screen size) - 2 (2 offscreen tiles))
+  TAX
+  LDY #28  ; Iterate using Y
+Loop2:
+  DEX
+  STX vtmp1
+  LDA $0300,X  ; Load tile
+  STA $2007  ; Store tile in PPU
+  DEY  ; Point to next tile
+  BNE Loop2  ; Keep looping until done all tiles
+  PLA  ; Restore X
+  TAX
+  JMP Loop1
+End:
+  STX CacheDrawFrom  ; Now hould be equal
+ENDM
+
+
 MACRO drawColMain
   ; Can have a reverse loop (as opposed to the VBLANK handle drawing) as we already know there's at least 1 column to draw
 Loop:
-  ; TODO: Do stuff here
-  INX
-  CPX CacheMakeTo
+  ; At this point A is always the value in CacheMake
+  BPL @plus1
+;minus
+  ; TODO: Decrease item pointers
+  JMP +aft
+@plus1:
+  LDX nxtCol
+  STX tmp1  ; Point to correct column
+  ; TODO: Increase prevItPtr too, but only increase when objects leave the screen left not enter on right
+  JSR ChkIncNxtItPtr  ; Increase nxtItPtr if required. Also points the PPU to tmp1
+  INX  ; Increase next column
+  TXA  ; X is unchanged
+  AND #%00111111
+  STA nxtCol
+
++aft
+  JSR DrawCol  ; Draw column to cache
+
+  LDA CacheMake
+  BPL @plus2
+;minus
+  CLC
+  ADC #$01
+  STA CacheMake
   BNE Loop
+  JMP +end
+@plus2:
+  SEC
+  SBC #$01
+  STA CacheMake
+  BNE Loop
++end
 ENDM
+
 
 
 DrawCol:
   ; Only used in main
   ; Draws the current column. This uses prev and nxt ItPtrs to calculate the current column, without modifying either.
-  ; It writes the column to either $2007 or $03??, specified by tmp1. If the most significant bit of tmp1 is 1, it uses $2007, else it uses $03 tmp1
+  ; It writes the column to either $2007 or $03??, specified by tmp1. If the most significant bit of tmp1 is 1, it uses $2007, else it uses $03 CacheDrawTo+Tile and increments CacheDrawTo appending the column data to the cache data thing every column
 
-  LDX #28  ; 28 visible tiles in a column (30 - 2 invisible extras)
   LDA tmp1
   AND #%00111110
   STA tmp4  ; Now tmp4 contains only the column index!
+  LDX #28  ; 28 visible tiles in a column (30 - 2 invisible extras)
 LoopTls:
   LDA nxtItPtr+1
   STA tmpPtr+1
@@ -350,21 +341,44 @@ LoopIts:  ; Loop over every item on-screenish backwards (later items override pr
 
 +cont
   LDA #$02  ; If no object wants it, draw a blank (changed for testing)
+  STA tmp2
 +write
-  BIT tmp1
+  LDA tmp1
   BPL +store03
+  LDA tmp2
   STA $2007
   JMP +aft
 +store03
-  INC tmp1
-  LDY tmp1
-  STA ($0300),Y
+  STX tmp3
+  LDY CacheDrawTo
+  INY
+  CPY #$07
+  BNE +
+  LDY #$00
++ LDA CacheIdxToAddr,Y  ; A is the base address
+  CLC
+  ADC tmp3
+  TAY  ; Y is now the address + the tile row num
+  DEY  ; As Y is one too big
+  LDA tmp2
+  STA $0300,Y
 +aft
   DEX
-  TXA  ; Keep going until all tiles are drawn
-  BEQ +end
+  TXA
+  BEQ +end  ; Only quit when all tiles are drawn
   ; This is required as Branch instructions are relative, but this subroutine is so long it becomes out of range
   JMP LoopTls
 +end
+  LDA tmp1
+  BMI +trueEnd
+  ; Add the column to the next cache 'which column should it be' place
+  LDX CacheDrawTo
+  INX
+  CPX #$07
+  BNE +
+  LDX #$00
++ STA $0300,X
+  STX CacheDrawTo  ; Now there is 1 more tile to draw!
++trueEnd
   RTS
 
