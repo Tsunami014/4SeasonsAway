@@ -8,8 +8,14 @@
   STA prevItPtr+1
 
   ; Write to the sreen and then enable it
-  LDA #32 + Offset  ; 32 columns per screen; draw one whole screen plus a couple extra columns after
   DrawInit
+  ; Draw more columns normally (increasing all the pointers)
+  LDA #Offset
+  STA CacheMake
+  ; This is less efficient than DrawInit, but 1. this is initialisation and 2. This is required to set all the vars (prev pointers and cols)
+  drawColMain
+  handleDrawingVBLANK
+
   JSR UpdateScroll  ; Update scrolling afterwards, fixing any other issues
 
   ; Enable rendering

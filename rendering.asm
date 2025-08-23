@@ -71,7 +71,6 @@ MACRO PointPPU colIdx  ; Writes over A
   AND #%00011111
   STA $2006
 
-  ; TODO: Can we just start 32 blocks down instead of writing a blank?
   LDA #$00
   STA $2007  ; First column is offscreen, so we write a 0 to it
 ENDM
@@ -111,6 +110,36 @@ ChkIncNxtItPtr:  ; Check and increase an item pointer (check if need to) in a lo
 +End:
   LDY #$00
   RTS
+
+MACRO ChkIncPrevItPtr  ; Macro as it's only ever used once
+Loop:
+  LDY #$00
+  LDA (prevItPtr),Y
+
+  GetObjMaxX prevItPtr
+  CLC
+  ADC #$01
+  AND #%00011111
+  CMP prevCol
+  BNE Aft
+  ; Object is now offscreen! Increase prevItPtr
+-OSLoop  ; Loop over next objects while they overshadow (or don't loop if they don't)
+  LDA (prevItPtr),Y  ; Find out how many bytes this object is
+  AND #%00000001
+  ORA #%00000010  ; A is 2 or 3
+  STA tmp2
+  LDA prevItPtr
+  CLC
+  ADC tmp2
+  STA prevItPtr
+  BNE +
+  INC prevItPtr+1  ; It did overflow
++ LDA (prevItPtr),Y
+  AND #%01000000
+  BNE -OSLoop
+  JMP Loop
+Aft:
+ENDM
 
 
 ; Decrease the temp item pointer by 1 item.
@@ -189,7 +218,7 @@ ENDM
 
 
 MACRO DrawInit
-  ; A is the amount of columns to increment by
+  LDA #32  ; 32 columns per screen
 Loop:
   PHA  ; Keep A for later
   LDX nxtCol
@@ -260,12 +289,17 @@ Loop:
   ; TODO: Decrease item pointers
   JMP +aft
 @plus1:
-  LDX nxtCol
-  STX tmp1  ; Point to correct column
-  ; TODO: Increase prevItPtr too, but only increase when objects leave the screen left not enter on right
+  ChkIncPrevItPtr
   JSR ChkIncNxtItPtr  ; Increase nxtItPtr if required.
-  INX  ; Increase next column
-  TXA  ; X is unchanged
+  LDA prevCol
+  CLC
+  ADC #$01
+  AND #%00111111
+  STA prevCol
+  LDA nxtCol
+  STA tmp1  ; Point to correct column
+  CLC
+  ADC #$01
   AND #%00111111
   STA nxtCol
 

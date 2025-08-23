@@ -38,15 +38,18 @@ pth = os.path.abspath(__file__+'/../')+'/'
 with open(pth+'tilemap.dat') as f:
     dat = f.readlines()
 
+lastX = None
 def handleLn(ln):
+    global lastX
     ln = ln.strip(' \r\n').replace(' ', '').lower()
     scrc, ln = ln[0], ln[1:]
     scr = {'<': 0, '>': 1}[scrc]
     coords, typ = ln.split('-')
     x, y = (int(i) for i in coords.split(','))
     dat = 0
-    hstr = 'I0SXXXXD TTTTYYYY'
+    hstr = 'IOSXXXXD TTTTYYYY'
     datstr = ' 1111DDDD'
+    width = 1
     if ':' in typ:
         typ, dat = typ.split(':')
         dat = int(dat)
@@ -56,6 +59,7 @@ def handleLn(ln):
                 f'Object {typ} cannot have data, but has been provided some!'
             )
         if d[0] == 0:
+            width = dat
             dat = x + dat
         else:
             dat = y + dat
@@ -65,7 +69,16 @@ def handleLn(ln):
         if d[1] == 1:
             dat = 0
             hstr += datstr
-    return makeHex(hstr, d[0], scr, x, d[1], d[2], y, dat)
+        # TODO: When there become structures, ensure the width for each one is set properly
+    overshadowed = 0
+    if lastX is None:
+        lastX = x+width
+    else:
+        if x+width < lastX:
+            overshadowed = 1
+        else:
+            lastX = x+width
+    return makeHex(hstr, d[0], overshadowed, scr, x, d[1], d[2], y, dat)
 
 outdat = []
 chr = None
@@ -76,10 +89,12 @@ for ln in dat:
     if chr != ln[0]:
         outdat.append(tmp)
         tmp = []
+        lastX = None
         chr = ln[0]
     tmp.append(handleLn(ln))
 outdat.append(tmp)
 
+lastX = None
 prevTlmp = handleLn('> 0,0 - Wall: 1')  # This is so when starting the first item is never seen. TODO: Can we do something else instead?
 
 out = '; NOTE: Auto generated with `tilemap.py`, will be written over next run of that file\nTilemap:\n' + \

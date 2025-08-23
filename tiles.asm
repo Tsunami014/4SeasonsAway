@@ -8,12 +8,18 @@ MACRO HandleTile  ; Handle drawing a tile. Is a macro as this is only used once 
   LDY #$00
   LDA (tmpPtr),Y
   TAY  ; Now the first byte is in Y for ease of access later
-  BPL +
+  BMI +
   AND #%00000001
   BEQ Struct
-  JMP Vert
-+ AND #%00000001
-  BNE Horiz
+  JMP Horiz
++ ; Skip if x != tile x
+  AND #%00111110
+  CMP tmp4
+  BNE Fail
+  ; Now check for the type
+  TYA
+  AND #%00000001
+  BNE Vert
 
 Single:  ; A single block
   JMP Fail
@@ -63,4 +69,29 @@ ENDM
 
 HorizTiles:  ; Tiles used for horizontal objects. The horizontal object is entirely just one block, and that block id is listed below.
   .db $01
+
+; Assumes A=(itPtr),Y, writes output to A
+; Overwrites Y&tmp2
+MACRO GetObjMaxX itPtr
+  BPL OneWide
+  TAY
+  AND #%00000001
+  BEQ Struct
+  ; Horizontal
+  TYA
+  AND #%00100000
+  LSR
+  STA tmp2
+  LDY #$03
+  LDA (itPtr),Y
+  AND #$0F  ; Lower 4 bits
+  ORA tmp2
+  JMP Aft
+Struct:
+  ; TODO: This
+OneWide:  ; Vertical or single
+  AND #%00111110
+  LSR
+Aft:
+ENDM
 
