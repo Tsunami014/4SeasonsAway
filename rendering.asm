@@ -32,7 +32,6 @@ UpdateScroll:
   STA CacheMake
 
 ++
-  LDA $2002  ; read PPU status to reset the high/low latch
   LDA playerx  ; Update x scroll
   STA $2005
   ; Set y scroll to 0
@@ -57,8 +56,6 @@ UpdateScroll:
 
 
 MACRO PointPPU colIdx  ; Writes over A
-  LDA $2002  ; read PPU status to reset the high/low latch
-
   ; Get pointer value
   ; High byte
   LDA colIdx
@@ -81,7 +78,6 @@ ENDM
 
 
 ; Sets Y->0, writes over Y&tmp3&tmp4&tmpPtr
-; Then calls the PointPPU to tmp1
 ; Uses nxtCol and writes to nxtItPtr
 ChkIncNxtItPtr:  ; Check and increase an item pointer (check if need to) in a loop. Continues until next item is not ok.
   LDY #$00
@@ -113,7 +109,6 @@ ChkIncNxtItPtr:  ; Check and increase an item pointer (check if need to) in a lo
   JMP -loop  ; Keep going until the next item is not on the screen edge
 
 +End:
-  PointPPU tmp1  ; Saves having to jump to it again after
   LDY #$00
   RTS
 
@@ -199,7 +194,8 @@ Loop:
   PHA  ; Keep A for later
   LDX nxtCol
   STX tmp1  ; Point to correct column
-  JSR ChkIncNxtItPtr  ; Increase nxtItPtr if required. Also points the PPU to tmp1
+  JSR ChkIncNxtItPtr  ; Increase nxtItPtr if required.
+  PointPPU tmp1  ; Saves having to jump to it again after
   TXA  ; X is unchanged
   ORA #%10000000
   STA tmp1  ; Store column in addition to a 'write directly to the screen' bit
@@ -267,7 +263,7 @@ Loop:
   LDX nxtCol
   STX tmp1  ; Point to correct column
   ; TODO: Increase prevItPtr too, but only increase when objects leave the screen left not enter on right
-  JSR ChkIncNxtItPtr  ; Increase nxtItPtr if required. Also points the PPU to tmp1
+  JSR ChkIncNxtItPtr  ; Increase nxtItPtr if required.
   INX  ; Increase next column
   TXA  ; X is unchanged
   AND #%00111111

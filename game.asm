@@ -34,6 +34,8 @@ VBLANK:
   TYA
   PHA
 
+  LDA $2002  ; read PPU status to reset the high/low latch
+
 ; Handle Movement
   LDA #00
   STA vtmp1 ; Store whether to update the scroll
@@ -107,14 +109,13 @@ VBLANK:
   STA vtmp1
 @aftsetx3:
 
+  handleDrawingVBLANK  ; Draw any columns that were queued BEFORE updating scroll
 ; Check scrolling
   LDA vtmp1
   BEQ +  ; Only update scroll if moved
   JSR UpdateScroll
 + ; After movement
   
-  handleDrawingVBLANK  ; Draw any columns that were queued
-
   ; Restore registers from stack
   PLA
   TAY
