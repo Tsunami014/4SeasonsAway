@@ -112,33 +112,63 @@ ChkIncNxtItPtr:  ; Check and increase an item pointer (check if need to) in a lo
   RTS
 
 MACRO ChkIncPrevItPtr  ; Macro as it's only ever used once
+  LDA prevCol
+  AND #%00111110
+  STA tmp4
 Loop:
   LDY #$00
-  LDA (prevItPtr),Y
-
-  GetObjMaxX prevItPtr
-  CLC
-  ADC #$01
-  AND #%00011111
-  CMP prevCol
-  BNE Aft
-  ; Object is now offscreen! Increase prevItPtr
--OSLoop  ; Loop over next objects while they overshadow (or don't loop if they don't)
   LDA (prevItPtr),Y  ; Find out how many bytes this object is
   AND #%00000001
   ORA #%00000010  ; A is 2 or 3
   STA tmp2
+  TAY
+  LDA (prevItPtr),Y  ; Get next object
+  BPL @OneWide
+  TAX
+  AND #%00000001
+  BEQ @Struct
+;Horizontal
+  TXA
+  AND #%00100000
+  STA tmp3
+  INY  ; Add 2 to Y to get data byte of next object
+  INY
+  LDA (prevItPtr),Y  ; Get data byte of next object
+  AND #$0F  ; Lower 4 bits; the x+width
+  ASL
+  ORA tmp3  ; Combine with screen bit from earlier
+  JMP @Aft1
+@Struct:
+  ; TODO: This
+@OneWide:  ; Vertical or single
+  AND #%00111110
+
+@Aft1:
+  CLC
+  ADC #$01
+  AND #%00111110
+  CMP tmp4
+  BNE Aft2
+  ; Object is now offscreen! Increase prevItPtr
+  LDY #$00  ; Y will stay 0 for this
+-OSLoop  ; Loop over next objects while they overshadow (or don't loop if they don't)
   LDA prevItPtr
   CLC
   ADC tmp2
   STA prevItPtr
-  BNE +
+  BCC +
   INC prevItPtr+1  ; It did overflow
 + LDA (prevItPtr),Y
   AND #%01000000
-  BNE -OSLoop
+  BEQ +loop
+  LDA (prevItPtr),Y  ; Find out how many bytes this object is
+  AND #%00000001
+  ORA #%00000010  ; A is 2 or 3
+  STA tmp2
+  JMP -OSLoop
++loop
   JMP Loop
-Aft:
+Aft2:
 ENDM
 
 
@@ -218,7 +248,8 @@ ENDM
 
 
 MACRO DrawInit
-  LDA #32  ; 32 columns per screen
+  LDA #32+Offset  ; 32 columns per screen plus a couple extra
+  ; TODO: This will make a seam line for going forwards a nice distance away, but not when going backwards!
 Loop:
   PHA  ; Keep A for later
   LDX nxtCol
@@ -242,9 +273,9 @@ ENDM
 
 
 
-MACRO handleDrawingVBLANK
+MACRO HandleDrawingVBLANK
   LDX CacheDrawFrom
-Loop1:
+--
   CPX CacheDrawTo
   BEQ End
   INX
@@ -265,24 +296,24 @@ Loop1:
   ADC #28  ; Draw 28 tiles (30 (screen size) - 2 (2 offscreen tiles))
   TAX
   LDY #28  ; Iterate using Y
-Loop2:
+-
   DEX
   STX vtmp1
   LDA $0300,X  ; Load tile
   STA $2007  ; Store tile in PPU
   DEY  ; Point to next tile
-  BNE Loop2  ; Keep looping until done all tiles
+  BNE -  ; Keep looping until done all tiles
   PLA  ; Restore X
   TAX
-  JMP Loop1
+  JMP --
 End:
   STX CacheDrawFrom  ; Now hould be equal
 ENDM
 
 
-MACRO drawColMain
+MACRO DrawColMain
   ; Can have a reverse loop (as opposed to the VBLANK handle drawing) as we already know there's at least 1 column to draw
-Loop:
+-loop
   ; At this point A is always the value in CacheMake
   BPL @plus1
 ;minus
@@ -312,14 +343,15 @@ Loop:
   CLC
   ADC #$01
   STA CacheMake
-  BNE Loop
-  JMP +end
+  BEQ End
+  JMP -loop
 @plus2:
   SEC
   SBC #$01
   STA CacheMake
-  BNE Loop
-+end
+  BEQ End
+  JMP -loop
+End
 ENDM
 
 

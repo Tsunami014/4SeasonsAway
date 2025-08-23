@@ -70,28 +70,3 @@ ENDM
 HorizTiles:  ; Tiles used for horizontal objects. The horizontal object is entirely just one block, and that block id is listed below.
   .db $01
 
-; Assumes A=(itPtr),Y, writes output to A
-; Overwrites Y&tmp2
-MACRO GetObjMaxX itPtr
-  BPL OneWide
-  TAY
-  AND #%00000001
-  BEQ Struct
-  ; Horizontal
-  TYA
-  AND #%00100000
-  LSR
-  STA tmp2
-  LDY #$03
-  LDA (itPtr),Y
-  AND #$0F  ; Lower 4 bits
-  ORA tmp2
-  JMP Aft
-Struct:
-  ; TODO: This
-OneWide:  ; Vertical or single
-  AND #%00111110
-  LSR
-Aft:
-ENDM
-

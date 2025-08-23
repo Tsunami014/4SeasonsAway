@@ -7,15 +7,8 @@
   STA nxtItPtr+1
   STA prevItPtr+1
 
-  ; Write to the sreen and then enable it
+  ; Write to the screen and then enable it
   DrawInit
-  ; Draw more columns normally (increasing all the pointers)
-  LDA #Offset
-  STA CacheMake
-  ; This is less efficient than DrawInit, but 1. this is initialisation and 2. This is required to set all the vars (prev pointers and cols)
-  drawColMain
-  handleDrawingVBLANK
-
   JSR UpdateScroll  ; Update scrolling afterwards, fixing any other issues
 
   ; Enable rendering
@@ -25,7 +18,7 @@
 Loop:
   LDA CacheMake
   BEQ Loop
-  drawColMain
+  DrawColMain
   JMP Loop
 
 
@@ -115,7 +108,7 @@ VBLANK:
   STA vtmp1
 @aftsetx3:
 
-  handleDrawingVBLANK  ; Draw any columns that were queued BEFORE updating scroll
+  HandleDrawingVBLANK  ; Draw any columns that were queued BEFORE updating scroll
 ; Check scrolling
   LDA vtmp1
   BEQ +  ; Only update scroll if moved

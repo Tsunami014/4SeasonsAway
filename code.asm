@@ -84,13 +84,6 @@ buttons1     .dsb 1  ; player 1 gamepad buttons, one bit per button
 .org $8000  ; Program ROM ($8000 for 2 banks, $C000 for 1)
 
 
-;;;;;;;;;;;;;;;;;; Utility functions
-
-
-
-; For later
-
-
 
 ;;;;;;;;;;;;;;;;;; Initialisation
 
