@@ -55,7 +55,6 @@ Horiz:  ; A horizontal row of blocks
   ORA tmp2
   CMP tmp4
   BMI Fail
-  BEQ Fail  ; Can't have it being equal either!
   LDA #$01  ; TODO: Fill with the correct tile value
   STA tmp2
   JMP Aft

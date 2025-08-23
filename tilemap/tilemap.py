@@ -52,7 +52,7 @@ def handleLn(ln):
     width = 1
     if ':' in typ:
         typ, dat = typ.split(':')
-        dat = int(dat)
+        dat = int(dat)-1
         d = types[typ]
         if d[1] == 0:
             raise ValueError(
