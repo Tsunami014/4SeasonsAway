@@ -10,6 +10,7 @@
   ; Write to the screen and then enable it
   DrawInit
   JSR UpdateScroll  ; Update scrolling afterwards, fixing any other issues
+  LDA #-Offset & %00111111
 
   ; Enable rendering
   LDA #PPUMASKBASE
@@ -26,13 +27,6 @@ Loop:
 
 
 VBLANK:
-  ; Store registers to the stack
-  PHA
-  TXA
-  PHA
-  TYA
-  PHA
-
   LDA $2002  ; read PPU status to reset the high/low latch
 
 ; Handle Movement

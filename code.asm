@@ -161,6 +161,13 @@ RESET:
 
 
 NMI:  ; During VBLANK
+  ; Store registers to the stack for recovery inside VBLANK routine
+  PHA
+  TXA
+  PHA
+  TYA
+  PHA
+
   LDA #$00
   STA $2003       ; set the low byte (00) of the RAM address
   LDA #$02

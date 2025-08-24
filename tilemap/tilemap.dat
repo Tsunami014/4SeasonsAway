@@ -19,8 +19,7 @@
 < 2,  9  - Wall: 2
 < 4,  10 - Wall: 2
 < 6,  11 - Wall: 2
-# This crashes it, don't ask me why
-#< 8,  12 - Wall: 2
+< 8,  12 - Wall: 2
 < 10, 13 - Wall: 2
 # Offscreen tiles so it ends with a blank screen
 > 15, 14  - Wall: 1

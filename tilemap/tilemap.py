@@ -61,7 +61,15 @@ def handleLn(ln):
         if d[0] == 0:
             width = dat
             dat = x + dat
+            if dat >= 16:
+                raise ValueError(
+                    f'Input x {x} and width {width} combined ({dat}) is greater than 16!'
+                )
         else:
+            if dat+y >= 16:
+                raise ValueError(
+                    f'Input y {y} and height {dat} combined ({y+dat}) is greater than 16!'
+                )
             dat = y + dat
         hstr += datstr
     else:

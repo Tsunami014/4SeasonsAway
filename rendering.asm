@@ -76,6 +76,8 @@ MACRO PointPPU colIdx  ; Writes over A
 ENDM
 
 
+;-------------------------------------------------------------------------------------
+
 ; Sets Y->0, writes over Y&tmp3&tmp4&tmpPtr
 ; Uses nxtCol and writes to nxtItPtr
 ChkIncNxtItPtr:  ; Check and increase an item pointer (check if need to) in a loop. Continues until next item is not ok.
@@ -100,10 +102,7 @@ ChkIncNxtItPtr:  ; Check and increase an item pointer (check if need to) in a lo
   ADC tmp3  ; Now A = nxtItPtr + 2 + (1 if there is a data byte in the object else 0)
   STA nxtItPtr
   BCC +
-  LDA nxtItPtr+1
-  ADC #$00  ; Propagate the carry
-  STA nxtItPtr+1
-
+  INC nxtItPtr+1
 + LDY #$00  ; So the next loop will work
   JMP -loop  ; Keep going until the next item is not on the screen edge
 
@@ -172,10 +171,13 @@ Aft2:
 ENDM
 
 
+;-------------------------------------------------------------------------------------
+
+
 ; Decrease the temp item pointer by 1 item.
-; Assumes Y=0, writes over X or Y, tmp3 and tmpPtr. tmpPtr becomes the pointer to the previous item and X&tmp3 become the amount of bytes-1
-UseX = 1
+; Writes over Y, tmp3 and tmpPtr. tmpPtr becomes the pointer to the previous item and Y&tmp3 become the amount of bytes-1
 MACRO DecTmpItPtr
+  LDY #$00
   LDA tmpPtr
   BNE +
   DEC tmpPtr+1
@@ -184,23 +186,14 @@ MACRO DecTmpItPtr
   LDA (tmpPtr),Y
   AND #%11110000
   CMP #%11110000
-IF UseX==1
-  BEQ +
-  LDX #$01
-  JMP +aft
-+ LDX #$02
-+aft
-  STX tmp3
-ELSE
   BEQ +
   LDY #$01
   JMP +aft
 + LDY #$02
 +aft
   STY tmp3
-ENDIF
-  SEC
   LDA tmpPtr
+  SEC
   SBC tmp3
   STA tmpPtr
   LDA tmpPtr+1
@@ -208,6 +201,8 @@ ENDIF
   STA tmpPtr+1
 ENDM
 
+
+; TODO: These below routines are all broken and will not work.
 ChkDecItPtrRout:  ; Is the routine internals for the ChkDecItPtr. This is a subroutine.
   DecTmpItPtr  ; Sets X
   INX  ; Now X is correct
@@ -245,11 +240,11 @@ MACRO ChkDecItPtr itPtr,colIdx  ; Check and decrease an item pointer (check if n
 ENDM
 
 
+;-------------------------------------------------------------------------------------
 
 
 MACRO DrawInit
   LDA #32+Offset  ; 32 columns per screen plus a couple extra
-  ; TODO: This will make a seam line for going forwards a nice distance away, but not when going backwards!
 Loop:
   PHA  ; Keep A for later
   LDX nxtCol
@@ -317,20 +312,32 @@ MACRO DrawColMain
   ; At this point A is always the value in CacheMake
   BPL @plus1
 ;minus
-  ; TODO: Decrease item pointers
+  ;ChkDecItPtr prevItPtr,prevCol
+  ; TODO: Forwards pointer
+  LDX prevCol
+  STX tmp1  ; Point to correct column
+  DEX
+  TXA
+  AND #%00111111
+  STA prevCol
+  LDX nxtCol
+  DEX
+  TXA
+  AND #%00111111
+  STA nxtCol
   JMP +aft
 @plus1:
   ChkIncPrevItPtr
   JSR ChkIncNxtItPtr  ; Increase nxtItPtr if required.
-  LDA prevCol
-  CLC
-  ADC #$01
+  LDX prevCol
+  INX
+  TXA
   AND #%00111111
   STA prevCol
-  LDA nxtCol
-  STA tmp1  ; Point to correct column
-  CLC
-  ADC #$01
+  LDX nxtCol
+  STX tmp1  ; Point to correct column
+  INX
+  TXA
   AND #%00111111
   STA nxtCol
 
@@ -354,6 +361,8 @@ MACRO DrawColMain
 End
 ENDM
 
+
+;-------------------------------------------------------------------------------------
 
 
 DrawCol:
@@ -384,11 +393,8 @@ LoopIts:  ; Loop over every item on-screenish backwards (later items override pr
   LDA tmp2
   BNE +write
   ; If is still 0, decrease then check if temp pointer is still greater than the initial; and if so, keep looping
-  LDY #$00  ; Requires Y=0
-  UseX = 0  ; Go clobber Y instead of my precious X!
   DecTmpItPtr
-  UseX = 1
-  ; Check if tmpPtr <= prevItPtr
+  ; Check if tmpPtr <= prevItPtr and stop looping if it is
   LDA tmpPtr+1  ; compare high bytes
   CMP prevItPtr+1
   BCC +cont ; if tmpPtr+1 < prevItPtr+1 then tmpPtr < prevItPtr so exit loop
