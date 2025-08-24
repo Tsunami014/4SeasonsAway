@@ -399,7 +399,7 @@ DrawCol:
   LDA CacheIdxToAddr,Y  ; A is the base address
   STA tmp2  ; tmp2 is now also the base address
   TAY
-  LDA #$02  ; Fill every tile with a blank
+  LDA #$00  ; Fill every tile with a blank
   LDX #28  ; 28 visible tiles in a column (30 - 2 invisible extras)
 - STA $0300,Y
   INY

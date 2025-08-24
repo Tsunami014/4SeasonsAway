@@ -49,6 +49,7 @@ Horiz:  ; A horizontal row of blocks
   ; Find Y and also skip if Y is offscreen (>= 15)
   LDY #$01
   LDA (tmpPtr),Y
+  TAX  ; Keep for later
   AND #$0F
   CMP #15
   BCS Aft
@@ -57,10 +58,15 @@ Horiz:  ; A horizontal row of blocks
   CLC
   ADC tmp2
   TAY  ; Now Y is the base offset to draw to plus the tile Y coord!
-  LDA #$01  ; TODO: Fill with the correct tile value
+  TXA  ; Now find correct tile type
+.REPT 4  ; Get top 4 bits
+  LSR
+.ENDR
+  TAX
+  LDA HorizTiles2,X
   STA $0300,Y
   INY  ; Draw second block
-  ; TODO: For some objects, fill with a different value here
+  LDA HorizTiles,X
   STA $0300,Y
   JMP Aft
 Vert:  ; A vertical row of blocks
@@ -69,5 +75,7 @@ Aft:
 ENDM
 
 HorizTiles:  ; Tiles used for horizontal objects. The horizontal object is entirely just one block, and that block id is listed below.
-  .db $01
+  .db $02
+HorizTiles2:  ; Second tiles in the horizontal object (the one under the first)
+  .db $04
 

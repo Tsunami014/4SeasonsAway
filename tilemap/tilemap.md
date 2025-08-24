@@ -68,6 +68,13 @@ If I=0, the object only is one block in width.
 | `1``0` | `1111WWWW` | A horizontal line of blocks. `W` is x + the width. |
 | `1``1` | `1111HHHH` | A vertical line of blocks. `H` is y + the height. |
 
+## Floor patterns
+Because I need some way of storing floor patterns where there are 2 patterns; one for in front and one for behind, I will use Vertical lines of blocks.
+```
+1OSXXXX1 TTTT1111 1111TTTT
+```
+It is like a vertical line of blocks, but offscreen (Y=15) so I can use this as a floor pattern. The first lot of T is the floor pattern when going backwards and the second is when going forwards.
+
 ## Object table
 | Obj name | I | D | hex type |
 |----------|---|---|----------|
