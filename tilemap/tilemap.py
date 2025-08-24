@@ -99,8 +99,11 @@ for ln in dat:
         tmp = []
         lastX = None
         chr = ln[0]
-    tmp.append(handleLn(ln))
+    tmp.append(ln)
 outdat.append(tmp)
+
+outdat = [sorted(i, key=lambda x: int(x[1:x.index(',')])) for i in outdat]
+outdat = [[handleLn(j) for j in i] for i in outdat]
 
 lastX = None
 prevTlmp = handleLn('> 0,0 - Wall: 1')  # This is so when starting the first item is never seen. TODO: Can we do something else instead?
