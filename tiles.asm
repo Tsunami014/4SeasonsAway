@@ -100,11 +100,13 @@ Aft:
 ENDM
 
 HorizTiles:  ; Tiles used for horizontal objects. The horizontal object is entirely just one block, and that block id is listed below.
-  .db $02
+  ;   grass, dirtH
+  .db $02,   $04
 HorizTiles2:  ; Second tiles in the horizontal object (the one under the first)
-  .db $04
+  .db $04,   $04
 
 SingleTiles:
+  ;   dirtS
   .db $04
 SingleTiles2:
   .db $04

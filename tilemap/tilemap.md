@@ -79,7 +79,7 @@ It is like a vertical line of blocks, but offscreen (Y=15) so I can use this as 
 ### Single objects (D=0, I=1)
 | Obj name  | hex type |
 |-----------|----------|
-| Dirt      |    0     |
+| DirtS     |    0     |
 
 ### Structures (D=0, I=0)
 | Obj name  | hex type |
@@ -89,6 +89,7 @@ It is like a vertical line of blocks, but offscreen (Y=15) so I can use this as 
 | Obj name  | hex type |
 |-----------|----------|
 | Grass     |    0     |
+| DirtH     |    1     |
 
 ### Vertical objects (D=1, I=1)
 | Obj name  | hex type |
