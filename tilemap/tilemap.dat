@@ -1,59 +1,61 @@
 # Don't forget to compile with `tilemap.py` once you've finished changing this file!
 
 # Some tests
-< 0,  3  - Wall: 2
-< 5,  8  - Wall: 4
-< 6,  9  - Wall: 1
-< 10, 8  - Wall: 2
-> 0,  6  - Wall: 3
-> 8,  6  - Wall: 6
+< 0,  3  - Grass: 2
+< 5,  8  - Grass: 4
+< 6,  9  - Grass: 1
+# To cover up the block below it
+< 6,  8  - Dirt
+< 10, 8  - Grass: 2
+> 0,  6  - Grass: 3
+> 8,  6  - Grass: 6
 # A nice floor and ceiling pattern
-< 0,  0  - Wall: 16
-< 0,  13 - Wall: 16
-> 0,  1  - Wall: 16
-> 0,  12 - Wall: 16
-< 0,  2  - Wall: 8
-< 0,  11 - Wall: 8
-< 8,  3  - Wall: 8
-< 8,  10 - Wall: 8
-> 0,  4  - Wall: 4
-> 0,  9  - Wall: 4
-> 4,  5  - Wall: 4
-> 4,  8  - Wall: 4
-> 8,  6  - Wall: 4
-> 8,  7  - Wall: 4
-> 12, 7  - Wall: 4
-> 12, 6  - Wall: 4
+< 0,  0  - Grass: 16
+< 0,  13 - Grass: 16
+> 0,  1  - Grass: 16
+> 0,  12 - Grass: 16
+< 0,  2  - Grass: 8
+< 0,  11 - Grass: 8
+< 8,  3  - Grass: 8
+< 8,  10 - Grass: 8
+> 0,  4  - Grass: 4
+> 0,  9  - Grass: 4
+> 4,  5  - Grass: 4
+> 4,  8  - Grass: 4
+> 8,  6  - Grass: 4
+> 8,  7  - Grass: 4
+> 12, 7  - Grass: 4
+> 12, 6  - Grass: 4
 # A nice pattern of twos
-< 0,  0  - Wall: 2
-< 0,  4  - Wall: 2
-< 0,  8  - Wall: 2
-< 0,  12 - Wall: 2
-< 2,  3  - Wall: 2
-< 2,  8  - Wall: 2
-< 2,  11 - Wall: 2
-< 2,  15 - Wall: 2
-< 4,  1  - Wall: 2
-< 4,  6  - Wall: 2
-< 4,  9  - Wall: 2
-< 4,  13 - Wall: 2
-< 6,  2  - Wall: 2
-< 6,  7  - Wall: 2
-< 6,  10 - Wall: 2
-< 6,  14 - Wall: 2
+< 0,  0  - Grass: 2
+< 0,  4  - Grass: 2
+< 0,  8  - Grass: 2
+< 0,  12 - Grass: 2
+< 2,  3  - Grass: 2
+< 2,  8  - Grass: 2
+< 2,  11 - Grass: 2
+< 2,  15 - Grass: 2
+< 4,  1  - Grass: 2
+< 4,  6  - Grass: 2
+< 4,  9  - Grass: 2
+< 4,  13 - Grass: 2
+< 6,  2  - Grass: 2
+< 6,  7  - Grass: 2
+< 6,  10 - Grass: 2
+< 6,  14 - Grass: 2
 # Some bars in a timer shape
-< 8,  0  - Wall: 8
-< 9,  2  - Wall: 6
-< 10, 4  - Wall: 4
-< 11, 6  - Wall: 2
-< 11, 8  - Wall: 2
-< 10, 10 - Wall: 4
-< 9,  12 - Wall: 6
-< 8,  14 - Wall: 8
+< 8,  0  - Grass: 8
+< 9,  2  - Grass: 6
+< 10, 4  - Grass: 4
+< 11, 6  - Grass: 2
+< 11, 8  - Grass: 2
+< 10, 10 - Grass: 4
+< 9,  12 - Grass: 6
+< 8,  14 - Grass: 8
 
 # Offscreen tiles so it ends with a blank screen
-> 15, 14  - Wall: 1
-< 15, 14  - Wall: 1
-> 15, 14  - Wall: 1
-< 15, 14  - Wall: 1
+> 15, 14  - Grass: 1
+< 15, 14  - Grass: 1
+> 15, 14  - Grass: 1
+< 15, 14  - Grass: 1
 

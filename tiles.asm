@@ -11,7 +11,10 @@ MACRO HandleTile  ; Handle drawing a tile. Is a macro as this is only used once 
   JMP Horiz
 + ; Skip if x != tile x
   AND #%00111110
-  CMP tmp1
+  STA tmp3
+  LDA tmp1
+  AND #%00111110  ; So tmp1 has the lower bit masked too
+  CMP tmp3
   BNE Aft
   ; Now check for the type
   TXA
@@ -19,6 +22,28 @@ MACRO HandleTile  ; Handle drawing a tile. Is a macro as this is only used once 
   BNE Vert
 
 Single:  ; A single block
+  ; Find Y and skip if offscreen
+  LDY #$01
+  LDA (tmpPtr),Y
+  TAX  ; Keep for later
+  AND #$0F
+  CMP #15
+  BCS Aft
+  ; Draw the tile to the right Y!
+  ASL
+  CLC
+  ADC tmp2
+  TAY  ; Now Y is the base offset to draw to plus the tile Y coord!
+  TXA  ; Now find correct tile type
+.REPT 4  ; Get top 4 bits
+  LSR
+.ENDR
+  TAX
+  LDA SingleTiles2,X
+  STA $0300,Y
+  INY  ; Draw second block
+  LDA SingleTiles,X
+  STA $0300,Y
   JMP Aft
 Struct:  ; A structure of blocks
   JMP Aft
@@ -77,5 +102,10 @@ ENDM
 HorizTiles:  ; Tiles used for horizontal objects. The horizontal object is entirely just one block, and that block id is listed below.
   .db $02
 HorizTiles2:  ; Second tiles in the horizontal object (the one under the first)
+  .db $04
+
+SingleTiles:
+  .db $04
+SingleTiles2:
   .db $04
 

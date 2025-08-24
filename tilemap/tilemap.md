@@ -76,7 +76,21 @@ Because I need some way of storing floor patterns where there are 2 patterns; on
 It is like a vertical line of blocks, but offscreen (Y=15) so I can use this as a floor pattern. The first lot of T is the floor pattern when going backwards and the second is when going forwards.
 
 ## Object table
-| Obj name | I | D | hex type |
-|----------|---|---|----------|
-| Wall     | 0 | 1 |    0     |
+### Single objects (D=0, I=1)
+| Obj name  | hex type |
+|-----------|----------|
+| Dirt      |    0     |
+
+### Structures (D=0, I=0)
+| Obj name  | hex type |
+|-----------|----------|
+
+### Horizontal objects (D=1, I=0)
+| Obj name  | hex type |
+|-----------|----------|
+| Grass     |    0     |
+
+### Vertical objects (D=1, I=1)
+| Obj name  | hex type |
+|-----------|----------|
 

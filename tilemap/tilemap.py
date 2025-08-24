@@ -2,8 +2,9 @@ import os.path
 import math
 
 types = {
-    #        I  D  0xT (Type is 4 bits, or one hex value)
-    'wall': (0, 1, 0x0)
+    #         I  D  0xT (Type is 4 bits, or one hex value)
+    'grass': (0, 1, 0x0),
+    'dirt':  (1, 0, 0x0)
 }
 
 def makeHex(fmt, *args):
@@ -106,7 +107,7 @@ outdat = [sorted(i, key=lambda x: int(x[1:x.index(',')])) for i in outdat]
 outdat = [[handleLn(j) for j in i] for i in outdat]
 
 lastX = None
-prevTlmp = handleLn('> 0,0 - Wall: 1')  # This is so when starting the first item is never seen. TODO: Can we do something else instead?
+prevTlmp = handleLn('> 0,0 - Dirt')  # This is so when starting the first item is never seen. TODO: Can we do something else instead?
 
 out = '; NOTE: Auto generated with `tilemap.py`, will be written over next run of that file\nTilemap:\n' + \
     '  .db '+prevTlmp+'  ; Offscreen tile to ensure the code still works. This will never be visible.\n' + \
