@@ -17,7 +17,7 @@
   STA $2001
   ; Main loop
 Loop:
-  LDA CacheMake
+  LDX CacheMake
   BEQ Loop
   DrawColMain
   JMP Loop

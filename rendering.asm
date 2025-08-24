@@ -110,6 +110,8 @@ ChkIncNxtItPtr:  ; Check and increase an item pointer (check if need to) in a lo
   LDY #$00
   RTS
 
+
+
 MACRO ChkIncPrevItPtr  ; Macro as it's only ever used once
   LDA prevCol
   AND #%00111110
@@ -306,10 +308,21 @@ End:
 ENDM
 
 
+MACRO CheckCacheSze
+  LDA CacheDrawTo
+  SEC
+  SBC CacheDrawFrom
+  CMP #$07  ; Check if the value is less than 7
+  ; Next instruction to do is BCC
+ENDM
 MACRO DrawColMain
+  CheckCacheSze
+  BCC Loop
+  JMP End  ; Skip if too many tiles queued
   ; Can have a reverse loop (as opposed to the VBLANK handle drawing) as we already know there's at least 1 column to draw
--loop
-  ; At this point A is always the value in CacheMake
+Loop
+  ; At this point X is always the value in CacheMake
+  TXA
   BPL @plus1
 ;minus
   ;ChkDecItPtr prevItPtr,prevCol
@@ -344,27 +357,27 @@ MACRO DrawColMain
 +aft
   JSR DrawCol  ; Draw column to cache
 
-  LDA CacheMake
+  LDX CacheMake
   BPL @plus2
 ;minus
-  CLC
-  ADC #$01
-  STA CacheMake
-  BEQ End
-  JMP -loop
+  INX
+JMP +nxt
 @plus2:
-  SEC
-  SBC #$01
-  STA CacheMake
+  DEX
++nxt
+  STX CacheMake
   BEQ End
-  JMP -loop
-End
+  CheckCacheSze
+  BCC End  ; Skip if too many tiles queued
+  JMP Loop
+End:
 ENDM
 
 
 ;-------------------------------------------------------------------------------------
 
 
+; TODO: 4 pointers; a front and back for the right and left of the screen
 DrawCol:
   ; Only used in main
   ; Draws the current column. This uses prev and nxt ItPtrs to calculate the current column, without modifying either.
