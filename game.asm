@@ -11,6 +11,7 @@
   DrawInit
   JSR UpdateScroll  ; Update scrolling afterwards, fixing any other issues
   LDA #-Offset & %00111111
+  STA prevCol
 
   ; Enable rendering
   LDA #PPUMASKBASE

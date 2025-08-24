@@ -58,7 +58,7 @@ UpdateScroll:
 MACRO PointPPU colIdx  ; Writes over A
   ; Get pointer value
   ; High byte
-  LDA colIdx
+  ; A is already colIdx
   AND #%00100000
   BEQ +
   LDA #$24  ; is a 1 - use 2nd page
@@ -78,13 +78,13 @@ ENDM
 
 ;-------------------------------------------------------------------------------------
 
-; Sets Y->0, writes over Y&tmp3&tmp4&tmpPtr
+; Sets Y->0, writes over Y&tmp1&tmp2&tmpPtr
 ; Uses nxtCol and writes to nxtItPtr
 ChkIncNxtItPtr:  ; Check and increase an item pointer (check if need to) in a loop. Continues until next item is not ok.
   LDY #$00
   LDA nxtCol
   AND #%00111110
-  STA tmp4  ; tmp4 = Current screen. But, only the part of the screen.
+  STA tmp2  ; tmp2 = Current screen. But, only the part of the screen.
 -loop
   LDA (nxtItPtr),Y  ; Load first byte of the previous object
   AND #%00000001
@@ -92,14 +92,14 @@ ChkIncNxtItPtr:  ; Check and increase an item pointer (check if need to) in a lo
   TAY
   LDA (nxtItPtr),Y  ; Load first byte of next object
   AND #%00111110  ; Filter out for the X and screen
-  CMP tmp4  ; This only works when going forwards; when going backwards, the objects would be added when they're half a block too early
+  CMP tmp2  ; This only works when going forwards; when going backwards, the objects would be added when they're half a block too early
   BNE +End
   ; The next item is now on screen! (Exactly on the screen edge)
   ; Update nxtItPtr to be the next obj
-  STY tmp3
+  STY tmp1
   LDA nxtItPtr
   CLC
-  ADC tmp3  ; Now A = nxtItPtr + 2 + (1 if there is a data byte in the object else 0)
+  ADC tmp1  ; Now A = nxtItPtr + 2 + (1 if there is a data byte in the object else 0)
   STA nxtItPtr
   BCC +
   INC nxtItPtr+1
@@ -115,7 +115,7 @@ ChkIncNxtItPtr:  ; Check and increase an item pointer (check if need to) in a lo
 MACRO ChkIncPrevItPtr  ; Macro as it's only ever used once
   LDA prevCol
   AND #%00111110
-  STA tmp4
+  STA tmp1
 Loop:
   LDY #$00
   LDA (prevItPtr),Y  ; Find out how many bytes this object is
@@ -148,7 +148,7 @@ Loop:
   CLC
   ADC #$01
   AND #%00111110
-  CMP tmp4
+  CMP tmp1
   BNE Aft2
   ; Object is now offscreen! Increase prevItPtr
   LDY #$00  ; Y will stay 0 for this
@@ -249,14 +249,24 @@ MACRO DrawInit
   LDA #32+Offset  ; 32 columns per screen plus a couple extra
 Loop:
   PHA  ; Keep A for later
-  LDX nxtCol
-  STX tmp1  ; Point to correct column
   JSR ChkIncNxtItPtr  ; Increase nxtItPtr if required.
+  LDA nxtCol
+  STA tmp1  ; Point to correct column
   PointPPU tmp1  ; Saves having to jump to it again after
-  TXA  ; X is unchanged
-  ORA #%10000000
-  STA tmp1  ; Store column in addition to a 'write directly to the screen' bit
-  JSR DrawCol  ; Draw column to the right memory spot
+  JSR DrawCol  ; Draw column to cache
+  ; Now draw cached column to the screen
+  LDX #28  ; 28 tiles in a column
+  ; Loop in reverse
+  LDY #FirstCacheVal+28
+- DEY
+  LDA $0300,Y
+  STA $2007
+  DEX
+  BNE -
+
+  LDA #$00
+  STA CacheDrawTo  ; Do not draw this again later, there's no need; so just pretend it's not there.
+
   LDA nxtCol  ; Now increase column idx
   CLC
   ADC #$01
@@ -271,24 +281,25 @@ ENDM
 
 
 MACRO HandleDrawingVBLANK
-  LDX CacheDrawFrom
 --
+  LDX CacheDrawFrom
   CPX CacheDrawTo
   BEQ End
-  INX
-  CPX #$07  ; Handle overflow
-  BNE +
-  LDX #$00
-+ LDA $0300,X
+  LDA $0300,X
   STA vtmp1  ; Use vtmp1 as temp storage for the column index
   PointPPU vtmp1
   ; X is a number from 0-6 labelling which column in cache to use.
   ; Each column in cache has a column index stored at $030? where ? = X (0-6)
   ; The columns are stored in memory as a list of every byte making up the column (28 in total) starting from $0310, $0330, $0350, etc. (but NOTE they're backwards)
   ; This low byte is stored in a table below this macro for ease of use
-  TXA
-  PHA  ; Store X on the stack, it will be used as the loop counter below
   LDA CacheIdxToAddr,X  ; Now A is the low byte of the address!
+  ; After it's been used, increase by 1
+  INX
+  CPX #$07  ; Handle overflow
+  BNE +
+  LDX #$00
++ STX CacheDrawFrom
+  ; Now use the low byte of the addr in A from before
   CLC
   ADC #28  ; Draw 28 tiles (30 (screen size) - 2 (2 offscreen tiles))
   TAX
@@ -300,24 +311,24 @@ MACRO HandleDrawingVBLANK
   STA $2007  ; Store tile in PPU
   DEY  ; Point to next tile
   BNE -  ; Keep looping until done all tiles
-  PLA  ; Restore X
-  TAX
   JMP --
 End:
-  STX CacheDrawFrom  ; Now hould be equal
 ENDM
 
 
-MACRO CheckCacheSze
+MACRO CheckCacheSze  ; Checks if adding to the cache will cause an overflow
   LDA CacheDrawTo
-  SEC
-  SBC CacheDrawFrom
-  CMP #$07  ; Check if the value is less than 7
-  ; Next instruction to do is BCC
+  CLC
+  ADC #$01
+  CMP #$07
+  BNE +
+  LDA #$00
++ CMP CacheDrawFrom
+  ; Next instruction to do is BNE
 ENDM
 MACRO DrawColMain
   CheckCacheSze
-  BCC Loop
+  BNE Loop
   JMP End  ; Skip if too many tiles queued
   ; Can have a reverse loop (as opposed to the VBLANK handle drawing) as we already know there's at least 1 column to draw
 Loop
@@ -368,7 +379,7 @@ JMP +nxt
   STX CacheMake
   BEQ End
   CheckCacheSze
-  BCC End  ; Skip if too many tiles queued
+  BNE End  ; Skip if too many tiles queued
   JMP Loop
 End:
 ENDM
@@ -377,89 +388,77 @@ ENDM
 ;-------------------------------------------------------------------------------------
 
 
-; TODO: 4 pointers; a front and back for the right and left of the screen
 DrawCol:
+  ; tmp1 must be the column idx of the column to draw
   ; Only used in main
   ; Draws the current column. This uses prev and nxt ItPtrs to calculate the current column, without modifying either.
-  ; It writes the column to either $2007 or $03??, specified by tmp1. If the most significant bit of tmp1 is 1, it uses $2007, else it uses $03 CacheDrawTo+Tile and increments CacheDrawTo appending the column data to the cache data thing every column
+  ; It writes the column to $03??; $03 CacheDrawTo+Tile and increments CacheDrawTo appending the column data to the cache data thing every column
 
-  LDA tmp1
-  AND #%00111110
-  STA tmp4  ; Now tmp4 contains only the column index!
+  ; First clear the memory address we will be using
+  LDY CacheDrawTo
+  LDA CacheIdxToAddr,Y  ; A is the base address
+  STA tmp2  ; tmp2 is now also the base address
+  TAY
+  LDA #$02  ; Fill every tile with a blank
   LDX #28  ; 28 visible tiles in a column (30 - 2 invisible extras)
-LoopTls:
-  LDA nxtItPtr+1
+- STA $0300,Y
+  INY
+  DEX
+  BNE -
+
+  LDA prevItPtr+1
   STA tmpPtr+1
-  LDA nxtItPtr
+  LDA prevItPtr
   STA tmpPtr
 
   ; Check if it's equal right now to ensure nothing bad happens when 0 items are on-screen
-  CMP prevItPtr
+  CMP nxtItPtr
   BNE LoopIts
   LDA tmpPtr+1
-  CMP prevItPtr+1
+  CMP nxtItPtr+1
   BNE LoopIts  ; If end != start, continue
-  JMP +cont  ; Because HandleTile is so big
+  JMP End  ; Because HandleTile is so big
 
-LoopIts:  ; Loop over every item on-screenish backwards (later items override previous ones)
-  HandleTile  ; Macro defined in tiles.asm
-  LDA tmp2
-  BNE +write
-  ; If is still 0, decrease then check if temp pointer is still greater than the initial; and if so, keep looping
-  DecTmpItPtr
-  ; Check if tmpPtr <= prevItPtr and stop looping if it is
-  LDA tmpPtr+1  ; compare high bytes
-  CMP prevItPtr+1
-  BCC +cont ; if tmpPtr+1 < prevItPtr+1 then tmpPtr < prevItPtr so exit loop
-  BNE +loopIts ; if tmpPtr+1 != prevItPtr+1 then tmpPtr > prevItPtr so continue
-  LDA tmpPtr  ; compare low bytes
-  CMP prevItPtr
-  BEQ +cont  ; if tmpPtr+0 == prevItPtr+0 then tmpPtr == prevItPtr so exit
-  BCS +loopIts ; if tmpPtr+0 > prevItPtr+0 then tmpPtr > prevItPtr so continue
-  JMP +cont
-+loopIts  ; Because HandleTile is so fat
-  JMP LoopIts
-
-+cont
-  LDA #$02  ; If no object wants it, draw a blank (changed for testing)
-  STA tmp2
-+write
-  LDA tmp1
-  BPL +store03
-  LDA tmp2
-  STA $2007
-  JMP +aft
-+store03
-  STX tmp3
-  LDY CacheDrawTo
-  INY
-  CPY #$07
-  BNE +
+LoopIts:  ; Loop over every item on-screenish forwards (later items override previous ones) and get them to draw to the column if they can
+  ; Increase pointer
   LDY #$00
-+ LDA CacheIdxToAddr,Y  ; A is the base address
+  LDA (tmpPtr),Y
+  AND #%00000001
+  ORA #%00000010  ; A is the number of bytes in object
+  STA tmp3
+  LDA tmpPtr
   CLC
   ADC tmp3
-  TAY  ; Y is now the address + the tile row num
-  DEY  ; As Y is one too big
-  LDA tmp2
-  STA $0300,Y
-+aft
-  DEX
-  TXA
-  BEQ +end  ; Only quit when all tiles are drawn
-  ; This is required as Branch instructions are relative, but this subroutine is so long it becomes out of range
-  JMP LoopTls
-+end
+  STA tmpPtr
+  BCC +
+  INC tmpPtr+1
++
+  HandleTile  ; Now handle the tile!
+
+  ; Check if tmpPtr <= nxtItPtr and continue while it is!
+  LDA tmpPtr+1  ; compare high bytes
+  CMP nxtItPtr+1
+  BCC +loop ; if tmpPtr+1 < nxtItPtr+1 then tmpPtr < nxtItPtr so continue
+  BNE End ; if tmpPtr+1 != nxtItPtr+1 then tmpPtr > nxtItPtr so exit
+  LDA tmpPtr  ; compare low bytes
+  CMP nxtItPtr
+  BCC +loop  ; if tmpPtr+0 < nxtItPtr+0 then tmpPtr < prevItPtr so continue
+  BEQ +loop  ; if tmpPtr+0 == nxtItPtr+0 then tmpPtr == prevItPtr so continue
+  JMP End  ; else it's >, so exit
+
++loop  ; Bcos HandleTile is so fat
+  JMP LoopIts
+
+End
   LDA tmp1
-  BMI +trueEnd
   ; Add the column to the next cache 'which column should it be' place
   LDX CacheDrawTo
+  STA $0300,X
+  ; Now increase cache draw to!
   INX
   CPX #$07
   BNE +
   LDX #$00
-+ STA $0300,X
-  STX CacheDrawTo  ; Now there is 1 more tile to draw!
-+trueEnd
++ STX CacheDrawTo  ; Now there is 1 more tile to draw!
   RTS
 

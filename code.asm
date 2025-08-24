@@ -29,9 +29,9 @@ BTN_LEFT   = %00000010
 BTN_RIGHT  = %00000001
 
 xspeedchng = $01
-maxxspeed  = $08
+maxxspeed  = $07  ; So you can never load more than 1 tile too much every frame
 
-Offset     = 7  ; The number of tiles forwards to draw new tiles
+Offset     = 6  ; The number of tiles forwards to draw new tiles
 
 ; Memory addresses for cache
 CacheColumns = $0300
@@ -54,7 +54,6 @@ CacheMake      = $030F
 tmp1         .dsb 1
 tmp2         .dsb 1
 tmp3         .dsb 1
-tmp4         .dsb 1
 
 tmpPtr       .dsb 2
 ; Temporary variables FOR VBLANK
@@ -209,7 +208,7 @@ ReadController:
 
 
 
-;;;;;;;;;;;;;;;;;; Sprites and graphics
+;;;;;;;;;;;;;;;;;; Data
 
 
 
@@ -218,8 +217,9 @@ palette:
   .db $22,$29,$1A,$0F,  $22,$36,$17,$0F,  $22,$30,$21,$0F,  $22,$27,$17,$0F   ;;background palette
   .db $22,$1C,$15,$14,  $22,$02,$38,$3C,  $22,$1C,$15,$14,  $22,$02,$38,$3C   ;;sprite palette
 
+FirstCacheVal = $10  ; For init usage
 CacheIdxToAddr:  ; Exactly what it sounds like.
-  .db $10, $30, $50, $70, $90, $B0, $D0
+  .db FirstCacheVal, $30, $50, $70, $90, $B0, $D0
 
 
   .include "tilemap/tilemap.asm"  ; Includes Tilemap&PrevTilemap label

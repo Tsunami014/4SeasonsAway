@@ -1,68 +1,70 @@
-; X is current Y pos (PLEASE NOTE THIS; IT'S VERY IMPORTANT)
 ; tmpPtr is the current object pointer
-; tmp1 is the input column idx as it could be either (but NOTE the highest bit needs to be ignored in any calculation)
-; tmp4 is the input column idx only (tmp1 with the correct bits masked out)
-; tmp2 is the output (0 if not handled, tile id (that isn't 0) if succeeded) (This value can be used, as it's only set at the end)
-
+; tmp1 is the input column idx as it could be either
+; tmp2 is the base address; $0300 + address + tile y to draw to screen!
 MACRO HandleTile  ; Handle drawing a tile. Is a macro as this is only used once and repeated a lot, so a subroutine is too expensive.
   LDY #$00
   LDA (tmpPtr),Y
-  TAY  ; Now the first byte is in Y for ease of access later
+  TAX  ; Now the first byte is in X for ease of access later
   BMI +
   AND #%00000001
   BEQ Struct
   JMP Horiz
 + ; Skip if x != tile x
   AND #%00111110
-  CMP tmp4
-  BNE Fail
+  CMP tmp1
+  BNE Aft
   ; Now check for the type
-  TYA
+  TXA
   AND #%00000001
   BNE Vert
 
 Single:  ; A single block
-  JMP Fail
+  JMP Aft
 Struct:  ; A structure of blocks
-  JMP Fail
+  JMP Aft
 Horiz:  ; A horizontal row of blocks
   ; Skip if x < tile x
-  TYA
+  TXA
   AND #%00111110
-  CMP tmp4
+  CMP tmp1
   BEQ +  ; Continue if it's equal
-  BPL Fail
+  BPL Aft
 + ; Store screen bit for later
   AND #%00100000
-  STA tmp2
-  ; Skip if not the right Y pos
-  LDY #$01
-  LDA (tmpPtr),Y
-  AND #%00001111
   STA tmp3
-  TXA
-  SEC
-  SBC #$01  ; Subtract 1 so the Y is really correct!
-  AND #%00011110  ; Get top 4 bits of Y
-  LSR
-  CMP tmp3
-  BNE Fail
   ; Skip if x > tile position of x + width
+  LDA tmp1
+  AND #%00111110  ; Now we can mask the last bit
+  TAX
   LDY #$02
   LDA (tmpPtr),Y
   AND #%00001111
   ASL
-  ORA tmp2
-  CMP tmp4
-  BMI Fail
+  ORA tmp3
+  LDY tmp1  ; Save tmp1 for restore later
+  STX tmp1
+  CMP tmp1
+  STY tmp1  ; Restore tmp1
+  BMI Aft
+  ; Find Y and also skip if Y is offscreen (>= 15)
+  LDY #$01
+  LDA (tmpPtr),Y
+  AND #$0F
+  CMP #15
+  BCS Aft
+  ; Draw the tile to the right Y!
+  ASL
+  CLC
+  ADC tmp2
+  TAY  ; Now Y is the base offset to draw to plus the tile Y coord!
   LDA #$01  ; TODO: Fill with the correct tile value
-  STA tmp2
+  STA $0300,Y
+  INY  ; Draw second block
+  ; TODO: For some objects, fill with a different value here
+  STA $0300,Y
   JMP Aft
 Vert:  ; A vertical row of blocks
   
-Fail:
-  LDA #$00
-  STA tmp2
 Aft:
 ENDM
 
