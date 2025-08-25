@@ -15,20 +15,23 @@ MACRO HandleTile  ; Handle drawing a tile. Is a macro as this is only used once 
   LDA tmp1
   AND #%00111110  ; So tmp1 has the lower bit masked too
   CMP tmp3
-  BNE Aft
+  BNE aft1
   ; Now check for the type
   TXA
   AND #%00000001
-  BNE Vert
+  BEQ Single
+  JMP Vert
+aft1:  ; For usage near here
+  JMP Aft  ; Bcos this func's too big
 
 Single:  ; A single block
-  ; Find Y and skip if offscreen
+  ; Find Y and skip if offscreen (Singles can be used as offscreen objects for blank screens if required)
   LDY #$01
   LDA (tmpPtr),Y
   TAX  ; Keep for later
   AND #$0F
   CMP #15
-  BCS Aft
+  BCS aft1
   ; Draw the tile to the right Y!
   ASL
   CLC
@@ -71,13 +74,13 @@ Horiz:  ; A horizontal row of blocks
   CMP tmp1
   STY tmp1  ; Restore tmp1
   BMI Aft
-  ; Find Y and also skip if Y is offscreen (>= 15)
+  ; Find Y
   LDY #$01
   LDA (tmpPtr),Y
   TAX  ; Keep for later
   AND #$0F
-  CMP #15
-  BCS Aft
+  ;CMP #15  ; We don't need to check if Y is offscreen, as it never should be
+  ;BCS Aft
   ; Draw the tile to the right Y!
   ASL
   CLC
@@ -95,19 +98,57 @@ Horiz:  ; A horizontal row of blocks
   STA $0300,Y
   JMP Aft
 Vert:  ; A vertical row of blocks
-  
+  ; Find Y and if offscreen assume it's a floor pattern object
+  LDY #$01
+  LDA (tmpPtr),Y
+  TAX  ; Keep for later
+  AND #$0F
+  CMP #15
+  BCS FP  ; If is offscreen, it's a floor pattern object
+  ; Find height required
+  LDY #$02
+  AND #$0F
+  ASL  ; So it draws 2* that many tiles
+  STA tmp3  ; tmp3 is the looper
+  ; Draw the tile to the right Y!
+  ASL
+  CLC
+  ADC tmp2
+  TAY  ; Now Y is the base offset to draw to plus the tile Y coord!
+  TXA  ; Now find correct tile type
+.REPT 4  ; Get top 4 bits
+  LSR
+.ENDR
+  TAX
+  LDA VertTiles2,X
+  STA $0300,Y
+  ; Draw other blocks
+  LDA VertTiles,X
+  LDX tmp3
+- DEY
+  STA $0300,Y
+  DEX
+  BNE -
+  JMP Aft
+FP:
+  ; TODO: Floor patterns
 Aft:
 ENDM
 
-HorizTiles:  ; Tiles used for horizontal objects. The horizontal object is entirely just one block, and that block id is listed below.
-  ;   grass, dirtH
-  .db $02,   $04
-HorizTiles2:  ; Second tiles in the horizontal object (the one under the first)
-  .db $04,   $04
-
-SingleTiles:
+SingleTiles:  ; Top block of tile
   ;   dirtS
   .db $04
-SingleTiles2:
+SingleTiles2: ; Bottom block of tile
   .db $04
+
+HorizTiles:  ; Top block of every column
+  ;   grass, dirtH
+  .db $02,   $04
+HorizTiles2: ; Bottom block of every column
+  .db $04,   $04
+
+VertTiles:  ; Middle block
+  .db $0F
+VertTiles2:  ; Top and bottom blocks
+  .db $10
 

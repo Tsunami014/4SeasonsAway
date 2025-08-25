@@ -1,7 +1,7 @@
 ; NOTE: Auto generated with `tilemap.py`, will be written over next run of that file
 Tilemap:
   .db $A0, $00  ; Offscreen tile to ensure the code still works. This will never be visible.
-  .db $01, $03, $F1,    $0B, $08, $F8,    $4D, $09, $F6,    $CC, $08,    $15, $08, $FB
+  .db $01, $03, $F1,    $83, $04, $F4,    $0B, $08, $F8,    $4D, $09, $F6,    $CC, $08,    $15, $08, $FB
   .db $61, $06, $F2,    $31, $06, $FD
   .db $01, $00, $FF,    $01, $0D, $FF
   .db $21, $01, $FF,    $21, $0C, $FF

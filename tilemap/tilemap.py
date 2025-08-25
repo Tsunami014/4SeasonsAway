@@ -2,14 +2,15 @@ import os.path
 import math
 
 types = {
-    #         I  D  0xT (Type is 4 bits, or one hex value)
+    #          I  D  0xT (Type is 4 bits, or one hex value)
     # Singles
-    'dirts': (1, 0, 0x0),
+    'dirts':  (1, 0, 0x0),
     # Structures
     # Horizontals
-    'grass': (0, 1, 0x0),
-    'dirth': (0, 1, 0x1),
+    'grass':  (0, 1, 0x0),
+    'dirth':  (0, 1, 0x1),
     # Verticals
+    'pillar': (1, 1, 0x0)
 }
 
 def makeHex(fmt, *args):
@@ -71,12 +72,6 @@ def handleLn(ln):
                 raise ValueError(
                     f'Input x {x} and width {width} combined ({dat}) is greater than 16!'
                 )
-        else:
-            if dat+y >= 16:
-                raise ValueError(
-                    f'Input y {y} and height {dat} combined ({y+dat}) is greater than 16!'
-                )
-            dat = y + dat
         hstr += datstr
     else:
         d = types[typ]

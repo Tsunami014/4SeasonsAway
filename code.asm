@@ -214,7 +214,7 @@ ReadController:
 
   .org $E000
 palette:
-  .db $22,$19,$16,$2D,  $22,$36,$17,$0F,  $22,$30,$21,$0F,  $22,$27,$17,$0F   ;;background palette
+  .db $21,$19,$27,$2D,  $21,$28,$26,$2D,  $21,$16,$27,$2D,  $22,$27,$17,$0F   ;;background palette
   .db $22,$1C,$15,$14,  $22,$02,$38,$3C,  $22,$1C,$15,$14,  $22,$02,$38,$3C   ;;sprite palette
 
 FirstCacheVal = $10  ; For init usage

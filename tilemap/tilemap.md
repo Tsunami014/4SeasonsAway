@@ -65,8 +65,12 @@ If I=0, the object only is one block in width.
 |--------|------------|------------|
 | `0``1` |  no data   | A single block. |
 | `0``0` |  no data   | A structure (collection of multiple blocks). |
-| `1``0` | `1111WWWW` | A horizontal line of blocks. `W` is x + the width. |
-| `1``1` | `1111HHHH` | A vertical line of blocks. `H` is y + the height. |
+| `1``0` | `1111WWWW` | A horizontal line of blocks. `W` is **x +** the width. |
+| `1``1` | `1111HHHH` | A vertical line of blocks. `H` is the height. |
+
+Please note:
+- The Y value is the bottom of the object; new tiles are added up.
+- W is X + width, H is just height.
 
 ## Floor patterns
 Because I need some way of storing floor patterns where there are 2 patterns; one for in front and one for behind, I will use Vertical lines of blocks.
@@ -94,4 +98,5 @@ It is like a vertical line of blocks, but offscreen (Y=15) so I can use this as 
 ### Vertical objects (D=1, I=1)
 | Obj name  | hex type |
 |-----------|----------|
+| Pillar    |    0     |
 
