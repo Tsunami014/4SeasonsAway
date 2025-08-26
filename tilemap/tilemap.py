@@ -46,8 +46,9 @@ with open(pth+'tilemap.dat') as f:
     dat = f.readlines()
 
 lastX = None
+prevFP = 0
 def handleLn(ln):
-    global lastX
+    global lastX, prevFP
     ln = ln.strip(' \r\n').replace(' ', '').lower()
     scrc, ln = ln[0], ln[1:]
     scr = {'<': 0, '>': 1}[scrc]
@@ -60,18 +61,23 @@ def handleLn(ln):
     if ':' in typ:
         typ, dat = typ.split(':')
         dat = int(dat)-1
-        d = types[typ]
-        if d[1] == 0:
-            raise ValueError(
-                f'Object {typ} cannot have data, but has been provided some!'
-            )
-        if d[0] == 0:
-            width = dat
-            dat = x + dat
-            if dat >= 16:
+        if typ == 'floorptn':
+            d = (1, 1, prevFP)  # A vertical column, where the type is the last floor pattern
+            y = 15
+            prevFP = dat
+        else:
+            d = types[typ]
+            if d[1] == 0:
                 raise ValueError(
-                    f'Input x {x} and width {width} combined ({dat}) is greater than 16!'
+                    f'Object {typ} cannot have data, but has been provided some!'
                 )
+            if d[0] == 0:
+                width = dat
+                dat = x + dat
+                if dat >= 16:
+                    raise ValueError(
+                        f'Input x {x} and width {width} combined ({dat}) is greater than 16!'
+                    )
         hstr += datstr
     else:
         d = types[typ]

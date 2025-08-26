@@ -62,8 +62,10 @@ vtmp1        .dsb 1
 ; Rendering stuff
 nxtCol       .dsb 1  ; Next column id JJSCCCCC (C = column num, S = screen num (yes they are separate), J = junk (can be anything, doesn't affect execution))
 nxtItPtr     .dsb 2  ; Pointer to memory where the next screen rendering item is located (for the right side of the screen)
+nxtFP        .dsb 1  ; Which floor pattern to use for the right side of the screen
 prevCol      .dsb 1  ; The previous column id, just like before; but for the left side of the screen instead of the right.
 prevItPtr    .dsb 2  ; Same, but the item on the left side
+prevFP       .dsb 1  ; Which floor pattern to use for the left side of the screen
 ; VERY IMPORTANT: prevItPtr is NOT rendered. The rendered objects are prevItPtr < item <= nxtItPtr. But when nxtItPtr == prevItPtr nothing should be rendered.
 
 ; Player stuff
@@ -220,6 +222,13 @@ palette:
 FirstCacheVal = $10  ; For init usage
 CacheIdxToAddr:  ; Exactly what it sounds like.
   .db FirstCacheVal, $30, $50, $70, $90, $B0, $D0
+
+FloorPatterns:
+  ; Each one is 14 bytes; each set of 4 bits is a tile
+  .db $10,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+
+FloorPatternIdxs:  ; Indexes into the FloorPatterns table - basically, multiples of 14. This is offset by 1.
+  .db $0E
 
 
   .include "tilemap/tilemap.asm"  ; Includes Tilemap&PrevTilemap label

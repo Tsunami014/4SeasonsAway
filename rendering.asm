@@ -253,6 +253,8 @@ Loop:
   LDA nxtCol
   STA tmp1  ; Point to correct column
   PointPPU tmp1  ; Saves having to jump to it again after
+  LDA nxtFP
+  STA tmp3
   JSR DrawCol  ; Draw column to cache
   ; Now draw cached column to the screen
   LDX #28  ; 28 tiles in a column
@@ -349,6 +351,8 @@ Loop
   TXA
   AND #%00111111
   STA nxtCol
+  LDA prevFP
+  STA tmp3
   JMP +aft
 @plus1:
   ChkIncPrevItPtr
@@ -364,6 +368,8 @@ Loop
   TXA
   AND #%00111111
   STA nxtCol
+  LDA nxtFP
+  STA tmp3
 
 +aft
   JSR DrawCol  ; Draw column to cache
@@ -390,6 +396,7 @@ ENDM
 
 DrawCol:
   ; tmp1 must be the column idx of the column to draw
+  ; tmp3 must be the floor pattern to use
   ; Only used in main
   ; Draws the current column. This uses prev and nxt ItPtrs to calculate the current column, without modifying either.
   ; It writes the column to $03??; $03 CacheDrawTo+Tile and increments CacheDrawTo appending the column data to the cache data thing every column
@@ -399,11 +406,25 @@ DrawCol:
   LDA CacheIdxToAddr,Y  ; A is the base address
   STA tmp2  ; tmp2 is now also the base address
   TAY
-  LDA #$00  ; Fill every tile with a blank
-  LDX #28  ; 28 visible tiles in a column (30 - 2 invisible extras)
-- STA $0300,Y
+  ; Fill every tile with the floor pattern
+  LDX tmp3
+  LDA FloorPatternIdxs,X  ; Get index into floor pattern table
+  STA tmp3  ; tmp3 is the max value of the loop
+  SEC
+  SBC #14  ; Find the initial value of the loop
+  TAX
+- LDA FloorPatterns,X
+.REPT 4  ; Get top 4 bits down to bottom
+  LSR
+.ENDR
+  STA $0300,Y
   INY
-  DEX
+  LDA FloorPatterns,X
+  AND #$0F
+  STA $0300,Y
+  INY
+  INX
+  CPX tmp3
   BNE -
 
   LDA prevItPtr+1
