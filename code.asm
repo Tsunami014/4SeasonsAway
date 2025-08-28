@@ -225,10 +225,11 @@ CacheIdxToAddr:  ; Exactly what it sounds like.
 
 FloorPatterns:
   ; Each one is 14 bytes; each set of 4 bits is a tile
-  .db $10,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+  .db $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+  .db $44,$44,$42,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 
 FloorPatternIdxs:  ; Indexes into the FloorPatterns table - basically, multiples of 14. This is offset by 1.
-  .db $0E
+  .db $0E,$1C,$2A
 
 
   .include "tilemap/tilemap.asm"  ; Includes Tilemap&PrevTilemap label

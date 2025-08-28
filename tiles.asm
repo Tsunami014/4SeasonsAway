@@ -104,7 +104,7 @@ Vert:  ; A vertical row of blocks
   TAX  ; Keep for later
   AND #$0F
   CMP #15
-  BCS FP  ; If is offscreen, it's a floor pattern object
+  BCS Aft  ; If is offscreen, it's a floor pattern object; so don't draw it.
   ; Find height required
   LDY #$02
   AND #$0F
@@ -129,9 +129,6 @@ Vert:  ; A vertical row of blocks
   STA $0300,Y
   DEX
   BNE -
-  JMP Aft
-FP:
-  ; TODO: Floor patterns
 Aft:
 ENDM
 

@@ -47,13 +47,19 @@ with open(pth+'tilemap.dat') as f:
 
 lastX = None
 prevFP = 0
-def handleLn(ln):
-    global lastX, prevFP
+totIdx = 0
+def handleLn(ln, cmdidx):
+    global lastX, prevFP, totIdx
+    totIdx += cmdidx
     ln = ln.strip(' \r\n').replace(' ', '').lower()
     scrc, ln = ln[0], ln[1:]
     scr = {'<': 0, '>': 1}[scrc]
     coords, typ = ln.split('-')
     x, y = (int(i) for i in coords.split(','))
+    if y == 15 and 'floorptn' not in typ:
+        raise ValueError(
+            f'Y of 15 is reserved for floor patterns! (cmd #{totIdx})'
+        )
     dat = 0
     hstr = 'IOSXXXXD TTTTYYYY'
     datstr = ' 1111DDDD'
@@ -62,6 +68,7 @@ def handleLn(ln):
         typ, dat = typ.split(':')
         dat = int(dat)-1
         if typ == 'floorptn':
+            dat += 1
             d = (1, 1, prevFP)  # A vertical column, where the type is the last floor pattern
             y = 15
             prevFP = dat
@@ -69,14 +76,14 @@ def handleLn(ln):
             d = types[typ]
             if d[1] == 0:
                 raise ValueError(
-                    f'Object {typ} cannot have data, but has been provided some!'
+                    f'Object {typ} cannot have data, but has been provided some! (cmd #{totIdx})'
                 )
             if d[0] == 0:
                 width = dat
                 dat = x + dat
                 if dat >= 16:
                     raise ValueError(
-                        f'Input x {x} and width {width} combined ({dat}) is greater than 16!'
+                        f'Input x {x} and width {width} combined ({dat}) is greater than 16! (cmd #{totIdx}))'
                     )
         hstr += datstr
     else:
@@ -109,15 +116,18 @@ for ln in dat:
     tmp.append(ln)
 outdat.append(tmp)
 
+# Sort the screens separately by x
 outdat = [sorted(i, key=lambda x: int(x[1:x.index(',')])) for i in outdat]
-outdat = [[handleLn(j) for j in i] for i in outdat]
+trueout = []
+for i in outdat:
+    trueout.append([handleLn(j, idx+1) for idx, j in enumerate(i)])
+    lastX = None  # Ensure the next screen does not use this
 
-lastX = None
-prevTlmp = handleLn('> 0,0 - DirtS')  # This is so when starting the first item is never seen. TODO: Can we do something else instead?
+prevTlmp = handleLn('> 15,0 - DirtS', -1)  # This is so when starting the first item is never seen.
 
 out = '; NOTE: Auto generated with `tilemap.py`, will be written over next run of that file\nTilemap:\n' + \
     '  .db '+prevTlmp+'  ; Offscreen tile to ensure the code still works. This will never be visible.\n' + \
-    '\n'.join('  .db ' + ',    '.join(i) for i in outdat[1:])
+    '\n'.join('  .db ' + ',    '.join(i) for i in trueout[1:])
 
 with open(pth+'tilemap.asm', 'w+') as f:
     f.write(out + '\n\n')

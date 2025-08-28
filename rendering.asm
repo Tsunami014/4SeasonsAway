@@ -103,8 +103,20 @@ ChkIncNxtItPtr:  ; Check and increase an item pointer (check if need to) in a lo
   STA nxtItPtr
   BCC +
   INC nxtItPtr+1
-+ LDY #$00  ; So the next loop will work
++ LDY #$01
+  LDA (nxtItPtr),Y  ; Load Y value of object
+  AND #$0F
+  CMP #$0F  ; Check if it's a floor pattern
+  BEQ @FP
+  LDY #$00  ; So the next loop will work
   JMP -loop  ; Keep going until the next item is not on the screen edge
+@FP:
+  LDY #$02
+  LDA (nxtItPtr),Y
+  AND #$0F  ; This is the new floor pattern!
+  STA nxtFP
+  LDY #$00
+  JMP -loop  ; Continue looping
 
 +End:
   LDY #$00
@@ -123,18 +135,18 @@ Loop:
   ORA #%00000010  ; A is 2 or 3
   STA tmp2
   TAY
-  LDA (prevItPtr),Y  ; Get next object
-  BPL @OneWide
+  LDA (prevItPtr),Y  ; Get next object's first byte
   TAX
+  BMI @OneWide
   AND #%00000001
   BEQ @Struct
 ;Horizontal
   TXA
   AND #%00100000
   STA tmp3
-  INY  ; Add 2 to Y to get data byte of next object
+  INY  ; Add 2 to Y to get data byte
   INY
-  LDA (prevItPtr),Y  ; Get data byte of next object
+  LDA (prevItPtr),Y
   AND #$0F  ; Lower 4 bits; the x+width
   ASL
   ORA tmp3  ; Combine with screen bit from earlier
@@ -142,31 +154,58 @@ Loop:
 @Struct:
   ; TODO: This
 @OneWide:  ; Vertical or single
+  INY  ; Get Y position byte
+  LDA (prevItPtr),Y
+  AND #$0F
+  CMP #$0F  ; If y position == $F, is a floor pattern
+  BNE @cont
+  ; Floor patterns!
+  LDA (prevItPtr),Y  ; Load the same byte again, but this time get the top 4 bits instead of the bottom 4
+.REPT 4
+  LSR
+.ENDR
+  STA prevFP
+@cont:
+  TXA
   AND #%00111110
 
 @Aft1:
   CLC
-  ADC #$01
+  ADC #$02
   AND #%00111110
   CMP tmp1
   BNE Aft2
   ; Object is now offscreen! Increase prevItPtr
-  LDY #$00  ; Y will stay 0 for this
--OSLoop  ; Loop over next objects while they overshadow (or don't loop if they don't)
+  LDY #$00
+-OvSLoop  ; Loop over next objects while they overshadow (or don't loop if they don't)
+  ; Increase prev item ptr first
   LDA prevItPtr
   CLC
   ADC tmp2
   STA prevItPtr
   BCC +
   INC prevItPtr+1  ; It did overflow
-+ LDA (prevItPtr),Y
++ ; Check if it overshadows
+  LDA (prevItPtr),Y
   AND #%01000000
-  BEQ +loop
+  BEQ +loop  ; If it is not overshadowing, continue the main loop
+  LDY #$01  ; Find if it's a floor pattern
+  LDA (prevItPtr),Y
+  AND #$0F
+  CMP #$0F
+  BNE +
+  ; Floor pattern!
+  LDA (prevItPtr),Y  ; Load the same byte again, but this time get the top 4 bits instead of the bottom 4
+.REPT 4
+  LSR
+.ENDR
+  STA prevFP
++ LDY #$00  ; Make Y 0 again
   LDA (prevItPtr),Y  ; Find out how many bytes this object is
   AND #%00000001
   ORA #%00000010  ; A is 2 or 3
   STA tmp2
-  JMP -OSLoop
+  JMP -OvSLoop
 +loop
   JMP Loop
 Aft2:
