@@ -1,7 +1,7 @@
 # Don't forget to compile with `tilemap.py` once you've finished changing this file!
 
 # Some tests
-#< 0,  0  - FloorPtn: 1
+< 0,  0  - FloorPtn: 1
 < 0,  3  - Grass:  2
 < 1,  4  - Pillar: 5
 < 5,  8  - Grass:  4
@@ -12,13 +12,13 @@
 > 0,  6  - Grass:  3
 > 8,  6  - Grass:  6
 # A nice floor and ceiling pattern
+< 0,  0  - FloorPtn: 0
 < 0,  0  - Grass:  16
 < 0,  13 - Grass:  16
 > 0,  1  - Grass:  16
 > 0,  12 - Grass:  16
 < 0,  2  - Grass:  8
 < 0,  11 - Grass:  8
-#< 0,  0  - FloorPtn: 0
 < 8,  3  - Grass:  8
 < 8,  10 - Grass:  8
 > 0,  4  - Grass:  4
