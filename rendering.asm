@@ -130,12 +130,7 @@ MACRO ChkIncPrevItPtr  ; Macro as it's only ever used once
   STA tmp1
 Loop:
   LDY #$00
-  LDA (prevItPtr),Y  ; Find out how many bytes this object is
-  AND #%00000001
-  ORA #%00000010  ; A is 2 or 3
-  STA tmp2
-  TAY
-  LDA (prevItPtr),Y  ; Get next object's first byte
+  LDA (prevItPtr),Y  ; Get object's first byte
   TAX
   BMI @OneWide
   AND #%00000001
@@ -144,8 +139,7 @@ Loop:
   TXA
   AND #%00100000
   STA tmp3
-  INY  ; Add 2 to Y to get data byte
-  INY
+  LDY #$02  ; Get data byte
   LDA (prevItPtr),Y
   AND #$0F  ; Lower 4 bits; the x+width
   ASL
@@ -154,7 +148,7 @@ Loop:
 @Struct:
   ; TODO: This
 @OneWide:  ; Vertical or single
-  INY  ; Get Y position byte
+  LDY #$01  ; Get Y position byte
   LDA (prevItPtr),Y
   AND #$0F
   CMP #$0F  ; If y position == $F, is a floor pattern
@@ -176,9 +170,13 @@ Loop:
   CMP tmp1
   BNE Aft2
   ; Object is now offscreen! Increase prevItPtr
-  LDY #$00
 -OvSLoop  ; Loop over next objects while they overshadow (or don't loop if they don't)
+  LDY #$00
   ; Increase prev item ptr first
+  LDA (prevItPtr),Y  ; Find out how many bytes this object is
+  AND #%00000001
+  ORA #%00000010  ; A is 2 or 3
+  STA tmp2
   LDA prevItPtr
   CLC
   ADC tmp2
@@ -189,6 +187,7 @@ Loop:
   LDA (prevItPtr),Y
   AND #%01000000
   BEQ +loop  ; If it is not overshadowing, continue the main loop
+  JMP +
   LDY #$01  ; Find if it's a floor pattern
   LDA (prevItPtr),Y
   AND #$0F
@@ -200,12 +199,7 @@ Loop:
   LSR
 .ENDR
   STA prevFP
-+ LDY #$00  ; Make Y 0 again
-  LDA (prevItPtr),Y  ; Find out how many bytes this object is
-  AND #%00000001
-  ORA #%00000010  ; A is 2 or 3
-  STA tmp2
-  JMP -OvSLoop
++ JMP -OvSLoop
 +loop
   JMP Loop
 Aft2:
