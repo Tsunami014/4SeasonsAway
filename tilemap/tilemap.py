@@ -10,7 +10,8 @@ types = {
     'grass':  (0, 1, 0x0),
     'dirth':  (0, 1, 0x1),
     # Verticals
-    'pillar': (1, 1, 0x0)
+    'pillar': (1, 1, 0x0),
+    'ladder': (1, 1, 0x1),
 }
 Offset = 5  # 16-Offset is the maximum width; any more and it stays on until the screen after
 

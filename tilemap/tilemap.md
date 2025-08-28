@@ -82,21 +82,22 @@ It is like a vertical line of blocks, but offscreen (Y=15) so I can use this as 
 ## Object table
 ### Single objects (D=0, I=1)
 | Obj name  | hex type |
-|-----------|----------|
-| DirtS     |    0     |
+|-----------|---|
+| DirtS     | 0 |
 
 ### Structures (D=0, I=0)
 | Obj name  | hex type |
-|-----------|----------|
+|-----------|---|
 
 ### Horizontal objects (D=1, I=0)
 | Obj name  | hex type |
-|-----------|----------|
-| Grass     |    0     |
-| DirtH     |    1     |
+|-----------|---|
+| Grass     | 0 |
+| DirtH     | 1 |
 
 ### Vertical objects (D=1, I=1)
 | Obj name  | hex type |
-|-----------|----------|
-| Pillar    |    0     |
+|-----------|---|
+| Pillar    | 0 |
+| Ladder    | 1 |
 

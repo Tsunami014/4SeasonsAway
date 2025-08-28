@@ -24,6 +24,9 @@ MACRO HandleTile  ; Handle drawing a tile. Is a macro as this is only used once 
 aft1:  ; For usage near here
   JMP Aft  ; Bcos this func's too big
 
+VertTypPtrs:  ; Pointers to the functions used by the vertical tiles to specify how they should be rendered
+  .dw DrawVert0, DrawVert1
+
 Single:  ; A single block
   ; Find Y and skip if offscreen (Singles can be used as offscreen objects for blank screens if required)
   LDY #$01
@@ -56,7 +59,7 @@ Horiz:  ; A horizontal row of blocks
   AND #%00111110
   CMP tmp1
   BEQ +  ; Continue if it's equal
-  BPL Aft
+  BPL aft1
 + ; Store screen bit for later
   AND #%00100000
   STA tmp3
@@ -119,7 +122,23 @@ Vert:  ; A vertical row of blocks
 .REPT 4  ; Get top 4 bits
   LSR
 .ENDR
+  STA tmp2  ; Store it in tmp2
   TAX
+  ; Now jump to the correct function!
+  LDA VertType,X
+  ASL
+  TAX
+  LDA VertTypPtrs,X
+  STA jmpPtr
+  LDA VertTypPtrs+1,X
+  STA jmpPtr+1
+  JMP (jmpPtr)
+DrawVert1:
+  LDA tmp1
+  AND #%00000001
+  BEQ Aft  ; Ensure it only draws the right column
+DrawVert0:
+  LDX tmp2
   LDA VertTiles2,X
   STA $0300,Y
   ; Draw other blocks
@@ -139,13 +158,18 @@ SingleTiles2: ; Bottom block of tile
   .db $04
 
 HorizTiles:  ; Top block of every column
-  ;   grass, dirtH
-  .db $02,   $04
+  ;   grass,dirtH
+  .db $02,  $04
 HorizTiles2: ; Bottom block of every column
-  .db $04,   $04
+  .db $04,  $04
 
-VertTiles:  ; Middle block
-  .db $0F
-VertTiles2:  ; Top and bottom blocks
-  .db $10
+VertType:   ; Type of object the vertical ones are (defines what the values in VertTiles are useed for)
+  ; 0 = middle,top - 1 = middle,top (only the right column)
+  ;   pillar,ladder
+  .db $00,   $01
+VertTiles:
+  ;   pillar,ladder
+  .db $10,   $12
+VertTiles2:
+  .db $11,   $12
 

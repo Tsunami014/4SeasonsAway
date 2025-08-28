@@ -56,6 +56,7 @@ tmp1         .dsb 1
 tmp2         .dsb 1
 tmp3         .dsb 1
 
+jmpPtr       .dsb 2  ; A pointer used for jump table stuff
 tmpPtr       .dsb 2
 ; Temporary variables FOR VBLANK
 vtmp1        .dsb 1
@@ -228,9 +229,10 @@ FloorPatterns:
   ; Each one is 14 bytes; each set of 4 bits is a tile
   .db $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
   .db $44,$44,$42,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+  .db $44,$44,$44,$44,$42,$00,$00,$00,$00,$00,$00,$00,$00,$00
 
 FloorPatternIdxs:  ; Indexes into the FloorPatterns table - basically, multiples of 14. This is offset by 1.
-  .db $0E,$1C,$2A
+  .db $0E,$1C,$2A,$38,$46,$54,$62,$70,$7E,$8C,$9A,$A8
 
 
   .include "tilemap/tilemap.asm"  ; Includes Tilemap&PrevTilemap label
