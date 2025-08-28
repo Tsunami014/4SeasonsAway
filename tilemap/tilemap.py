@@ -12,6 +12,7 @@ types = {
     # Verticals
     'pillar': (1, 1, 0x0)
 }
+Offset = 5  # 16-Offset is the maximum width; any more and it stays on until the screen after
 
 def makeHex(fmt, *args):
     args = [int(i) for i in args]
@@ -50,7 +51,10 @@ prevFP = 0
 totIdx = 0
 def handleLn(ln, cmdidx):
     global lastX, prevFP, totIdx
-    totIdx += cmdidx
+    if cmdidx == -1:
+        totIdx = -1  # The end command, doesn't have an index
+    else:
+        totIdx += cmdidx
     ln = ln.strip(' \r\n').replace(' ', '').lower()
     scrc, ln = ln[0], ln[1:]
     scr = {'<': 0, '>': 1}[scrc]
@@ -79,6 +83,10 @@ def handleLn(ln, cmdidx):
                     f'Object {typ} cannot have data, but has been provided some! (cmd #{totIdx})'
                 )
             if d[0] == 0:
+                if dat >= 16-Offset:
+                    raise ValueError(
+                        f'Horizontal object too large! Max length: {16-Offset-1}, provided length: {dat}. (cmd #{totIdx})'
+                    )
                 width = dat
                 dat = x + dat
                 if dat >= 16:
@@ -96,7 +104,7 @@ def handleLn(ln, cmdidx):
     if lastX is None:
         lastX = x+width
     else:
-        if x+width < lastX:
+        if x+width <= lastX:
             overshadowed = 1
         else:
             lastX = x+width

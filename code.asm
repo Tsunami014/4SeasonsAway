@@ -31,7 +31,8 @@ BTN_RIGHT  = %00000001
 xspeedchng = $01
 maxxspeed  = $07  ; So you can never load more than 1 tile too much every frame
 
-Offset     = 6  ; The number of tiles forwards to draw new tiles
+Offset     = 5  ; The number of tiles forwards to draw new tiles
+; 16 - Offset is the maximum number of tiles an object can be wide before it starts looping around
 
 ; Memory addresses for cache
 CacheColumns = $0300

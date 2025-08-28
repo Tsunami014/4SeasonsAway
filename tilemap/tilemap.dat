@@ -11,12 +11,17 @@
 < 10, 8  - Grass:  2
 > 0,  6  - Grass:  3
 > 8,  6  - Grass:  6
-# A nice floor and ceiling pattern
+# A nice floor and ceiling pattern (has to be split due to it being too long)
 < 0,  0  - FloorPtn: 0
-< 0,  0  - Grass:  16
-< 0,  13 - Grass:  16
-> 0,  1  - Grass:  16
-> 0,  12 - Grass:  16
+< 0,  0  - Grass:  10
+< 0,  13 - Grass:  10
+< 10, 0  - Grass:  6
+< 10, 13 - Grass:  6
+> 0,  1  - Grass:  10
+> 0,  12 - Grass:  10
+> 10, 1  - Grass:  6
+> 10, 12 - Grass:  6
+
 < 0,  2  - Grass:  8
 < 0,  11 - Grass:  8
 < 8,  3  - Grass:  8
