@@ -27,7 +27,7 @@ MACRO HandleTile  ; Handle drawing a tile. Is a macro as this is only used once 
 HorizTypPtrs:
   .dw DrawHoriz0, DrawHoriz1, DrawHoriz2, DrawHoriz3
 VertTypPtrs:
-  .dw DrawVert0, DrawVert1
+  .dw DrawVert0, DrawVert1, DrawVert2
 
 
 Single:  ; A single block
@@ -185,6 +185,7 @@ DHEnd:
   STA $0300,Y
   JMP Aft
 
+
 Vert:  ; A vertical row of blocks
   ; Find Y and if offscreen assume it's a floor pattern object
   LDY #$01
@@ -222,11 +223,18 @@ Vert:  ; A vertical row of blocks
   LDA VertTypPtrs+1,X
   STA jmpPtr+1
   JMP (jmpPtr)
-DrawVert1:
+DrawVert2:
+  LDX tmp4
   LDA tmp1
   AND #%00000001
-  BEQ Aft  ; Ensure it only draws the right column
-DrawVert0:
+  BNE +
+; First column
+  LDA VertTiles,X
+  JMP DV0Loop
++ ; Second column
+  LDA VertTiles2,X
+  JMP DV0Loop
+DrawVert1:
   LDX tmp4
   LDA VertTiles2,X  ; This tile is for the top; so keep it until the end
   STA tmp4
@@ -240,6 +248,16 @@ DrawVert0:
   BNE -
   LDA tmp4
   STA $0300,Y
+  JMP Aft
+DrawVert0:
+  LDX tmp4
+  LDA VertTiles,X
+DV0Loop:
+  LDX tmp3
+- STA $0300,Y
+  INY
+  DEX
+  BNE -
 
 
 Aft:
@@ -264,11 +282,11 @@ HorizTiles2:
   .db $04,  $04,  $36,   $26,  $16
 
 VertType:   ; Type of object the vertical ones are (defines what the values in VertTiles are useed for)
-; 0 = middle,top - 1 = middle,top (only the right column)
+; 0 = all,unused = 1 = middle,top - 2 = left,right
   ;   pillar,ladder,trunk
-  .db $00,   $01,   $00
+  .db $01,   $02,   $00
 VertTiles:
   .db $10,   $12,   $15
 VertTiles2:
-  .db $11,   $12,   $15
+  .db $11,   $13,   $15
 
