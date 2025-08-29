@@ -45,7 +45,7 @@ VBLANK:
   STA playerxspeed  ; Store the new player speed
   JMP @aftX2
 @noR:
-  JMP @noL  ; Remove left movement altogether; it does not work yet.
+  JMP @noL  ; HACK: Remove left movement altogether. It does not work, and will not until I implement the decrement item pointers.
   LDA buttons1  ; Check button state
   AND #BTN_LEFT
   BEQ @noL

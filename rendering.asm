@@ -269,70 +269,9 @@ ENDM
 ;-------------------------------------------------------------------------------------
 
 
-; Decrease the temp item pointer by 1 item.
-; Writes over Y, tmp3 and tmpPtr. tmpPtr becomes the pointer to the previous item and Y&tmp3 become the amount of bytes-1
-MACRO DecTmpItPtr
-  LDY #$00
-  LDA tmpPtr
-  BNE +
-  DEC tmpPtr+1
-+ DEC tmpPtr
-  ; Load last value of previous byte
-  LDA (tmpPtr),Y
-  AND #%11110000
-  CMP #%11110000
-  BEQ +
-  LDY #$01
-  JMP +aft
-+ LDY #$02
-+aft
-  STY tmp3
-  LDA tmpPtr
-  SEC
-  SBC tmp3
-  STA tmpPtr
-  LDA tmpPtr+1
-  SBC #$00
-  STA tmpPtr+1
-ENDM
-
-
-; TODO: These below routines are all broken and will not work.
-ChkDecItPtrRout:  ; Is the routine internals for the ChkDecItPtr. This is a subroutine.
-  DecTmpItPtr  ; Sets X
-  INX  ; Now X is correct
-
-  LDA tmp1
-  AND #%00111110
-  STA tmp3  ; tmp3 = Current screen. But, only the part of the screen. 
-
-  LDA (tmpPtr),Y
-  AND #%00111111  ; So if it ends with 1 then it won't work
-  CMP tmp3
-  BEQ ChkDecItPtrRout  ; Keep going while the objects are on the edge of the screen
-  RTS  ; TODO: Check length; keep going down while object x + length is on the left, not just x
-
-; Assumes Y=0, writes over X,tmp1,tmp3 and tmpPtr
-MACRO ChkDecItPtr itPtr,colIdx  ; Check and decrease an item pointer (check if need to) in a loop. Continues until next item is not ok.
-  ; TODO: Every loop, it decrements tmpItPtr and only if it was successful does it then update itPtr. It updates itPtr every loop. This means we don't have to un-add it later.
-  LDA itPtr
-  STA tmpPtr
-  LDA itPtr+1
-  STA tmpPtr+1
-
-  LDA colIdx
-  STA tmp1  ; Store colIdx in tmp1 for use in the routine
-  JSR ChkDecItPtrRout
-  ; Object is not correct, so now go back.
-  STX tmp3
-  LDA tmpPtr
-  CLC
-  ADC tmp3
-  STA itPtr
-  LDA tmpPtr+1
-  ADC #$00  ; Propagate carry
-  STA itPtr+1
-ENDM
+; This spot is for code to decrement the item pointers.
+; Because it would take too long, I have not done this yet.
+; BUT, if I would it would be as easy as implementing macros to decrement the 2 item pointers correctly. (and then reenabling the going left by removing the one jmp in game.asm)
 
 
 ;-------------------------------------------------------------------------------------
@@ -431,8 +370,7 @@ Loop
   TXA
   BPL @plus1
 ;minus
-  ;ChkDecItPtr prevItPtr,prevCol
-  ; TODO: Forwards pointer
+  ; TODO: This is where the decrement item pointer macros would be used
   LDX prevCol
   STX tmp1  ; Point to correct column
   DEX
