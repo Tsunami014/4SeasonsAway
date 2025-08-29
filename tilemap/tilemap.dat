@@ -1,31 +1,72 @@
 # Don't forget to compile with `tilemap.py` once you've finished changing this file!
 
 < 0,  0  - FloorPtn: 1
-< 2,  3  - Pillar: 5
-< 12, 3  - Ladder: 2
+< 2,  2  - Pillar: 7
+< 5,  2  - Pillar: 5
+< 8,  2  - Leaf: 2
+< 12, 2  - Ladder: 3
 < 13, 0  - FloorPtn: 2
 < 5,  11 - Cloud: 4
 < 6,  12 - Cloud: 2
 < 12, 9  - Cloud: 3
 < 12, 10 - Cloud: 4
 
+> 0,  5  - Leaf: 2
 > 3,  0  - FloorPtn: 0
 > 5,  0  - FloorPtn: 2
+> 7,  5  - Leaf: 1
 > 9,  5  - Grass: 4
 > 9,  4  - DirtH: 4
 > 10, 8  - Bricks: 2
 > 10, 7  - Bricks: 2
 > 10, 6  - Bricks: 2
+> 14, 5  - Leaf: 1
 > 4,  8  - Cloud: 2
 > 4,  9  - Cloud: 1
 > 7,  11 - Cloud: 3
 > 9,  12 - Cloud: 2
 
-< 5,  0  - FloorPtn: 0
-< 8,  0  - Pillar: 6
-< 10, 0  - Pillar: 7
-< 13, 0  - Pillar: 5
-< 15, 0  - FloorPtn: 1
+< 4,  5  - Trunk: 4
+< 1,  9  - Leaf: 7
+< 2,  10 - Leaf: 5
+< 1,  11 - Leaf: 7
+< 2,  12 - Leaf: 5
+< 3,  13 - Leaf: 3
+< 8,  0  - FloorPtn: 0
+< 11, 0  - Pillar: 6
+< 13, 0  - Pillar: 7
+< 15, 0  - Pillar: 5
+< 0,  13 - Cloud: 2
+< 10, 9  - Cloud: 3
+< 12, 10 - Cloud: 3
+
+> 1,  0  - FloorPtn: 1
+> 4,  2  - Bricks: 6
+> 5,  3  - Bricks: 5
+> 6,  4  - Bricks: 4
+> 7,  5  - Bricks: 3
+> 8,  6  - Bricks: 2
+> 9,  7  - Bricks: 1
+> 11, 2  - Leaf: 3
+> 12, 3  - Leaf: 2
+> 0,  12 - Cloud: 2
+> 4,  9  - Cloud: 4
+> 6,  10 - Cloud: 2
+> 5,  11 - Cloud: 2
+> 11, 12 - Cloud: 2
+> 12, 11 - Cloud: 2
+
+< 2,  2  - Leaf: 2
+< 3,  6  - StoneW: 5
+< 4,  6  - StoneW: 7
+< 5,  0  - FloorPtn: 4
+< 5,  6  - Stone: 8
+< 6,  6  - Stone: 8
+< 7,  0  - FloorPtn: 3
+< 1,  8  - Cloud: 3
+< 2,  9  - Cloud: 2
+< 3,  13 - Cloud: 2
+
 # Offscreen tiles so it ends with a blank screen
 . 0,  0  - FloorPtn: 0
 . 14, 14 - Grass: 1

@@ -230,8 +230,10 @@ CacheIdxToAddr:  ; Exactly what it sounds like.
 FloorPatterns:
   ; Each one is 14 bytes; each set of 4 bits is a tile
   .db $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-  .db $44,$44,$42,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+  .db $44,$42,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
   .db $44,$44,$44,$44,$42,$00,$00,$00,$00,$00,$00,$00,$00,$00
+  .db $DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD
+  .db $DD,$DD,$11,$11,$11,$11,$11,$11,$11,$11,$11,$DD,$DD,$DD
 
 FloorPatternIdxs:  ; Indexes into the FloorPatterns table - basically, multiples of 14. This is offset by 1.
   .db $0E,$1C,$2A,$38,$46,$54,$62,$70,$7E,$8C,$9A,$A8

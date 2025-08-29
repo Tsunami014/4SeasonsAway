@@ -16,6 +16,8 @@ types = {
     'pillar': (1, 1, 0x0),
     'ladder': (1, 1, 0x1),
     'trunk':  (1, 1, 0x2),
+    'stone':  (1, 1, 0x3),
+    'stonew': (1, 1, 0x4),
 }
 Offset = 5  # 16-Offset is the maximum width; any more and it stays on until the screen after
 

@@ -104,4 +104,6 @@ It is like a vertical line of blocks, but offscreen (Y=15) so I can use this as 
 | Pillar    | 0 |
 | Ladder    | 1 |
 | Trunk     | 2 |
+| Stone     | 3 |
+| StoneW    | 4 |
 

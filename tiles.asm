@@ -283,10 +283,10 @@ HorizTiles2:
 
 VertType:   ; Type of object the vertical ones are (defines what the values in VertTiles are useed for)
 ; 0 = all,unused = 1 = middle,top - 2 = left,right
-  ;   pillar,ladder,trunk
-  .db $01,   $02,   $00
+  ;   pillar,ladder,trunk,stone,stonew
+  .db $01,   $02,   $00,  $00,  $01
 VertTiles:
-  .db $10,   $12,   $15
+  .db $10,   $12,   $15,  $0D,  $0D
 VertTiles2:
-  .db $11,   $13,   $15
+  .db $11,   $13,   $15,  $0D,  $0E
 
