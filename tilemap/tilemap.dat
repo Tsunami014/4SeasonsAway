@@ -1,14 +1,26 @@
 # Don't forget to compile with `tilemap.py` once you've finished changing this file!
 
 < 0,  0  - FloorPtn: 1
-< 1,  3  - Pillar: 5
+< 2,  3  - Pillar: 5
 < 12, 3  - Ladder: 2
 < 13, 0  - FloorPtn: 2
+< 5,  11 - Cloud: 4
+< 6,  12 - Cloud: 2
+< 12, 9  - Cloud: 3
+< 12, 10 - Cloud: 4
+
 > 3,  0  - FloorPtn: 0
 > 5,  0  - FloorPtn: 2
 > 9,  5  - Grass: 4
 > 9,  4  - DirtH: 4
 > 10, 8  - Bricks: 2
+> 10, 7  - Bricks: 2
+> 10, 6  - Bricks: 2
+> 4,  8  - Cloud: 2
+> 4,  9  - Cloud: 1
+> 7,  11 - Cloud: 3
+> 9,  12 - Cloud: 2
+
 < 5,  0  - FloorPtn: 0
 < 8,  0  - Pillar: 6
 < 10, 0  - Pillar: 7
