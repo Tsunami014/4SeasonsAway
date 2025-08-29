@@ -94,6 +94,7 @@ It is like a vertical line of blocks, but offscreen (Y=15) so I can use this as 
 |-----------|---|
 | Grass     | 0 |
 | DirtH     | 1 |
+| Bricks    | 2 |
 
 ### Vertical objects (D=1, I=1)
 | Obj name  | hex type |

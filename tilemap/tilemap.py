@@ -9,6 +9,7 @@ types = {
     # Horizontals
     'grass':  (0, 1, 0x0),
     'dirth':  (0, 1, 0x1),
+    'bricks': (0, 1, 0x2),
     # Verticals
     'pillar': (1, 1, 0x0),
     'ladder': (1, 1, 0x1),

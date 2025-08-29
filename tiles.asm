@@ -15,17 +15,20 @@ MACRO HandleTile  ; Handle drawing a tile. Is a macro as this is only used once 
   LDA tmp1
   AND #%00111110  ; So tmp1 has the lower bit masked too
   CMP tmp3
-  BNE aft1
+  BNE AftS
   ; Now check for the type
   TXA
   AND #%00000001
   BEQ Single
   JMP Vert
-aft1:  ; For usage near here
-  JMP Aft  ; Bcos this func's too big
 
-VertTypPtrs:  ; Pointers to the functions used by the vertical tiles to specify how they should be rendered
+
+; Pointers to the functions used by the objects to specify how they should be rendered
+HorizTypPtrs:
+  .dw DrawHoriz0, DrawHoriz1, DrawHoriz2, DrawHoriz3
+VertTypPtrs:
   .dw DrawVert0, DrawVert1
+
 
 Single:  ; A single block
   ; Find Y and skip if offscreen (Singles can be used as offscreen objects for blank screens if required)
@@ -34,7 +37,7 @@ Single:  ; A single block
   TAX  ; Keep for later
   AND #$0F
   CMP #15
-  BCS aft1
+  BCS AftS
   ; Draw the tile to the right Y!
   ASL
   CLC
@@ -50,16 +53,21 @@ Single:  ; A single block
   INY  ; Draw second block
   LDA SingleTiles,X
   STA $0300,Y
+AftS  ; Reuse existing jmp
   JMP Aft
+
+
 Struct:  ; A structure of blocks
   JMP Aft
+
+
 Horiz:  ; A horizontal row of blocks
   ; Skip if x < tile x
   TXA
   AND #%00111110
   CMP tmp1
   BEQ +  ; Continue if it's equal
-  BPL aft1
+  BPL AftH
 + ; Store screen bit for later
   AND #%00100000
   STA tmp3
@@ -76,14 +84,14 @@ Horiz:  ; A horizontal row of blocks
   STX tmp1
   CMP tmp1
   STY tmp1  ; Restore tmp1
-  BMI Aft
+  BMI AftH
   ; Find Y
   LDY #$01
   LDA (tmpPtr),Y
   TAX  ; Keep for later
   AND #$0F
   ;CMP #15  ; We don't need to check if Y is offscreen, as it never should be
-  ;BCS Aft
+  ;BCS AftH
   ; Draw the tile to the right Y!
   ASL
   CLC
@@ -93,13 +101,90 @@ Horiz:  ; A horizontal row of blocks
 .REPT 4  ; Get top 4 bits
   LSR
 .ENDR
+  STA tmp3  ; Type is in tmp3
+
   TAX
+  ; Now jump to the correct function!
+  LDA HorizType,X
+  ASL
+  TAX
+  LDA HorizTypPtrs,X
+  STA jmpPtr
+  LDA HorizTypPtrs+1,X
+  STA jmpPtr+1
+  JMP (jmpPtr)
+DrawHoriz0:
+  LDX tmp3
+  LDA HorizTiles,X
+  STA $0300,Y
+  INY  ; Draw second block
+  STA $0300,Y
+AftH:  ; Reuse an existing jmp
+  JMP Aft
+DrawHoriz1:
+  LDX tmp3
   LDA HorizTiles2,X
   STA $0300,Y
   INY  ; Draw second block
   LDA HorizTiles,X
   STA $0300,Y
   JMP Aft
+DrawHoriz3:
+  LDA tmp1
+  AND #%00000001
+  BEQ DHStart
+  JMP DHEnd
+DrawHoriz2:
+  STY tmp5
+  LDY #$00
+  LDA (tmpPtr),Y
+  AND #%00111110
+  CMP tmp1
+  BEQ @DHStart
+  AND #%00100000  ; Store screen bit for later
+  STA tmp4
+  LDY #$02
+  LDA (tmpPtr),Y
+  AND #$0F
+  ASL
+  ORA tmp4
+  ORA #%00000001  ; Ensure it's the last *column*
+  LDY tmp5
+  CMP tmp1
+  BEQ DHEnd
+; Regular in the middle tile
+  LDX tmp3
+  LDA HorizTiles,X
+  STA $0300,Y
+  INY  ; Draw second block
+  LDA HorizTiles,X
+  STA $0300,Y
+  JMP Aft
+@DHStart:
+  LDY tmp5
+DHStart:
+  LDX tmp3
+  LDA HorizTiles,X
+  CLC
+  ADC #$01
+  STA $0300,Y
+  INY  ; Draw second block
+  LDA HorizTiles,X
+  ADC #$02  ; Previous should NEVER overflow
+  STA $0300,Y
+  JMP Aft
+DHEnd:
+  LDX tmp3
+  LDA HorizTiles,X
+  CLC
+  ADC #$04
+  STA $0300,Y
+  INY  ; Draw second block
+  LDA HorizTiles,X
+  ADC #$03  ; Previous should NEVER overflow
+  STA $0300,Y
+  JMP Aft
+
 Vert:  ; A vertical row of blocks
   ; Find Y and if offscreen assume it's a floor pattern object
   LDY #$01
@@ -127,6 +212,7 @@ Vert:  ; A vertical row of blocks
 .ENDR
   STA tmp4  ; Store it in tmp4
   TAX
+
   ; Now jump to the correct function!
   LDA VertType,X
   ASL
@@ -154,8 +240,11 @@ DrawVert0:
   BNE -
   LDA tmp4
   STA $0300,Y
+
+
 Aft:
 ENDM
+
 
 SingleTiles:  ; Top block of tile
   ;   dirtS
@@ -163,14 +252,19 @@ SingleTiles:  ; Top block of tile
 SingleTiles2: ; Bottom block of tile
   .db $04
 
-HorizTiles:  ; Top block of every column
-  ;   grass,dirtH
-  .db $02,  $04
-HorizTiles2: ; Bottom block of every column
-  .db $04,  $04
+; A set of 5 is a set of 5 tiles in order in the character rom: middle, bottom left, top left, top right, bottom right.
+; A 'looping' set of 5 does not use the middle tile; it just loops between the left and right ones.
+HorizType:  ; Type of object (defines what HorizTiles and HorizTiles2 are used for)
+; 0 = all,unused - 1 = bottom,top - 2 = start tile of a set of 5,unused - 3 = start of a looping set of 5,unused
+  ;   grass,dirtH,bricks
+  .db $01,  $00,  $03
+HorizTiles:
+  .db $02,  $04,  $36
+HorizTiles2:
+  .db $04,  $04,  $36
 
 VertType:   ; Type of object the vertical ones are (defines what the values in VertTiles are useed for)
-  ; 0 = middle,top - 1 = middle,top (only the right column)
+; 0 = middle,top - 1 = middle,top (only the right column)
   ;   pillar,ladder
   .db $00,   $01
 VertTiles:
