@@ -2,24 +2,29 @@ import os.path
 import math
 
 types = {
-    #          I  D  0xT (Type is 4 bits, or one hex value)
+    #           I  D  0xT (Type is 4 bits, or one hex value)
     # Singles
-    'dirts':  (1, 0, 0x0),
-    'fruit':  (1, 0, 0x1),
+    'dirts':   (1, 0, 0x0),
+    'fruit':   (1, 0, 0x1),
+    'vinetop': (1, 0, 0x2),
+    'mark':    (1, 0, 0x3),
+    'stoneblk':(1, 0, 0x4),
     # Structures
     # Horizontals
-    'grass':  (0, 1, 0x0),
-    'dirth':  (0, 1, 0x1),
-    'bricks': (0, 1, 0x2),
-    'cloud':  (0, 1, 0x3),
-    'leaf':   (0, 1, 0x4),
-    'bridge': (0, 1, 0x5),
+    'grass':   (0, 1, 0x0),
+    'dirth':   (0, 1, 0x1),
+    'bricks':  (0, 1, 0x2),
+    'cloud':   (0, 1, 0x3),
+    'leaf':    (0, 1, 0x4),
+    'bridge':  (0, 1, 0x5),
+    'spikes':  (0, 1, 0x6),
     # Verticals
-    'pillar': (1, 1, 0x0),
-    'ladder': (1, 1, 0x1),
-    'trunk':  (1, 1, 0x2),
-    'stone':  (1, 1, 0x3),
-    'stonew': (1, 1, 0x4),
+    'pillar':  (1, 1, 0x0),
+    'ladder':  (1, 1, 0x1),
+    'vine':    (1, 1, 0x2),
+    'trunk':   (1, 1, 0x3),
+    'stone':   (1, 1, 0x4),
+    'stonew':  (1, 1, 0x5),
 }
 Offset = 5  # 16-Offset is the maximum width; any more and it stays on until the screen after
 

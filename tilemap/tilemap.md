@@ -85,6 +85,9 @@ It is like a vertical line of blocks, but offscreen (Y=15) so I can use this as 
 |-----------|---|
 | DirtS     | 0 |
 | Fruit     | 1 |
+| VineTop   | 2 |
+| Mark      | 3 |
+| StoneBlk  | 4 |
 
 ### Structures (D=0, I=0)
 | Obj name  | hex type |
@@ -99,13 +102,15 @@ It is like a vertical line of blocks, but offscreen (Y=15) so I can use this as 
 | Cloud     | 3 |
 | Leaf      | 4 |
 | Bridge    | 5 |
+| Spikes    | 6 |
 
 ### Vertical objects (D=1, I=1)
 | Obj name  | hex type |
 |-----------|---|
 | Pillar    | 0 |
 | Ladder    | 1 |
-| Trunk     | 2 |
-| Stone     | 3 |
-| StoneW    | 4 |
+| Vine      | 2 |
+| Trunk     | 3 |
+| Stone     | 4 |
+| StoneW    | 5 |
 

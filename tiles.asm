@@ -79,7 +79,7 @@ DrawSingle2:
   AND #%00000001
   BNE AftS  ; Only the left tile
   LDA SingleTiles,X
-  STA $0301,Y  ; Only update the top left tile
+  STA $0300,Y  ; Only update the bottom left tile
 
 
 Struct:  ; A structure of blocks
@@ -282,30 +282,30 @@ ENDM
 
 SingleType:  ; Type of object (defines what SingleTiles ans SingleTiles2 do)
 ; 0 = all,unused - 1 = top,bottom - 2 = top left corner,unused (rest untouched)
-  ;   dirtS,fruit
-  .db $01,  $02
+  ;   dirtS,fruit,vinetop,mark,stoneblk
+  .db $01,  $02,  $02,    $02, $01
 SingleTiles:
-  .db $04,  $1B
+  .db $04,  $1B,  $1E,    $1F, $0D
 SingleTiles2:
-  .db $04,  $1B
+  .db $04,  $1B,  $1E,    $1F, $0D
 
 ; A set of 5 is a set of 5 tiles in order in the character rom: middle, bottom left, top left, top right, bottom right.
 ; A 'looping' set of 5 does not use the middle tile; it just loops between the left and right ones.
 HorizType:  ; Type of object (defines what HorizTiles and HorizTiles2 are used for)
 ; 0 = all,unused - 1 = top,bottom - 2 = start tile of a set of 5,unused - 3 = start of a looping set of 5,unused
-  ;   grass,dirtH,bricks,cloud,leaf,bridge
-  .db $01,  $00,  $03,   $02,  $02, $01
+  ;   grass,dirtH,bricks,cloud,leaf,bridge,spikes
+  .db $01,  $00,  $03,   $02,  $02, $01,   $01
 HorizTiles:
-  .db $02,  $04,  $36,   $26,  $16, $05
+  .db $02,  $04,  $36,   $26,  $16, $05,   $01
 HorizTiles2:
-  .db $04,  $04,  $36,   $26,  $16, $00
+  .db $04,  $04,  $36,   $26,  $16, $00,   $0F
 
 VertType:   ; Type of object the vertical ones are (defines what the values in VertTiles are useed for)
 ; 0 = all,unused = 1 = middle,top - 2 = left,right
-  ;   pillar,ladder,trunk,stone,stonew
-  .db $01,   $02,   $00,  $00,  $01
+  ;   pillar,ladder,vine,trunk,stone,stonew
+  .db $01,   $02,   $02, $00,  $00,  $01
 VertTiles:
-  .db $10,   $12,   $15,  $0D,  $0D
+  .db $10,   $12,   $1C, $15,  $0D,  $0D
 VertTiles2:
-  .db $11,   $13,   $15,  $0D,  $0E
+  .db $11,   $13,   $1D, $15,  $0D,  $0E
 

@@ -1,5 +1,7 @@
 # Don't forget to compile with `tilemap.py` once you've finished changing this file!
 
+# Spring 1
+
 < 0,  0  - FloorPtn: 1
 < 2,  2  - Pillar: 7
 < 5,  2  - Pillar: 5
@@ -14,7 +16,7 @@
 
 > 0,  5  - Leaf: 2
 > 3,  0  - FloorPtn: 0
-> 5,  0  - FloorPtn: 2
+> 6,  0  - FloorPtn: 2
 > 7,  5  - Leaf: 1
 > 9,  5  - Grass: 4
 > 9,  4  - DirtH: 4
@@ -34,7 +36,7 @@
 < 2,  12 - Leaf: 5
 < 3,  13 - Leaf: 3
 < 3,  12 - Fruit
-< 5,  9  - Fruit
+< 5,  10 - Fruit
 < 8,  4  - Bridge: 1
 < 8,  0  - FloorPtn: 0
 < 11, 0  - Pillar: 6
@@ -71,6 +73,20 @@
 < 1,  8  - Cloud: 3
 < 2,  9  - Cloud: 2
 < 3,  13 - Cloud: 2
+
+# Cave 1
+> 3,  0  - FloorPtn: 5
+> 3,  10 - StoneBlk
+> 7,  0  - FloorPtn: 4
+> 7,  2  - Vine: 4
+> 7,  6  - VineTop
+> 11, 1  - Spikes: 5
+> 13, 4  - Bricks: 2
+> 12, 10 - StoneBlk
+> 13, 10 - StoneBlk
+> 4,  9  - Mark
+> 10, 5  - Mark
+> 14, 8  - Mark
 
 # Offscreen tiles so it ends with a blank screen
 . 0,  0  - FloorPtn: 0

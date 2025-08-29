@@ -218,7 +218,7 @@ ReadController:
 
 
 
-  .org $E000
+  .org $D000
 palette:
   .db $21,$19,$27,$2D,  $21,$28,$26,$2D,  $21,$17,$27,$2D,  $22,$27,$17,$0F   ;;background palette
   .db $22,$1C,$15,$14,  $22,$02,$38,$3C,  $22,$1C,$15,$14,  $22,$02,$38,$3C   ;;sprite palette
@@ -234,6 +234,7 @@ FloorPatterns:
   .db $44,$44,$44,$44,$42,$00,$00,$00,$00,$00,$00,$00,$00,$00
   .db $DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD
   .db $DD,$DD,$11,$11,$11,$11,$11,$11,$11,$11,$11,$DD,$DD,$DD
+  .db $DD,$DD,$DD,$DD,$DD,$DD,$11,$11,$11,$11,$11,$DD,$DD,$DD
 
 FloorPatternIdxs:  ; Indexes into the FloorPatterns table - basically, multiples of 14. This is offset by 1.
   .db $0E,$1C,$2A,$38,$46,$54,$62,$70,$7E,$8C,$9A,$A8
