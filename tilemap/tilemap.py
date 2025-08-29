@@ -5,6 +5,7 @@ types = {
     #          I  D  0xT (Type is 4 bits, or one hex value)
     # Singles
     'dirts':  (1, 0, 0x0),
+    'fruit':  (1, 0, 0x1),
     # Structures
     # Horizontals
     'grass':  (0, 1, 0x0),

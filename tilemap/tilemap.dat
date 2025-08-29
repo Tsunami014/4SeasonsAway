@@ -4,6 +4,7 @@
 < 2,  2  - Pillar: 7
 < 5,  2  - Pillar: 5
 < 8,  2  - Leaf: 2
+< 9,  2  - Fruit
 < 12, 2  - Ladder: 3
 < 13, 0  - FloorPtn: 2
 < 5,  11 - Cloud: 4
@@ -32,6 +33,8 @@
 < 1,  11 - Leaf: 7
 < 2,  12 - Leaf: 5
 < 3,  13 - Leaf: 3
+< 3,  12 - Fruit
+< 5,  9  - Fruit
 < 8,  4  - Bridge: 1
 < 8,  0  - FloorPtn: 0
 < 11, 0  - Pillar: 6
@@ -49,6 +52,7 @@
 > 8,  6  - Bricks: 2
 > 9,  7  - Bricks: 1
 > 11, 2  - Leaf: 3
+> 12, 2  - Fruit
 > 12, 3  - Leaf: 2
 > 0,  12 - Cloud: 2
 > 4,  9  - Cloud: 4

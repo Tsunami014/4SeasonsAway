@@ -84,6 +84,7 @@ It is like a vertical line of blocks, but offscreen (Y=15) so I can use this as 
 | Obj name  | hex type |
 |-----------|---|
 | DirtS     | 0 |
+| Fruit     | 1 |
 
 ### Structures (D=0, I=0)
 | Obj name  | hex type |

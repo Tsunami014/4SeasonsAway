@@ -24,6 +24,8 @@ MACRO HandleTile  ; Handle drawing a tile. Is a macro as this is only used once 
 
 
 ; Pointers to the functions used by the objects to specify how they should be rendered
+SingleTypPtrs:
+  .dw DrawSingle0, DrawSingle1, DrawSingle2
 HorizTypPtrs:
   .dw DrawHoriz0, DrawHoriz1, DrawHoriz2, DrawHoriz3
 VertTypPtrs:
@@ -47,14 +49,37 @@ Single:  ; A single block
 .REPT 4  ; Get top 4 bits
   LSR
 .ENDR
+  STA tmp3
   TAX
-  LDA SingleTiles2,X
-  STA $0300,Y
-  INY  ; Draw second block
+
+  ; Now jump to the correct function!
+  LDA SingleType,X
+  ASL
+  TAX
+  LDA SingleTypPtrs,X
+  STA jmpPtr
+  LDA SingleTypPtrs+1,X
+  STA jmpPtr+1
+  LDX tmp3
+  JMP (jmpPtr)
+DrawSingle0:
   LDA SingleTiles,X
   STA $0300,Y
+  STA $0301,Y  ; You will see this trick a lot. Instead of increasing Y for more CPU cycles, we just increase the base pointer by 1.
 AftS  ; Reuse existing jmp
   JMP Aft
+DrawSingle1:
+  LDA SingleTiles2,X
+  STA $0300,Y
+  LDA SingleTiles,X
+  STA $0301,Y
+  JMP Aft
+DrawSingle2:
+  LDA tmp1
+  AND #%00000001
+  BNE AftS  ; Only the left tile
+  LDA SingleTiles,X
+  STA $0301,Y  ; Only update the top left tile
 
 
 Struct:  ; A structure of blocks
@@ -112,22 +137,19 @@ Horiz:  ; A horizontal row of blocks
   STA jmpPtr
   LDA HorizTypPtrs+1,X
   STA jmpPtr+1
+  LDX tmp3
   JMP (jmpPtr)
 DrawHoriz0:
-  LDX tmp3
   LDA HorizTiles,X
   STA $0300,Y
-  INY  ; Draw second block
-  STA $0300,Y
+  STA $0301,Y
 AftH:  ; Reuse an existing jmp
   JMP Aft
 DrawHoriz1:
-  LDX tmp3
   LDA HorizTiles2,X
   STA $0300,Y
-  INY  ; Draw second block
   LDA HorizTiles,X
-  STA $0300,Y
+  STA $0301,Y
   JMP Aft
 DrawHoriz3:
   LDA tmp1
@@ -153,12 +175,10 @@ DrawHoriz2:
   CMP tmp1
   BEQ DHEnd
 ; Regular in the middle tile
-  LDX tmp3
   LDA HorizTiles,X
   STA $0300,Y
-  INY  ; Draw second block
   LDA HorizTiles,X
-  STA $0300,Y
+  STA $0301,Y
   JMP Aft
 @DHStart:
   LDY tmp5
@@ -168,10 +188,9 @@ DHStart:
   CLC
   ADC #$01
   STA $0300,Y
-  INY  ; Draw second block
   LDA HorizTiles,X
   ADC #$02  ; Previous should NEVER overflow
-  STA $0300,Y
+  STA $0301,Y
   JMP Aft
 DHEnd:
   LDX tmp3
@@ -179,10 +198,9 @@ DHEnd:
   CLC
   ADC #$04
   STA $0300,Y
-  INY  ; Draw second block
   LDA HorizTiles,X
   ADC #$03  ; Previous should NEVER overflow
-  STA $0300,Y
+  STA $0301,Y
   JMP Aft
 
 
@@ -222,9 +240,9 @@ Vert:  ; A vertical row of blocks
   STA jmpPtr
   LDA VertTypPtrs+1,X
   STA jmpPtr+1
+  LDX tmp4
   JMP (jmpPtr)
 DrawVert2:
-  LDX tmp4
   LDA tmp1
   AND #%00000001
   BNE +
@@ -235,7 +253,6 @@ DrawVert2:
   LDA VertTiles2,X
   JMP DV0Loop
 DrawVert1:
-  LDX tmp4
   LDA VertTiles2,X  ; This tile is for the top; so keep it until the end
   STA tmp4
   ; Draw other blocks
@@ -250,7 +267,6 @@ DrawVert1:
   STA $0300,Y
   JMP Aft
 DrawVert0:
-  LDX tmp4
   LDA VertTiles,X
 DV0Loop:
   LDX tmp3
@@ -264,16 +280,19 @@ Aft:
 ENDM
 
 
-SingleTiles:  ; Top block of tile
-  ;   dirtS
-  .db $04
-SingleTiles2: ; Bottom block of tile
-  .db $04
+SingleType:  ; Type of object (defines what SingleTiles ans SingleTiles2 do)
+; 0 = all,unused - 1 = top,bottom - 2 = top left corner,unused (rest untouched)
+  ;   dirtS,fruit
+  .db $01,  $02
+SingleTiles:
+  .db $04,  $1B
+SingleTiles2:
+  .db $04,  $1B
 
 ; A set of 5 is a set of 5 tiles in order in the character rom: middle, bottom left, top left, top right, bottom right.
 ; A 'looping' set of 5 does not use the middle tile; it just loops between the left and right ones.
 HorizType:  ; Type of object (defines what HorizTiles and HorizTiles2 are used for)
-; 0 = all,unused - 1 = bottom,top - 2 = start tile of a set of 5,unused - 3 = start of a looping set of 5,unused
+; 0 = all,unused - 1 = top,bottom - 2 = start tile of a set of 5,unused - 3 = start of a looping set of 5,unused
   ;   grass,dirtH,bricks,cloud,leaf,bridge
   .db $01,  $00,  $03,   $02,  $02, $01
 HorizTiles:
