@@ -97,6 +97,7 @@ It is like a vertical line of blocks, but offscreen (Y=15) so I can use this as 
 | Bricks    | 2 |
 | Cloud     | 3 |
 | Leaf      | 4 |
+| Bridge    | 5 |
 
 ### Vertical objects (D=1, I=1)
 | Obj name  | hex type |

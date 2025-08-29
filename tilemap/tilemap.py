@@ -12,6 +12,7 @@ types = {
     'bricks': (0, 1, 0x2),
     'cloud':  (0, 1, 0x3),
     'leaf':   (0, 1, 0x4),
+    'bridge': (0, 1, 0x5),
     # Verticals
     'pillar': (1, 1, 0x0),
     'ladder': (1, 1, 0x1),
