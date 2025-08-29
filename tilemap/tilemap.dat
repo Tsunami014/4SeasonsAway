@@ -116,6 +116,7 @@
 > 8,  0  - FloorPtn: 3
 
 # Summer
+< 0,  0  - PalleteChng: 1
 < 0,  0  - FloorPtn: 1
 
 # Offscreen tiles so it ends with a blank screen

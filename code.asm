@@ -16,7 +16,7 @@ MIRRORING = %0001 ;%0000 = horizontal, %0001 = vertical, %1000 = four-screen
 
 
 PPUCTRLBASE = %10010100   ; enable NMI, sprites from Pattern Table 0, background from Pattern Table 1
-PPUMASKBASE = %00011110   ; enable sprites, enable background, no clipping on left side
+PPUMASKBASE = %00011110   ; enable sprites, enable background, no clipping on left side, increment by 32
 
 ;; Controller inputs
 BTN_A      = %10000000

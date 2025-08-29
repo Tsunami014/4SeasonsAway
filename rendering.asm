@@ -78,7 +78,7 @@ ENDM
 
 ;-------------------------------------------------------------------------------------
 
-; Sets Y->0, writes over Y&tmp1&tmp2&tmpPtr
+; Sets Y->0, writes over everything
 ; Uses nxtCol and writes to nxtItPtr
 ChkIncNxtItPtr:  ; Check and increase an item pointer (check if need to) in a loop. Continues until next item is not ok.
   LDY #$00
@@ -93,10 +93,11 @@ ChkIncNxtItPtr:  ; Check and increase an item pointer (check if need to) in a lo
   LDA (nxtItPtr),Y  ; Load first byte of next object
   AND #%00111110  ; Filter out for the X and screen
   CMP tmp2  ; This only works when going forwards; when going backwards, the objects would be added when they're half a block too early
-  BNE +End
+  BEQ +
+  JMP +End  ; Bcos it's too far away
   ; The next item is now on screen! (Exactly on the screen edge)
   ; Update nxtItPtr to be the next obj
-  STY tmp1
++ STY tmp1
   LDA nxtItPtr
   CLC
   ADC tmp1  ; Now A = nxtItPtr + 2 + (1 if there is a data byte in the object else 0)
@@ -108,6 +109,65 @@ ChkIncNxtItPtr:  ; Check and increase an item pointer (check if need to) in a lo
   AND #$0F
   CMP #$0F  ; Check if it's a floor pattern
   BEQ @FP
+  ; Check if it's a pallete change object
+  CMP #$0E
+  BNE @cont
+  LDY #$00
+  LDA (nxtItPtr),Y  ; Load first byte of this object
+  AND #%10000001  ; Filter out for the I and D values
+  CMP #%10000000  ; This ensures it's a single block
+  BNE -loop  ; Because Y is already 0
+  ; It's a pallete change object!
+  LDY #$01  ; Get the other byte... again... to get the type this time tho!
+  LDA (nxtItPtr),Y
+  AND #$F0
+  STA tmp1
+.REPT 4
+  LSR
+.ENDR
+  ORA tmp1  ; Now tmp1 has a repeated 4-bit value
+  STA tmp3
+  ; This will cause a slight jitter, but because this is SUPPOSED to happen when rendering is off after level transitions, we don't have to worry.
+  ; But since level transitions do not exist yet, we have to pretend ourselves by turning rendering off and on again.
+  ; <replaceWhenLevelTransitions>
+@WaitForVBlank:
+  LDA $2002
+  AND #%10000000
+  BEQ @WaitForVBlank
+
+  LDA #$00  ; Do not render. But more importantly, ensure it increments by 1 not 32!
+  STA $2000
+  ; </replaceWhenLevelTransitions>
+  LDA $2002
+  LDA #$02
+  STA tmp4
+  LDA #$23
+@palChngOuterLoop:
+  STA $2006
+  LDA #$C0
+  STA $2006
+
+  LDA tmp3  ; A is the value to write!
+  LDY #64  ; 64 bytes to write
+@palChngInnerLoop:
+  STA $2007
+  DEY
+  BNE @palChngInnerLoop
+  LDA #$27
+  LDX tmp4
+  DEX
+  BEQ @aft
+  STX tmp4
+  JMP @palChngOuterLoop
+@aft:
+  ; <replaceWhenLevelTransitions>
+  ; Update the ppu flags again
+  LDA playerscrn
+  AND #%00000001
+  ORA #PPUCTRLBASE
+  STA $2000
+  ; </replaceWhenLevelTransitions>
+@cont:
   LDY #$00  ; So the next loop will work
   JMP -loop  ; Keep going until the next item is not on the screen edge
 @FP:

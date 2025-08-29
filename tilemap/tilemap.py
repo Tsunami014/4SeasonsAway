@@ -90,6 +90,18 @@ def handleLn(ln, cmdidx):
             d = (1, 1, prevFP)  # A vertical column, where the type is the last floor pattern
             y = 15
             prevFP = dat
+            hstr += datstr
+        elif typ == 'palletechng':
+            if not (0 <= dat <= 3):
+                raise ValueError(
+                    f"Palette number must be between 0-3, found {dat}! (cmd #{totIdx})"
+                )
+
+            # Because the pallete needs a special thing where the number is repeated 4 times, we do it in the fast python once.
+            # But we only get 4 bits to store it in, so only repeat it twice. The other 2 will be fine.
+            value = (dat << 2) | dat
+            d = (1, 0, value)
+            y = 14
         else:
             d = types[typ]
             if d[1] == 0:
@@ -108,7 +120,7 @@ def handleLn(ln, cmdidx):
                     raise ValueError(
                         f'Input x {x} and width {width} combined ({dat}) is greater than 16! (cmd #{totIdx}))'
                     )
-        hstr += datstr
+            hstr += datstr
     else:
         d = types[typ]
         if d[1] == 1:
