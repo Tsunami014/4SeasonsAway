@@ -17,7 +17,8 @@ types = {
     'cloud':   (0, 1, 0x3),
     'leaf':    (0, 1, 0x4),
     'bridge':  (0, 1, 0x5),
-    'spikes':  (0, 1, 0x6),
+    'cbridge': (0, 1, 0x6),
+    'spikes':  (0, 1, 0x7),
     # Verticals
     'pillar':  (1, 1, 0x0),
     'ladder':  (1, 1, 0x1),

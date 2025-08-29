@@ -88,6 +88,36 @@
 > 10, 5  - Mark
 > 14, 8  - Mark
 
+< 0,  1  - Spikes: 10
+< 2,  1  - Vine: 6
+< 2,  7  - VineTop
+< 3,  6  - Bricks: 3
+< 3,  5  - Bricks: 1
+< 6,  6  - CBridge: 5
+< 6,  1  - StoneBlk
+< 6,  2  - Spikes: 1
+< 8,  7  - Spikes: 2
+< 11, 6  - Bricks: 1
+< 13, 10 - StoneBlk
+< 14, 2  - StoneBlk
+< 15, 2  - StoneBlk
+< 0,  3  - Mark
+< 6,  9  - Mark
+< 10, 5  - Mark
+
+> 0,  7  - Mark
+> 3,  4  - Mark
+> 4,  9  - Stone: 2
+> 5,  9  - Stone: 2
+> 6,  7  - Stone: 4
+> 7,  7  - Stone: 4
+> 6,  2  - StoneBlk
+> 7,  2  - StoneBlk
+> 8,  0  - FloorPtn: 3
+
+# Summer
+< 0,  0  - FloorPtn: 1
+
 # Offscreen tiles so it ends with a blank screen
 . 0,  0  - FloorPtn: 0
 . 14, 14 - Grass: 1
