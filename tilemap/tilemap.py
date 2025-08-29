@@ -71,9 +71,8 @@ def handleLn(ln, cmdidx):
     width = 1
     if ':' in typ:
         typ, dat = typ.split(':')
-        dat = int(dat)-1
+        dat = int(dat)
         if typ == 'floorptn':
-            dat += 1
             d = (1, 1, prevFP)  # A vertical column, where the type is the last floor pattern
             y = 15
             prevFP = dat
@@ -84,6 +83,7 @@ def handleLn(ln, cmdidx):
                     f'Object {typ} cannot have data, but has been provided some! (cmd #{totIdx})'
                 )
             if d[0] == 0:
+                dat -= 1
                 if dat >= 16-Offset:
                     raise ValueError(
                         f'Horizontal object too large! Max length: {16-Offset-1}, provided length: {dat}. (cmd #{totIdx})'
@@ -117,6 +117,11 @@ tmp = []
 for ln in dat:
     if ln == '\n' or ln[0] == '#':
         continue
+    if ln[0] == '.':
+        if chr == '<':
+            ln = '>'+ln[1:]
+        else:
+            ln = '<'+ln[1:]
     if chr != ln[0]:
         outdat.append(tmp)
         tmp = []

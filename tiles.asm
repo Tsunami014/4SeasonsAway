@@ -110,10 +110,13 @@ Vert:  ; A vertical row of blocks
   BCS Aft  ; If is offscreen, it's a floor pattern object; so don't draw it.
   ; Find height required
   LDY #$02
+  LDA (tmpPtr),Y
   AND #$0F
   ASL  ; So it draws 2* that many tiles
   STA tmp3  ; tmp3 is the looper
   ; Draw the tile to the right Y!
+  TXA
+  AND #$0F
   ASL
   CLC
   ADC tmp2
@@ -122,7 +125,7 @@ Vert:  ; A vertical row of blocks
 .REPT 4  ; Get top 4 bits
   LSR
 .ENDR
-  STA tmp2  ; Store it in tmp2
+  STA tmp4  ; Store it in tmp4
   TAX
   ; Now jump to the correct function!
   LDA VertType,X
@@ -138,16 +141,19 @@ DrawVert1:
   AND #%00000001
   BEQ Aft  ; Ensure it only draws the right column
 DrawVert0:
-  LDX tmp2
-  LDA VertTiles2,X
-  STA $0300,Y
+  LDX tmp4
+  LDA VertTiles2,X  ; This tile is for the top; so keep it until the end
+  STA tmp4
   ; Draw other blocks
   LDA VertTiles,X
   LDX tmp3
-- DEY
-  STA $0300,Y
+  DEX  ; Leave one out for the end
+- STA $0300,Y
+  INY
   DEX
   BNE -
+  LDA tmp4
+  STA $0300,Y
 Aft:
 ENDM
 

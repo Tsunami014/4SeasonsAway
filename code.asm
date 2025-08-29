@@ -55,6 +55,7 @@ CacheMake      = $030F
 tmp1         .dsb 1
 tmp2         .dsb 1
 tmp3         .dsb 1
+tmp4         .dsb 1
 
 jmpPtr       .dsb 2  ; A pointer used for jump table stuff
 tmpPtr       .dsb 2
