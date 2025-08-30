@@ -455,131 +455,131 @@
 > 5,  9  - Mark2
 
 # Winter
-> 3,  0  - FloorPtn: 6
-> 3,  10 - StoneBlk
-> 6,  0  - FloorPtn: 0
-> 6,  0  - Ice: 10
-> 6,  1  - Ice: 10
-> 6,  2  - Ice: 3
-> 6,  3  - Ice: 2
-> 6,  4  - Ice: 1
-> 10, 10 - Cloud: 3
+< 3,  0  - FloorPtn: 6
+< 3,  10 - StoneBlk
+< 6,  0  - FloorPtn: 0
+< 6,  0  - Ice: 10
+< 6,  1  - Ice: 10
+< 6,  2  - Ice: 3
+< 6,  3  - Ice: 2
+< 6,  4  - Ice: 1
+< 10, 10 - Cloud: 3
 
-< 3,  0  - FloorPtn: 1
-< 3,  2  - Fence: 5
-< 2,  6  - PTLeaf: 7
-< 3,  8  - PTLeaf: 5
-< 4,  10 - PTLeaf: 3
-< 5,  2  - Trunk: 8
-< 8,  0  - FloorPtn: 0
-< 11, 0  - Ice: 4
-< 11, 1  - Ice: 4
-< 8, 12  - Cloud: 5
+> 3,  0  - FloorPtn: 1
+> 3,  2  - Fence: 5
+> 2,  6  - PTLeaf: 7
+> 3,  8  - PTLeaf: 5
+> 4,  10 - PTLeaf: 3
+> 5,  2  - Trunk: 8
+> 8,  0  - FloorPtn: 0
+> 11, 0  - Ice: 4
+> 11, 1  - Ice: 4
+> 8, 12  - Cloud: 5
 
-> 2,  2  - Ice: 2
-> 2,  3  - Fence: 1
-> 3,  3  - Ice: 1
-> 6,  3  - Ice: 2
-> 6,  4  - Fence: 1
-> 7,  4  - Ice: 1
-> 10, 4  - Ice: 2
-> 10, 5  - Ice: 2
-> 14, 5  - Ice: 2
-> 14, 6  - Ice: 2
-> 5,  9  - Cloud: 3
+< 2,  2  - Ice: 2
+< 2,  3  - Fence: 1
+< 3,  3  - Ice: 1
+< 6,  3  - Ice: 2
+< 6,  4  - Fence: 1
+< 7,  4  - Ice: 1
+< 10, 4  - Ice: 2
+< 10, 5  - Ice: 2
+< 14, 5  - Ice: 2
+< 14, 6  - Ice: 2
+< 5,  9  - Cloud: 3
 
-< 3,  6  - Ice: 3
-< 3,  7  - Ice: 3
-< 6,  7  - Bridge: 3
-< 6,  8  - Fence: 4
-< 9,  7  - Grass: 3
-< 10, 6  - DirtS
-< 10, 8  - Ice: 2
-< 11, 9  - Ice: 2
-< 3,  11 - Cloud: 4
-< 7,  3  - Cloud: 6
+> 3,  6  - Ice: 3
+> 3,  7  - Ice: 3
+> 6,  7  - Bridge: 3
+> 6,  8  - Fence: 4
+> 9,  7  - Grass: 3
+> 10, 6  - DirtS
+> 10, 8  - Ice: 2
+> 11, 9  - Ice: 2
+> 3,  11 - Cloud: 4
+> 7,  3  - Cloud: 6
 
-> 2,  0  - Pillar: 5
-> 2,  5  - Ice: 1
-> 6,  0  - Pillar: 6
-> 6,  6  - Ice: 1
-> 10, 0  - Pillar: 4
-> 10, 4  - Ice: 1
-> 14, 0  - Pillar: 5
-> 14, 5  - Ice: 2
-> 3,  12 - Cloud: 7
-
-< 2,  0  - FloorPtn: 1
-< 4,  2  - Bush: 3
-< 8,  3  - Ice: 1
+< 2,  0  - Pillar: 5
+< 2,  5  - Ice: 1
+< 6,  0  - Pillar: 6
+< 6,  6  - Ice: 1
+< 10, 0  - Pillar: 4
 < 10, 4  - Ice: 1
-< 6,  6  - Ice: 2
-< 5,  7  - Ice: 2
-< 8,  9  - Ice: 1
-< 11, 2  - Stone: 9
-< 12, 2  - Stone: 9
-< 11, 11 - Blocks: 4
-< 13, 10 - Blocks: 1
-< 14, 0  - FloorPtn: 0
-< 3,  10 - Cloud: 3
+< 14, 0  - Pillar: 5
+< 14, 5  - Ice: 2
+< 3,  12 - Cloud: 7
 
-> 0,  0  - FloorPtn: 13
-> 3,  1  - Grass: 5
-> 3,  0  - DirtH: 5
-> 5,  2  - Bush: 2
-> 10, 1  - Grass: 4
-> 10, 0  - DirtH: 4
-> 12, 2  - Blocks: 2
-> 5,  8  - Cloud: 5
-> 7,  9  - Cloud: 3
+> 2,  0  - FloorPtn: 1
+> 4,  2  - Bush: 3
+> 8,  3  - Ice: 1
+> 10, 4  - Ice: 1
+> 6,  6  - Ice: 2
+> 5,  7  - Ice: 2
+> 8,  9  - Ice: 1
+> 11, 2  - Stone: 9
+> 12, 2  - Stone: 9
+> 11, 11 - Blocks: 4
+> 13, 10 - Blocks: 1
+> 14, 0  - FloorPtn: 0
+> 3,  10 - Cloud: 3
 
-< 2,  2  - Grass: 3
-< 2,  1  - DirtH: 3
-< 2,  0  - DirtH: 3
-< 3,  3  - Bush: 1
-< 9,  1  - Bridge: 3
-< 9,  2  - Fence: 3
-< 12, 1  - Grass: 4
-< 12, 0  - DirtH: 4
-< 13, 2  - Log: 3
-< 2,  9  - Cloud: 3
-< 10, 10 - Cloud: 2
+< 0,  0  - FloorPtn: 13
+< 3,  1  - Grass: 5
+< 3,  0  - DirtH: 5
+< 5,  2  - Bush: 2
+< 10, 1  - Grass: 4
+< 10, 0  - DirtH: 4
+< 12, 2  - Blocks: 2
+< 5,  8  - Cloud: 5
+< 7,  9  - Cloud: 3
 
-> 4,  0  - Pillar: 1
-> 6,  0  - Pillar: 2
-> 8,  0  - Pillar: 3
-> 10, 0  - FloorPtn: 14
-> 12, 4  - Log: 3
-> 14, 8  - Leaf: 2
-> 13, 9  - Leaf: 3
-> 13, 10 - Leaf: 3
-> 14, 11 - Leaf: 2
-> 15, 8  - LeafW: 4
-> 5,  8  - Cloud: 6
+> 2,  2  - Grass: 3
+> 2,  1  - DirtH: 3
+> 2,  0  - DirtH: 3
+> 3,  3  - Bush: 1
+> 9,  1  - Bridge: 3
+> 9,  2  - Fence: 3
+> 12, 1  - Grass: 4
+> 12, 0  - DirtH: 4
+> 13, 2  - Log: 3
+> 2,  9  - Cloud: 3
+> 10, 10 - Cloud: 2
 
-< 0,  4  - Trunk: 4
-< 0,  8  - Leaf: 3
-< 0,  9  - Leaf: 4
-< 0,  10 - Leaf: 4
-< 0,  11 - Leaf: 3
-< 0,  8  - LeafW: 4
-< 5,  8  - BrickL
-< 6,  8  - Bricks: 6
-< 12, 8  - BrickR
-< 6,  9  - BrickL
-< 7,  9  - Bricks: 4
-< 11, 9  - BrickR
-< 6,  4  - Bricks: 6
-< 6,  5  - Bricks: 6
-< 6,  6  - Bricks: 6
-< 6,  7  - Bricks: 6
-< 8,  4  - CaveBG: 3
-< 9,  4  - CaveBG: 3
-< 11, 13 - DirtH: 3
-< 13, 12 - DirtS
-< 14, 3  - DirtV: 11
-< 15, 3  - DirtV: 11
-< 3,  12 - Cloud: 3
+< 4,  0  - Pillar: 1
+< 6,  0  - Pillar: 2
+< 8,  0  - Pillar: 3
+< 10, 0  - FloorPtn: 14
+< 12, 4  - Log: 3
+< 14, 8  - Leaf: 2
+< 13, 9  - Leaf: 3
+< 13, 10 - Leaf: 3
+< 14, 11 - Leaf: 2
+< 15, 8  - LeafW: 4
+< 5,  8  - Cloud: 6
+
+> 0,  4  - Trunk: 4
+> 0,  8  - Leaf: 3
+> 0,  9  - Leaf: 4
+> 0,  10 - Leaf: 4
+> 0,  11 - Leaf: 3
+> 0,  8  - LeafW: 4
+> 5,  8  - BrickL
+> 6,  8  - Bricks: 6
+> 12, 8  - BrickR
+> 6,  9  - BrickL
+> 7,  9  - Bricks: 4
+> 11, 9  - BrickR
+> 6,  4  - Bricks: 6
+> 6,  5  - Bricks: 6
+> 6,  6  - Bricks: 6
+> 6,  7  - Bricks: 6
+> 8,  4  - CaveBG: 3
+> 9,  4  - CaveBG: 3
+> 11, 13 - DirtH: 3
+> 13, 12 - DirtS
+> 14, 3  - DirtV: 11
+> 15, 3  - DirtV: 11
+> 3,  12 - Cloud: 3
 
 
 . 0,  0  - FloorPtn: 15
