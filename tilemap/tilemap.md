@@ -101,9 +101,11 @@ It is like a vertical line of blocks, but offscreen (Y=15) so I can use this as 
 | Bricks    | 2 |
 | Cloud     | 3 |
 | Leaf      | 4 |
-| Bridge    | 5 |
-| CBridge   | 6 |
-| Spikes    | 7 |
+| Bush      | 5 |
+| Bridge    | 6 |
+| CBridge   | 7 |
+| Spikes    | 8 |
+| Log       | 9 |
 
 ### Vertical objects (D=1, I=1)
 | Obj name  | hex type |

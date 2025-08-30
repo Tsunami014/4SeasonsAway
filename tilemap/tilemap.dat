@@ -5,7 +5,7 @@
 < 0,  0  - FloorPtn: 1
 < 2,  2  - Pillar: 7
 < 5,  2  - Pillar: 5
-< 8,  2  - Leaf: 2
+< 8,  2  - Bush: 2
 < 9,  2  - Fruit
 < 12, 2  - Ladder: 3
 < 13, 0  - FloorPtn: 2
@@ -14,7 +14,7 @@
 < 12, 9  - Cloud: 3
 < 12, 10 - Cloud: 4
 
-> 0,  5  - Leaf: 2
+> 0,  5  - Log: 2
 > 3,  0  - FloorPtn: 0
 > 6,  0  - FloorPtn: 2
 > 7,  5  - Leaf: 1
@@ -23,7 +23,7 @@
 > 10, 8  - Bricks: 2
 > 10, 7  - Bricks: 2
 > 10, 6  - Bricks: 2
-> 14, 5  - Leaf: 1
+> 14, 5  - Bush: 1
 > 4,  8  - Cloud: 2
 > 4,  9  - Cloud: 1
 > 7,  11 - Cloud: 3
@@ -55,7 +55,7 @@
 > 9,  7  - Bricks: 1
 > 11, 2  - Leaf: 3
 > 12, 2  - Fruit
-> 12, 3  - Leaf: 2
+> 12, 3  - Bush: 2
 > 0,  12 - Cloud: 2
 > 4,  9  - Cloud: 4
 > 6,  10 - Cloud: 2
@@ -63,7 +63,7 @@
 > 11, 12 - Cloud: 2
 > 12, 11 - Cloud: 2
 
-< 2,  2  - Leaf: 2
+< 2,  2  - Bush: 2
 < 3,  6  - StoneW: 5
 < 4,  6  - StoneW: 7
 < 5,  0  - FloorPtn: 4

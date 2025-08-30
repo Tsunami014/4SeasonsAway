@@ -293,12 +293,12 @@ SingleTiles2:
 ; A 'looping' set of 5 does not use the middle tile; it just loops between the left and right ones.
 HorizType:  ; Type of object (defines what HorizTiles and HorizTiles2 are used for)
 ; 0 = all,unused - 1 = top,bottom - 2 = start tile of a set of 5,unused - 3 = start of a looping set of 5,unused
-  ;   grass,dirtH,bricks,cloud,leaf,bridge,cbridge,spikes
-  .db $01,  $00,  $03,   $02,  $02, $01,   $01,    $01
+  ;   grass,dirtH,bricks,cloud,leaf,bush,bridge,cbridge,spikes,log
+  .db $01,  $00,  $03,   $02,  $02, $02, $01,   $01,    $01,   $02
 HorizTiles:
-  .db $02,  $04,  $36,   $26,  $16, $05,   $06,    $01
+  .db $02,  $04,  $36,   $26,  $16, $46, $05,   $06,    $01,   $56
 HorizTiles2:
-  .db $04,  $04,  $36,   $26,  $16, $00,   $01,    $0F
+  .db $04,  $04,  $36,   $26,  $16, $46, $00,   $01,    $0F,   $56
 
 VertType:   ; Type of object the vertical ones are (defines what the values in VertTiles are useed for)
 ; 0 = all,unused = 1 = middle,top - 2 = left,right
