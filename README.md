@@ -19,6 +19,11 @@ Because the game is incomplete, please note:
 
 Built using the ASM6 compiler.
 
+# Demo video
+Please note the game is not lagging or stuttering, that is me letting go of the right button so you can see it
+
+https://github.com/user-attachments/assets/e6633d12-9f4f-47b6-8527-3d61760c32d1
+
 # "I just want to run the code"
 1. Download repo however
 1. Run `build.bat` or `./buildLinux` (double click in file explorer or run in terminal, I don't care)
@@ -49,6 +54,6 @@ To edit the tilemap;
 3. Convert it by running the `tilemap.py`. This will work without any external libraries.
 4. Compile and run the main code (see above)
 
-## Opcodes
+### Opcodes
 A very nice list of opcodes for the NES' hardware can be found [here](https://wiki.preterhuman.net/NES_Programming_Guide), and the instructions for the specific ASM6 assembler can be found [here](./Instructs.txt).
 
