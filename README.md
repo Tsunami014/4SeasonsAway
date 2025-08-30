@@ -3,10 +3,12 @@
 A platformer for the NES about finding a friend.
 
 Because the game is incomplete, please note:
-1. You cannot go left. Implementing the 2 functions required would take me too much time. But the code is built around the idea that one day if I implement it I can easily go left without modifying too much other stuff.
-2. There are no scrolling stoppers, so the screen will scroll past where it should be able to if this game were finished. This is because there is no player to go through doors with anyway!
-3. There is a visual glitch when transitioning between areas. This is because there is no level transitions. If there were, it would not occur.
-4. There is no player or enemies. This game is incomplete as mentioned before.
+1. The friend does not exist yet. (But the house does!)
+2. You cannot go left. Implementing the 2 functions required would take me too much time. But the code is built around the idea that one day if I implement it I can easily go left without modifying too much other stuff.
+3. There are no scrolling stoppers, so the screen will scroll past where it should be able to if this game were finished. This is because there is no player to go through doors with anyway!
+4. There is a visual glitch when transitioning between areas. This is because there is no level transitions. If there were, it would not occur.
+5. There is no player or enemies. This game is incomplete as mentioned before.
+6. At the end there is grey. If you go far enough, it will start reading the wrong values and cause glitched tiles to appear.
 
 Built using the ASM6 compiler.
 
