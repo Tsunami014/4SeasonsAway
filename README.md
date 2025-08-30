@@ -6,7 +6,7 @@ This project is written in assembly for the NES. Yes, THE 40 year old NES. The c
 
 This project was going to be a side-scrolling platformer. Turns out this stuff is hard. So it devolved to not having enemies, not having the player, and now not being able to go left. So now, it's just the platforms. Close enough, right? But I reckon getting anything to work on this thing is a grand feat in itself.
 
-This project was somewhat made with AI. I wrote all of the code myself (that's why it works and looks readable), but I used AI for debugging. But an annoyingly large amount of the time (I'd put it at 95%), debugging myself was either faster or the only way to do it as AI just could not figure out the problem, however simple. And you've never seen debugging be hard until you've debugged assembly. AI can be helpful *occasionally*, but it can also be a big waste of time stating things that are not the problem or are not the solution (and I only know that because I wrote my own code). So I probably wasted more time using it than I would've than if I just did it all myself. Such is life.
+This project was somewhat made with AI. I wrote all of the code myself (that's why it works and looks readable), but I used AI for debugging. But an annoyingly large amount of the time (I'd put it at 98%), debugging myself was either faster or the only way to do it as AI just could not figure out the problem, however simple. And you've never seen debugging be hard until you've debugged assembly. AI can be helpful *occasionally*, but it can also be a big waste of time stating things that are not the problem or are not the solution (and I only know that because I wrote my own code). So I probably wasted more time using it than I would've than if I just did it all myself. Such is life.
 
 # Please note
 Because the game is incomplete, please note:
@@ -20,7 +20,7 @@ Because the game is incomplete, please note:
 Built using the ASM6 compiler.
 
 # Demo video
-Please note the game is not lagging or stuttering, that is me letting go of the right button so you can see it
+Please note in this video the game is not lagging or stuttering, that is me letting go of the right button so you can see it (if you don't believe me go do it yourself)
 
 https://github.com/user-attachments/assets/e6633d12-9f4f-47b6-8527-3d61760c32d1
 
