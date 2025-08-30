@@ -19,9 +19,9 @@
 > 7,  5  - Leaf: 1
 > 9,  5  - Grass: 4
 > 9,  4  - DirtH: 4
-> 10, 8  - Bricks: 2
-> 10, 7  - Bricks: 2
-> 10, 6  - Bricks: 2
+> 10, 8  - Blocks: 2
+> 10, 7  - Blocks: 2
+> 10, 6  - Blocks: 2
 > 14, 5  - Bush: 1
 > 4,  8  - Cloud: 2
 > 4,  9  - Cloud: 1
@@ -36,6 +36,7 @@
 < 3,  13 - Leaf: 3
 < 3,  12 - Fruit
 < 5,  10 - Fruit
+< 6,  5  - Fence: 3
 < 8,  4  - Bridge: 1
 < 8,  0  - FloorPtn: 0
 < 11, 0  - Pillar: 6
@@ -46,12 +47,12 @@
 < 12, 10 - Cloud: 3
 
 > 1,  0  - FloorPtn: 1
-> 4,  2  - Bricks: 6
-> 5,  3  - Bricks: 5
-> 6,  4  - Bricks: 4
-> 7,  5  - Bricks: 3
-> 8,  6  - Bricks: 2
-> 9,  7  - Bricks: 1
+> 4,  2  - Blocks: 6
+> 5,  3  - Blocks: 5
+> 6,  4  - Blocks: 4
+> 7,  5  - Blocks: 3
+> 8,  6  - Blocks: 2
+> 9,  7  - Blocks: 1
 > 11, 2  - Leaf: 3
 > 12, 2  - Fruit
 > 12, 3  - Bush: 2
@@ -80,7 +81,7 @@
 > 7,  2  - Vine: 4
 > 7,  6  - VineTop
 > 11, 1  - Spikes: 5
-> 13, 4  - Bricks: 2
+> 13, 4  - Blocks: 2
 > 12, 10 - StoneBlk
 > 13, 10 - StoneBlk
 > 4,  9  - Mark
@@ -90,13 +91,13 @@
 < 0,  1  - Spikes: 10
 < 2,  1  - Vine: 6
 < 2,  7  - VineTop
-< 3,  6  - Bricks: 3
-< 3,  5  - Bricks: 1
+< 3,  6  - Blocks: 3
+< 3,  5  - Blocks: 1
 < 6,  6  - CBridge: 5
 < 6,  1  - StoneBlk
 < 6,  2  - Spikes: 1
 < 8,  7  - Spikes: 2
-< 11, 6  - Bricks: 1
+< 11, 6  - Blocks: 1
 < 13, 10 - StoneBlk
 < 14, 2  - StoneBlk
 < 15, 2  - StoneBlk
@@ -130,21 +131,21 @@
 < 15, 9  - Bird
 
 > 0,  0  - FloorPtn: 9
-> 2,  3  - Bricks: 1
+> 2,  3  - Blocks: 1
 > 5,  0  - FloorPtn: 8
 > 7,  2  - Sandcastle
-> 9,  2  - Bricks: 3
-> 10, 3  - Bricks: 3
-> 11, 4  - Bricks: 2
+> 9,  2  - Blocks: 3
+> 10, 3  - Blocks: 3
+> 11, 4  - Blocks: 2
 > 12, 0  - FloorPtn: 10
 > 2,  11 - Cloud: 6
 > 5,  12 - Cloud: 5
 > 12, 9  - Cloud: 4
 
-< 0,  4  - Bricks: 1
+< 0,  4  - Blocks: 1
 < 1,  0  - FloorPtn: 9
 < 4,  0  - FloorPtn: 10
-< 4,  4  - Bricks: 1
+< 4,  4  - Blocks: 1
 < 8,  0  - FloorPtn: 8
 < 8,  4  - DirtH: 2
 < 8,  3  - DirtH: 3
@@ -163,7 +164,7 @@
 > 6,  0  - Pillar: 3
 > 8,  0  - Pillar: 2
 > 11, 0  - Pillar: 3
-> 12, 1  - Bricks: 3
+> 12, 1  - Blocks: 3
 > 0,  11 - Cloud: 10
 > 3,  12 - Cloud: 3
 > 7,  10 - Cloud: 2
@@ -171,7 +172,7 @@
 > 5,  8  - Bird
 > 12, 8  - Cloud: 3
 
-< 3,  2  - Bricks: 1
+< 3,  2  - Blocks: 1
 < 4,  2  - Bridge: 2
 < 5,  0  - FloorPtn: 8
 < 5,  2  - DirtH: 3
@@ -201,9 +202,9 @@
 < 6,  0  - FloorPtn: 10
 < 12, 0  - FloorPtn: 8
 < 12, 0  - Pillar: 5
-< 13, 4  - Bricks: 1
-< 13, 3  - Bricks: 2
-< 13, 2  - Bricks: 3
+< 13, 4  - Blocks: 1
+< 13, 3  - Blocks: 2
+< 13, 2  - Blocks: 3
 < 0,  7  - Bird
 < 1,  8  - Bird
 < 2,  7  - Bird
@@ -214,7 +215,7 @@
 < 14, 9  - Cloud: 2
 
 > 2,  2  - Spade
-> 4,  2  - Bricks: 3
+> 4,  2  - Blocks: 3
 > 5,  3  - Bush: 2
 > 9,  2  - StoneBlk
 > 10, 2  - StoneBlk
@@ -250,7 +251,7 @@
 
 > 4,  0  - FloorPtn: 4
 > 6,  0  - FloorPtn: 5
-> 7,  2  - Bricks: 3
+> 7,  2  - Blocks: 3
 > 9,  0  - Spikes: 5
 > 9,  1  - CaveBG: 1
 > 10, 1  - CaveBG: 1
@@ -258,7 +259,7 @@
 > 12, 1  - CaveBG: 1
 > 13, 1  - CaveBG: 1
 > 13, 9  - CaveBG: 1
-> 13, 4  - Bricks: 1
+> 13, 4  - Blocks: 1
 > 14, 0  - FloorPtn: 6
 > 2,  4  - Mark
 > 5,  8  - Mark2
@@ -283,7 +284,7 @@
 > 2,  4  - CaveBG: 3
 > 3,  4  - CaveBG: 3
 > 4,  0  - FloorPtn: 11
-> 4,  3  - Bricks: 1
+> 4,  3  - Blocks: 1
 > 6,  8  - Leaf: 7
 > 7,  9  - Leaf: 5
 > 8,  10 - Leaf: 3
@@ -295,12 +296,12 @@
 > 14, 1  - DirtH: 2
 > 14, 10 - Bird
 
-< 4,  2  - Bricks: 3
-< 5,  3  - Bricks: 2
+< 4,  2  - Blocks: 3
+< 5,  3  - Blocks: 2
 < 6,  4  - Log: 6
 < 7,  0  - FloorPtn: 0
-< 11, 3  - Bricks: 2
-< 11, 2  - Bricks: 5
+< 11, 3  - Blocks: 2
+< 11, 2  - Blocks: 5
 < 11, 0  - Pillar: 2
 < 15, 0  - Pillar: 2
 < 15, 3  - LLitter: 1
@@ -318,9 +319,9 @@
 > 2,  12 - Leaf: 5
 > 2,  13 - Leaf: 5
 > 4,  0  - Trunk: 9
-> 2,  4  - Bricks: 5
+> 2,  4  - Blocks: 5
 > 2,  5  - LLitter: 5
-> 3,  3  - Bricks: 3
+> 3,  3  - Blocks: 3
 > 10, 0  - Pillar: 6
 > 10, 6  - LLitter: 1
 > 9,  12 - Bird
@@ -336,7 +337,7 @@
 > 14, 5  - Ladder: 6
 > 15, 0  - Trunk: 10
 > 15, 11 - LeafW: 3
-> 15, 10 - Bricks: 1
+> 15, 10 - Blocks: 1
 < 0,  6  - Leaf: 2
 < 0,  7  - Leaf: 4
 < 0,  8  - Leaf: 5
@@ -347,8 +348,8 @@
 < 0,  13 - Leaf: 5
 < 0,  0  - Trunk: 10
 < 0,  11 - LeafW: 3
-< 0,  10 - Bricks: 2
-< 5,  10 - Bricks: 2
+< 0,  10 - Blocks: 2
+< 5,  10 - Blocks: 2
 
 < 10, 0  - Pillar: 8
 < 14, 0  - Pillar: 6
@@ -383,8 +384,8 @@
 
 < 1,  0  - FloorPtn: 11
 < 3,  3  - Bush: 4
-< 9,  3  - Bricks: 4
-< 10, 2  - Bricks: 2
+< 9,  3  - Blocks: 4
+< 10, 2  - Blocks: 2
 < 11, 0  - FloorPtn: 5
 < 12, 2  - StoneBlk
 < 12, 8  - StoneBlk
@@ -407,14 +408,14 @@
 
 < 0,  0  - FloorPtn: 4
 < 0,  1  - Spikes: 10
-< 3,  1  - Bricks: 1
-< 6,  2  - Bricks: 1
-< 8,  4  - Bricks: 1
-< 4,  5  - Bricks: 1
-< 1,  6  - Bricks: 1
-< 0,  7  - Bricks: 1
-< 5,  8  - Bricks: 1
-< 9,  7  - Bricks: 1
+< 3,  1  - Blocks: 1
+< 6,  2  - Blocks: 1
+< 8,  4  - Blocks: 1
+< 4,  5  - Blocks: 1
+< 1,  6  - Blocks: 1
+< 0,  7  - Blocks: 1
+< 5,  8  - Blocks: 1
+< 9,  7  - Blocks: 1
 < 2,  11 - CaveBG: 1
 < 3,  11 - CaveBG: 1
 < 4,  11 - CaveBG: 1
@@ -424,24 +425,24 @@
 < 10, 6  - Stone: 2
 < 11, 6  - Stone: 2
 < 12, 6  - StoneBlk
-< 13, 6  - Bricks: 2
-< 13, 5  - Bricks: 1
+< 13, 6  - Blocks: 2
+< 13, 5  - Blocks: 1
 < 14, 0  - FloorPtn: 12
 < 1,  4  - Mark2
 < 4,  11 - Mark2
 < 11, 9  - Mark
 
-> 2,  5  - Bricks: 2
-> 7,  6  - Bricks: 2
-> 9,  7  - Bricks: 2
-> 15, 3  - Bricks: 1
+> 2,  5  - Blocks: 2
+> 7,  6  - Blocks: 2
+> 9,  7  - Blocks: 2
+> 15, 3  - Blocks: 1
 > 3,  7  - Mark
 > 7,  2  - Mark
 > 12, 6  - Mark2
 
-< 3,  4  - Bricks: 1
-< 8,  5  - Bricks: 1
-< 13, 5  - Bricks: 1
+< 3,  4  - Blocks: 1
+< 8,  5  - Blocks: 1
+< 13, 5  - Blocks: 1
 < 3,  9  - Mark
 < 7,  3  - Mark2
 < 12, 8  - Mark
@@ -453,9 +454,136 @@
 > 2,  10 - Mark
 > 5,  9  - Mark2
 
+# Winter
+> 3,  0  - FloorPtn: 6
+> 3,  10 - StoneBlk
+> 6,  0  - FloorPtn: 0
+> 6,  0  - Ice: 10
+> 6,  1  - Ice: 10
+> 6,  2  - Ice: 3
+> 6,  3  - Ice: 2
+> 6,  4  - Ice: 1
+> 10, 10 - Cloud: 3
 
-# Offscreen tiles so it ends with a blank screen
-. 0,  0  - FloorPtn: 0
+< 3,  0  - FloorPtn: 1
+< 3,  2  - Fence: 5
+< 2,  6  - PTLeaf: 7
+< 3,  8  - PTLeaf: 5
+< 4,  10 - PTLeaf: 3
+< 5,  2  - Trunk: 8
+< 8,  0  - FloorPtn: 0
+< 11, 0  - Ice: 4
+< 11, 1  - Ice: 4
+< 8, 12  - Cloud: 5
+
+> 2,  2  - Ice: 2
+> 2,  3  - Fence: 1
+> 3,  3  - Ice: 1
+> 6,  3  - Ice: 2
+> 6,  4  - Fence: 1
+> 7,  4  - Ice: 1
+> 10, 4  - Ice: 2
+> 10, 5  - Ice: 2
+> 14, 5  - Ice: 2
+> 14, 6  - Ice: 2
+> 5,  9  - Cloud: 3
+
+< 3,  6  - Ice: 3
+< 3,  7  - Ice: 3
+< 6,  7  - Bridge: 3
+< 6,  8  - Fence: 4
+< 9,  7  - Grass: 3
+< 10, 6  - DirtS
+< 10, 8  - Ice: 2
+< 11, 9  - Ice: 2
+< 3,  11 - Cloud: 4
+< 7,  3  - Cloud: 6
+
+> 2,  0  - Pillar: 5
+> 2,  5  - Ice: 1
+> 6,  0  - Pillar: 6
+> 6,  6  - Ice: 1
+> 10, 0  - Pillar: 4
+> 10, 4  - Ice: 1
+> 14, 0  - Pillar: 5
+> 14, 5  - Ice: 2
+> 3,  12 - Cloud: 7
+
+< 2,  0  - FloorPtn: 1
+< 4,  2  - Bush: 3
+< 8,  3  - Ice: 1
+< 10, 4  - Ice: 1
+< 6,  6  - Ice: 2
+< 5,  7  - Ice: 2
+< 8,  9  - Ice: 1
+< 11, 2  - Stone: 9
+< 12, 2  - Stone: 9
+< 11, 11 - Blocks: 4
+< 13, 10 - Blocks: 1
+< 14, 0  - FloorPtn: 0
+< 3,  10 - Cloud: 3
+
+> 0,  0  - FloorPtn: 13
+> 3,  1  - Grass: 5
+> 3,  0  - DirtH: 5
+> 5,  2  - Bush: 2
+> 10, 1  - Grass: 4
+> 10, 0  - DirtH: 4
+> 12, 2  - Blocks: 2
+> 5,  8  - Cloud: 5
+> 7,  9  - Cloud: 3
+
+< 2,  2  - Grass: 3
+< 2,  1  - DirtH: 3
+< 2,  0  - DirtH: 3
+< 3,  3  - Bush: 1
+< 9,  1  - Bridge: 3
+< 9,  2  - Fence: 3
+< 12, 1  - Grass: 4
+< 12, 0  - DirtH: 4
+< 13, 2  - Log: 3
+< 2,  9  - Cloud: 3
+< 10, 10 - Cloud: 2
+
+> 4,  0  - Pillar: 1
+> 6,  0  - Pillar: 2
+> 8,  0  - Pillar: 3
+> 10, 0  - FloorPtn: 14
+> 12, 4  - Log: 3
+> 14, 8  - Leaf: 2
+> 13, 9  - Leaf: 3
+> 13, 10 - Leaf: 3
+> 14, 11 - Leaf: 2
+> 15, 8  - LeafW: 4
+> 5,  8  - Cloud: 6
+
+< 0,  4  - Trunk: 4
+< 0,  8  - Leaf: 3
+< 0,  9  - Leaf: 4
+< 0,  10 - Leaf: 4
+< 0,  11 - Leaf: 3
+< 0,  8  - LeafW: 4
+< 5,  8  - BrickL
+< 6,  8  - Bricks: 6
+< 12, 8  - BrickR
+< 6,  9  - BrickL
+< 7,  9  - Bricks: 4
+< 11, 9  - BrickR
+< 6,  4  - Bricks: 6
+< 6,  5  - Bricks: 6
+< 6,  6  - Bricks: 6
+< 6,  7  - Bricks: 6
+< 8,  4  - CaveBG: 3
+< 9,  4  - CaveBG: 3
+< 11, 13 - DirtH: 3
+< 13, 12 - DirtS
+< 14, 3  - DirtV: 11
+< 15, 3  - DirtV: 11
+< 3,  12 - Cloud: 3
+
+
+. 0,  0  - FloorPtn: 15
+# Offscreen tiles so it continues to show the same black screen
 . 14, 14 - Grass: 1
 . 14, 14 - Grass: 1
 . 14, 14 - Grass: 1

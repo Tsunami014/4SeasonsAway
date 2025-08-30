@@ -92,6 +92,8 @@ It is like a vertical line of blocks, but offscreen (Y=15) so I can use this as 
 | Sandcastle| 6 |
 | Spade     | 7 |
 | Bird      | 8 |
+| BrickL    | 9 |
+| BrickR    | A |
 
 ### Structures (D=0, I=0)
 | Obj name  | hex type |
@@ -102,7 +104,7 @@ It is like a vertical line of blocks, but offscreen (Y=15) so I can use this as 
 |-----------|---|
 | Grass     | 0 |
 | DirtH     | 1 |
-| Bricks    | 2 |
+| Blocks    | 2 |
 | Cloud     | 3 |
 | Leaf      | 4 |
 | PTLeaf    | 5 |
@@ -112,6 +114,9 @@ It is like a vertical line of blocks, but offscreen (Y=15) so I can use this as 
 | Spikes    | 9 |
 | Log       | A |
 | LLitter   | B |
+| Ice       | C |
+| Fence     | D |
+| Bricks    | E |
 
 ### Vertical objects (D=1, I=1)
 | Obj name  | hex type |
@@ -124,4 +129,5 @@ It is like a vertical line of blocks, but offscreen (Y=15) so I can use this as 
 | StoneW    | 5 |
 | CaveBG    | 6 |
 | LeafW     | 7 |
+| DirtV     | 8 |
 

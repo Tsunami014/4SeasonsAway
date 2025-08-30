@@ -13,11 +13,13 @@ types = {
     'sandcastle':(1,0, 0x6),
     'spade':    (1, 0, 0x7),
     'bird':     (1, 0, 0x8),
+    'brickl':   (1, 0, 0x9),
+    'brickr':   (1, 0, 0xA),
     # Structures
     # Horizontals
     'grass':    (0, 1, 0x0),
     'dirth':    (0, 1, 0x1),
-    'bricks':   (0, 1, 0x2),
+    'blocks':   (0, 1, 0x2),
     'cloud':    (0, 1, 0x3),
     'leaf':     (0, 1, 0x4),
     'ptleaf':   (0, 1, 0x5),
@@ -27,6 +29,9 @@ types = {
     'spikes':   (0, 1, 0x9),
     'log':      (0, 1, 0xA),
     'llitter':  (0, 1, 0xB),
+    'ice':      (0, 1, 0xC),
+    'fence':    (0, 1, 0xD),
+    'bricks':   (0, 1, 0xE),
     # Verticals
     'pillar':   (1, 1, 0x0),
     'ladder':   (1, 1, 0x1),
@@ -36,6 +41,7 @@ types = {
     'stonew':   (1, 1, 0x5),
     'cavebg':   (1, 1, 0x6),
     'leafw':    (1, 1, 0x7),
+    'dirtv':    (1, 1, 0x8),
 }
 Offset = 5  # 16-Offset is the maximum width; any more and it stays on until the screen after
 

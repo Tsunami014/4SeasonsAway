@@ -71,17 +71,27 @@ DrawSingle0:
 AftS  ; Reuse existing jmp
   JMP Aft
 DrawSingle1:
-  LDA SingleTiles2,X
-  STA $0300,Y
-  LDA SingleTiles,X
-  STA $0301,Y
-  JMP Aft
-DrawSingle2:
   LDA tmp1
   AND #%00000001
   BNE AftS  ; Only the left tile
   LDA SingleTiles,X
   STA $0300,Y  ; Only update the bottom left tile
+  JMP Aft
+DrawSingle2:
+  LDA tmp1
+  AND #%00000001
+  ASL  ; So we add 2 if it is the second column
+  STA tmp3
+  LDA SingleTiles,X
+  CLC
+  ADC tmp3
+  TAX
+  LDA SingleTiles2,X
+  STA $0301,Y
+  INX
+  LDA SingleTiles2,X
+  STA $0300,Y
+  JMP Aft
 
 
 Struct:  ; A structure of blocks
@@ -282,32 +292,34 @@ Aft:
 ENDM
 
 
-SingleType:  ; Type of object (defines what SingleTiles ans SingleTiles2 do)
-; 0 = all,unused - 1 = top,bottom - 2 = top left corner,unused (rest untouched)
-  ;   dirtS,fruit,vinetop,mark,mark2,stoneblk,sandcastle,spade,bird
-  .db $00,  $02,  $02,    $02, $02,  $01,     $02,       $02,  $02
+SingleType:  ; Type of object
+; 0 = all - 1 = top left corner (rest untouched) - 2 = idx; topL,botL,topR,botR
+; For all idxs, that is the index into the SingleTiles2 table
+  ;   dirtS,fruit,vinetop,mark,mark2,stoneblk,sandcastle,spade,bird,brickL,brickR
+  .db $00,  $01,  $01,    $01, $01,  $00,     $01,       $01,  $01, $02,   $02
 SingleTiles:
-  .db $04,  $1B,  $1E,    $1F, $2F,  $0D,     $20,       $21,  $14
+  .db $04,  $1B,  $1E,    $1F, $2F,  $0D,     $20,       $21,  $14, $00,   $04
 SingleTiles2:
-  .db $04,  $1B,  $1E,    $1F, $2F,  $0D,     $20,       $21,  $14
+  ;   brickL,           brickR
+  .db $0B,$23,$23,$22,  $24,$22,$0B,$24
 
 ; A set of 5 is a set of 5 tiles in order in the character rom: middle, bottom left, top left, top right, bottom right.
 ; A 'looping' set of 5 does not use the middle tile; it just loops between the left and right ones.
 HorizType:  ; Type of object (defines what HorizTiles and HorizTiles2 are used for)
 ; 0 = all,unused - 1 = top,bottom - 2 = start tile of a set of 5,unused - 3 = start of a looping set of 5,unused
-  ;   grass,dirtH,bricks,cloud,leaf,ptleaf,bush,bridge,cbridge,spikes,log,llitter
-  .db $01,  $00,  $03,   $02,  $02, $02,   $02, $01,   $01,    $01,   $02,$01
+  ;   grass,dirtH,blocks,cloud,leaf,ptleaf,bush,bridge,cbridge,spikes,log,llitter,ice,fence,bricks
+  .db $01,  $00,  $03,   $02,  $02, $02,   $02, $01,   $01,    $01,   $02,$01,    $03,$01,  $00
 HorizTiles:
-  .db $02,  $04,  $36,   $26,  $16, $66,   $46, $05,   $06,    $01,   $56,$00
+  .db $02,  $04,  $36,   $26,  $16, $66,   $46, $05,   $06,    $01,   $56,$00,    $76,$00,  $22
 HorizTiles2:
-  .db $04,  $04,  $36,   $26,  $16, $66,   $46, $00,   $01,    $0F,   $56,$09
+  .db $04,  $04,  $36,   $26,  $16, $66,   $46, $00,   $01,    $0F,   $56,$09,    $76,$0C,  $22
 
 VertType:   ; Type of object the vertical ones are (defines what the values in VertTiles are useed for)
 ; 0 = all,unused = 1 = middle,top - 2 = left,right
-  ;   pillar,ladder,vine,trunk,stone,stonew,cavebg,leafw
-  .db $01,   $02,   $02, $00,  $00,  $01,   $00,   $00
+  ;   pillar,ladder,vine,trunk,stone,stonew,cavebg,leafw,dirtV
+  .db $01,   $02,   $02, $00,  $00,  $01,   $00,   $00,  $00
 VertTiles:
-  .db $10,   $12,   $1C, $15,  $0D,  $0D,   $01,   $16
+  .db $10,   $12,   $1C, $15,  $0D,  $0D,   $01,   $16,  $04
 VertTiles2:
-  .db $11,   $13,   $1D, $15,  $0D,  $0E,   $01,   $16
+  .db $11,   $13,   $1D, $15,  $0D,  $0E,   $01,   $16,  $04
 
