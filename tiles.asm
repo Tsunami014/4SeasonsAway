@@ -284,12 +284,12 @@ ENDM
 
 SingleType:  ; Type of object (defines what SingleTiles ans SingleTiles2 do)
 ; 0 = all,unused - 1 = top,bottom - 2 = top left corner,unused (rest untouched)
-  ;   dirtS,fruit,vinetop,mark,stoneblk,sandcastle,spade,bird
-  .db $00,  $02,  $02,    $02, $01,     $02,       $02,  $02
+  ;   dirtS,fruit,vinetop,mark,mark2,stoneblk,sandcastle,spade,bird
+  .db $00,  $02,  $02,    $02, $02,  $01,     $02,       $02,  $02
 SingleTiles:
-  .db $04,  $1B,  $1E,    $1F, $0D,     $20,       $21,  $14
+  .db $04,  $1B,  $1E,    $1F, $2F,  $0D,     $20,       $21,  $14
 SingleTiles2:
-  .db $04,  $1B,  $1E,    $1F, $0D,     $20,       $21,  $14
+  .db $04,  $1B,  $1E,    $1F, $2F,  $0D,     $20,       $21,  $14
 
 ; A set of 5 is a set of 5 tiles in order in the character rom: middle, bottom left, top left, top right, bottom right.
 ; A 'looping' set of 5 does not use the middle tile; it just loops between the left and right ones.

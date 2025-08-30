@@ -221,7 +221,7 @@ ReadController:
   .org $D000
 palette:
   ;   Spring,           Summer,           Automn,           Winter
-  .db $21,$19,$27,$2D,  $21,$28,$27,$2D,  $21,$17,$27,$00,  $21,$1B,$27,$2D   ;;background palette
+  .db $21,$19,$27,$2D,  $21,$28,$27,$2D,  $21,$17,$27,$00,  $21,$1B,$28,$2D   ;;background palette
   .db $21,$1C,$15,$14,  $21,$02,$38,$3C,  $21,$1C,$15,$14,  $21,$02,$38,$3C   ;;sprite palette
 
 FirstCacheVal = $10  ; For init usage
@@ -242,9 +242,10 @@ FloorPatterns:
   .db $88,$87,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00  ; 9 - Water until 2
   .db $88,$87,$00,$00,$05,$00,$00,$00,$00,$00,$00,$00,$00,$00  ; 10/A - Water until 2, bridge at 5
   .db $44,$44,$42,$90,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00  ; 11/B - Grass until 3, leaf litter on top
+  .db $11,$11,$11,$11,$11,$11,$11,$11,$11,$11,$11,$DD,$DD,$DD  ; 12/C - Cave roof only
 
 FloorPatternIdxs:  ; Indexes into the FloorPatterns table - basically, multiples of 14. This is offset by 1.
-  .db $0E,$1C,$2A,$38,$46,$54,$62,$70,$7E,$8C,$9A,$A8
+  .db $0E,$1C,$2A,$38,$46,$54,$62,$70,$7E,$8C,$9A,$A8,$B6,$C4,$D2,$E0
 
 
   .include "tilemap/tilemap.asm"  ; Includes Tilemap&PrevTilemap label

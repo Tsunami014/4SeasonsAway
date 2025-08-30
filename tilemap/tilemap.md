@@ -87,10 +87,11 @@ It is like a vertical line of blocks, but offscreen (Y=15) so I can use this as 
 | Fruit     | 1 |
 | VineTop   | 2 |
 | Mark      | 3 |
-| StoneBlk  | 4 |
-| Sandcastle| 5 |
-| Spade     | 6 |
-| Bird      | 7 |
+| Mark2     | 4 |
+| StoneBlk  | 5 |
+| Sandcastle| 6 |
+| Spade     | 7 |
+| Bird      | 8 |
 
 ### Structures (D=0, I=0)
 | Obj name  | hex type |

@@ -8,10 +8,11 @@ types = {
     'fruit':    (1, 0, 0x1),
     'vinetop':  (1, 0, 0x2),
     'mark':     (1, 0, 0x3),
-    'stoneblk': (1, 0, 0x4),
-    'sandcastle':(1,0, 0x5),
-    'spade':    (1, 0, 0x6),
-    'bird':     (1, 0, 0x7),
+    'mark2':    (1, 0, 0x4),
+    'stoneblk': (1, 0, 0x5),
+    'sandcastle':(1,0, 0x6),
+    'spade':    (1, 0, 0x7),
+    'bird':     (1, 0, 0x8),
     # Structures
     # Horizontals
     'grass':    (0, 1, 0x0),
