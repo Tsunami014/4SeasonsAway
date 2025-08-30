@@ -32,6 +32,7 @@ types = {
     'trunk':    (1, 1, 0x3),
     'stone':    (1, 1, 0x4),
     'stonew':   (1, 1, 0x5),
+    'cavebg':   (1, 1, 0x6),
 }
 Offset = 5  # 16-Offset is the maximum width; any more and it stays on until the screen after
 

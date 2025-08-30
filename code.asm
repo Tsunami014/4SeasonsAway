@@ -221,7 +221,7 @@ ReadController:
   .org $D000
 palette:
   ;   Spring,           Summer,           Automn,           Winter
-  .db $21,$19,$27,$2D,  $21,$28,$27,$2D,  $21,$16,$27,$00,  $21,$1B,$27,$2D   ;;background palette
+  .db $21,$19,$27,$2D,  $21,$28,$27,$2D,  $21,$17,$27,$00,  $21,$1B,$27,$2D   ;;background palette
   .db $21,$1C,$15,$14,  $21,$02,$38,$3C,  $21,$1C,$15,$14,  $21,$02,$38,$3C   ;;sprite palette
 
 FirstCacheVal = $10  ; For init usage
@@ -235,10 +235,12 @@ FloorPatterns:
   .db $44,$44,$44,$44,$42,$00,$00,$00,$00,$00,$00,$00,$00,$00  ; 2 - Grass until 5
   .db $DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD  ; 3 - Cave entirely filled
   .db $DD,$DD,$11,$11,$11,$11,$11,$11,$11,$11,$11,$DD,$DD,$DD  ; 4 - Cave until 2, and ceiling from 12
-  .db $DD,$DD,$DD,$DD,$DD,$DD,$11,$11,$11,$11,$11,$DD,$DD,$DD  ; 5 - Cave until 6, and ceiling from 12
-  .db $44,$44,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00  ; 6 - Sand until 2
-  .db $88,$87,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00  ; 7 - Water until 2
-  .db $88,$87,$00,$00,$05,$00,$00,$00,$00,$00,$00,$00,$00,$00  ; 8 - Water until 2, bridge at 5
+  .db $DD,$DD,$11,$11,$11,$11,$11,$11,$11,$DD,$DD,$DD,$DD,$DD  ; 5 - Cave until 2, and ceiling from 10
+  .db $DD,$DD,$DD,$DD,$DD,$DD,$11,$11,$11,$11,$11,$DD,$DD,$DD  ; 6 - Cave until 6, and ceiling from 12
+  .db $DD,$DD,$11,$11,$11,$DD,$DD,$DD,$11,$11,$11,$DD,$DD,$DD  ; 7 - Cave until 2, middle section from 6-8, and ceiling from 12
+  .db $44,$44,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00  ; 8 - Sand until 2
+  .db $88,$87,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00  ; 9 - Water until 2
+  .db $88,$87,$00,$00,$05,$00,$00,$00,$00,$00,$00,$00,$00,$00  ; A - Water until 2, bridge at 5
 
 FloorPatternIdxs:  ; Indexes into the FloorPatterns table - basically, multiples of 14. This is offset by 1.
   .db $0E,$1C,$2A,$38,$46,$54,$62,$70,$7E,$8C,$9A,$A8

@@ -130,13 +130,14 @@ ChkIncNxtItPtr:  ; Check and increase an item pointer (check if need to) in a lo
   ; This will cause a slight jitter, but because this is SUPPOSED to happen when rendering is off after level transitions, we don't have to worry.
   ; But since level transitions do not exist yet, we have to pretend ourselves by turning rendering off and on again.
   ; <replaceWhenLevelTransitions>
-@WaitForVBlank:
+@WaitForVBlank:  ; This specifically breaks everything when performed during the init.
   LDA $2002
   AND #%10000000
   BEQ @WaitForVBlank
-
+@nxt:
   LDA #$00  ; Do not render. But more importantly, ensure it increments by 1 not 32!
   STA $2000
+  STA $2001
   ; </replaceWhenLevelTransitions>
   LDA $2002
   LDA #$02
@@ -166,6 +167,8 @@ ChkIncNxtItPtr:  ; Check and increase an item pointer (check if need to) in a lo
   AND #%00000001
   ORA #PPUCTRLBASE
   STA $2000
+  LDA #PPUMASKBASE
+  STA $2001
   ; </replaceWhenLevelTransitions>
 @cont:
   LDY #$00  ; So the next loop will work

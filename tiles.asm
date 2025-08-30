@@ -285,7 +285,7 @@ ENDM
 SingleType:  ; Type of object (defines what SingleTiles ans SingleTiles2 do)
 ; 0 = all,unused - 1 = top,bottom - 2 = top left corner,unused (rest untouched)
   ;   dirtS,fruit,vinetop,mark,stoneblk,sandcastle,spade,bird
-  .db $01,  $02,  $02,    $02, $01,     $02,       $02,  $02
+  .db $00,  $02,  $02,    $02, $01,     $02,       $02,  $02
 SingleTiles:
   .db $04,  $1B,  $1E,    $1F, $0D,     $20,       $21,  $14
 SingleTiles2:
@@ -304,10 +304,10 @@ HorizTiles2:
 
 VertType:   ; Type of object the vertical ones are (defines what the values in VertTiles are useed for)
 ; 0 = all,unused = 1 = middle,top - 2 = left,right
-  ;   pillar,ladder,vine,trunk,stone,stonew
-  .db $01,   $02,   $02, $00,  $00,  $01
+  ;   pillar,ladder,vine,trunk,stone,stonew,cavebg
+  .db $01,   $02,   $02, $00,  $00,  $01,   $00
 VertTiles:
-  .db $10,   $12,   $1C, $15,  $0D,  $0D
+  .db $10,   $12,   $1C, $15,  $0D,  $0D,   $01
 VertTiles2:
-  .db $11,   $13,   $1D, $15,  $0D,  $0E
+  .db $11,   $13,   $1D, $15,  $0D,  $0E,   $01
 
