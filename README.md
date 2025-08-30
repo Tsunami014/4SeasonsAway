@@ -13,9 +13,9 @@ Because the game is incomplete, please note:
 Built using the ASM6 compiler.
 
 ## "I just want to run the code"
-1. Run `build.bash` or `./buildLinux` (double click in file explorer or run in terminal, I don't care)
+1. Run `build.bat` or `./buildLinux` (double click in file explorer or run in terminal, I don't care)
 2. Ensure it created a file `code.nes`
-3. Run an NES emulator such as the provided `nester.exe` and select Open ROM and select the `code.nes`
+3. Run an NES emulator (such as the provided `nester.exe`) and select Open ROM and select the `code.nes`
 4. Play!
 
 ## Editing/Running
