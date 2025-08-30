@@ -25,6 +25,7 @@ types = {
     'cbridge':  (0, 1, 0x8),
     'spikes':   (0, 1, 0x9),
     'log':      (0, 1, 0xA),
+    'llitter':  (0, 1, 0xB),
     # Verticals
     'pillar':   (1, 1, 0x0),
     'ladder':   (1, 1, 0x1),
@@ -33,6 +34,7 @@ types = {
     'stone':    (1, 1, 0x4),
     'stonew':   (1, 1, 0x5),
     'cavebg':   (1, 1, 0x6),
+    'leafw':    (1, 1, 0x7),
 }
 Offset = 5  # 16-Offset is the maximum width; any more and it stays on until the screen after
 

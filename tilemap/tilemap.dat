@@ -14,7 +14,7 @@
 < 12, 9  - Cloud: 3
 < 12, 10 - Cloud: 4
 
-> 0,  5  - Log: 2
+> 0,  5  - Log: 3
 > 3,  0  - FloorPtn: 0
 > 6,  0  - FloorPtn: 2
 > 7,  5  - Leaf: 1
@@ -279,6 +279,120 @@
 < 10, 4  - CaveBG: 3
 < 3,  10 - Mark
 < 6,  6  - Mark
+
+# Automn
+> 2,  4  - CaveBG: 3
+> 3,  4  - CaveBG: 3
+> 4,  0  - FloorPtn: 11
+> 4,  3  - Bricks: 1
+> 6,  8  - Leaf: 7
+> 7,  9  - Leaf: 5
+> 8,  10 - Leaf: 3
+> 7,  11 - Leaf: 5
+> 8,  12 - Leaf: 3
+> 9, 3  - Trunk: 5
+> 14, 0  - FloorPtn: 1
+> 14, 2  - Grass: 2
+> 14, 1  - DirtH: 2
+> 14, 10 - Bird
+
+< 4,  2  - Bricks: 3
+< 5,  3  - Bricks: 2
+< 6,  4  - Log: 6
+< 7,  0  - FloorPtn: 0
+< 11, 3  - Bricks: 2
+< 11, 2  - Bricks: 5
+< 11, 0  - Pillar: 2
+< 15, 0  - Pillar: 2
+< 15, 3  - LLitter: 1
+< 3,  11 - Cloud: 3
+< 4,  12 - Cloud: 2
+< 7,  9  - Cloud: 4
+< 9,  10 - Cloud: 2
+< 14, 11 - Bird
+< 15, 12 - Bird
+
+> 3,  8  - Leaf: 3
+> 2,  9  - Leaf: 5
+> 0,  10 - Leaf: 8
+> 1,  11 - Leaf: 7
+> 2,  12 - Leaf: 5
+> 2,  13 - Leaf: 5
+> 4,  0  - Trunk: 9
+> 2,  4  - Bricks: 5
+> 2,  5  - LLitter: 5
+> 3,  3  - Bricks: 3
+> 10, 0  - Pillar: 6
+> 10, 6  - LLitter: 1
+> 9,  12 - Bird
+> 9,  9  - Cloud: 2
+
+> 13, 7  - Leaf: 3
+> 13, 8  - Leaf: 3
+> 12, 9  - Leaf: 4
+> 11, 10 - Leaf: 5
+> 10, 11 - Leaf: 6
+> 11, 12 - Leaf: 5
+> 11, 13 - Leaf: 5
+> 14, 5  - Ladder: 6
+> 15, 0  - Trunk: 10
+> 15, 11 - LeafW: 3
+> 15, 10 - Bricks: 1
+< 0,  6  - Leaf: 2
+< 0,  7  - Leaf: 4
+< 0,  8  - Leaf: 5
+< 0,  9  - Leaf: 7
+< 0,  10 - Leaf: 6
+< 0,  11 - Leaf: 8
+< 0,  12 - Leaf: 6
+< 0,  13 - Leaf: 5
+< 0,  0  - Trunk: 10
+< 0,  11 - LeafW: 3
+< 0,  10 - Bricks: 2
+< 5,  10 - Bricks: 2
+
+< 10, 0  - Pillar: 8
+< 14, 0  - Pillar: 6
+< 15, 5  - Bridge: 1
+< 5,  7  - Cloud: 3
+< 9,  12 - Bird
+< 10, 13 - Bird
+< 12, 11 - Cloud: 3
+< 13, 12 - Cloud: 3
+
+> 0,  5  - Bridge: 7
+> 6,  8  - Leaf: 3
+> 5,  9  - Leaf: 5
+> 5,  10 - Leaf: 5
+> 5,  11 - Leaf: 5
+> 5,  12 - Leaf: 5
+> 6,  13 - Leaf: 3
+> 5,  10 - LeafW: 2
+> 9,  10 - LeafW: 2
+> 4,  6  - LLitter: 7
+> 5,  0  - FloorPtn: 11
+> 7,  3  - Trunk: 5
+> 8,  5  - Bridge: 5
+> 10, 0  - FloorPtn: 0
+> 13, 0  - Pillar: 6
+> 2,  11 - Cloud: 3
+> 4,  10 - Cloud: 2
+> 11, 9  - Cloud: 2
+> 13, 10 - Cloud: 2
+> 12, 12 - Bird
+> 13, 11 - Bird
+
+< 1,  0  - FloorPtn: 11
+< 3,  3  - Bush: 4
+< 9,  3  - Bricks: 4
+< 10, 2  - Bricks: 2
+< 11, 0  - FloorPtn: 5
+< 12, 2  - StoneBlk
+< 12, 8  - StoneBlk
+< 13, 0  - FloorPtn: 3
+< 3,  9  - Cloud: 5
+< 5,  10 - Cloud: 2
+< 6,  11 - Cloud: 1
 
 # Offscreen tiles so it ends with a blank screen
 . 0,  0  - FloorPtn: 0

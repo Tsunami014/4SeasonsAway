@@ -110,6 +110,7 @@ It is like a vertical line of blocks, but offscreen (Y=15) so I can use this as 
 | CBridge   | 8 |
 | Spikes    | 9 |
 | Log       | A |
+| LLitter   | B |
 
 ### Vertical objects (D=1, I=1)
 | Obj name  | hex type |
@@ -121,4 +122,5 @@ It is like a vertical line of blocks, but offscreen (Y=15) so I can use this as 
 | Stone     | 4 |
 | StoneW    | 5 |
 | CaveBG    | 6 |
+| LeafW     | 7 |
 

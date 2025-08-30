@@ -295,19 +295,19 @@ SingleTiles2:
 ; A 'looping' set of 5 does not use the middle tile; it just loops between the left and right ones.
 HorizType:  ; Type of object (defines what HorizTiles and HorizTiles2 are used for)
 ; 0 = all,unused - 1 = top,bottom - 2 = start tile of a set of 5,unused - 3 = start of a looping set of 5,unused
-  ;   grass,dirtH,bricks,cloud,leaf,ptleaf,bush,bridge,cbridge,spikes,log
-  .db $01,  $00,  $03,   $02,  $02, $02,   $02, $01,   $01,    $01,   $02
+  ;   grass,dirtH,bricks,cloud,leaf,ptleaf,bush,bridge,cbridge,spikes,log,llitter
+  .db $01,  $00,  $03,   $02,  $02, $02,   $02, $01,   $01,    $01,   $02,$01
 HorizTiles:
-  .db $02,  $04,  $36,   $26,  $16, $66,   $46, $05,   $06,    $01,   $56
+  .db $02,  $04,  $36,   $26,  $16, $66,   $46, $05,   $06,    $01,   $56,$00
 HorizTiles2:
-  .db $04,  $04,  $36,   $26,  $16, $66,   $46, $00,   $01,    $0F,   $56
+  .db $04,  $04,  $36,   $26,  $16, $66,   $46, $00,   $01,    $0F,   $56,$09
 
 VertType:   ; Type of object the vertical ones are (defines what the values in VertTiles are useed for)
 ; 0 = all,unused = 1 = middle,top - 2 = left,right
-  ;   pillar,ladder,vine,trunk,stone,stonew,cavebg
-  .db $01,   $02,   $02, $00,  $00,  $01,   $00
+  ;   pillar,ladder,vine,trunk,stone,stonew,cavebg,leafw
+  .db $01,   $02,   $02, $00,  $00,  $01,   $00,   $00
 VertTiles:
-  .db $10,   $12,   $1C, $15,  $0D,  $0D,   $01
+  .db $10,   $12,   $1C, $15,  $0D,  $0D,   $01,   $16
 VertTiles2:
-  .db $11,   $13,   $1D, $15,  $0D,  $0E,   $01
+  .db $11,   $13,   $1D, $15,  $0D,  $0E,   $01,   $16
 

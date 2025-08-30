@@ -240,7 +240,8 @@ FloorPatterns:
   .db $DD,$DD,$11,$11,$11,$DD,$DD,$DD,$11,$11,$11,$DD,$DD,$DD  ; 7 - Cave until 2, middle section from 6-8, and ceiling from 12
   .db $44,$44,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00  ; 8 - Sand until 2
   .db $88,$87,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00  ; 9 - Water until 2
-  .db $88,$87,$00,$00,$05,$00,$00,$00,$00,$00,$00,$00,$00,$00  ; A - Water until 2, bridge at 5
+  .db $88,$87,$00,$00,$05,$00,$00,$00,$00,$00,$00,$00,$00,$00  ; 10/A - Water until 2, bridge at 5
+  .db $44,$44,$42,$90,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00  ; 11/B - Grass until 3, leaf litter on top
 
 FloorPatternIdxs:  ; Indexes into the FloorPatterns table - basically, multiples of 14. This is offset by 1.
   .db $0E,$1C,$2A,$38,$46,$54,$62,$70,$7E,$8C,$9A,$A8
