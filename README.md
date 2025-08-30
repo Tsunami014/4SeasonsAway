@@ -1,4 +1,5 @@
 # 4 Seasons Away
+![Banner](./Banner.png)
 A platformer for the NES about finding a friend.
 
 Because the game is incomplete, please note:
