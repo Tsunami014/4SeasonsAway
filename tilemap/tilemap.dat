@@ -117,7 +117,122 @@
 
 # Summer
 < 0,  0  - PalleteChng: 1
-< 0,  0  - FloorPtn: 1
+< 0,  0  - FloorPtn: 3
+< 3,  0  - FloorPtn: 5
+< 6,  0  - FloorPtn: 6
+< 6,  2  - Ladder: 4
+< 9,  2  - Sandcastle
+< 10, 2  - Spade
+< 13, 0  - FloorPtn: 7
+< 15, 0  - FloorPtn: 6
+< 8,  11 - Cloud: 7
+< 13, 9  - Bird
+< 14, 8  - Bird
+< 15, 9  - Bird
+
+> 0,  0  - FloorPtn: 7
+> 2,  3  - Bricks: 1
+> 5,  0  - FloorPtn: 6
+> 7,  2  - Sandcastle
+> 9,  2  - Bricks: 3
+> 10, 3  - Bricks: 3
+> 11, 4  - Bricks: 2
+> 12, 0  - FloorPtn: 8
+> 2,  11 - Cloud: 6
+> 5,  12 - Cloud: 5
+> 12, 9  - Cloud: 4
+
+< 0,  4  - Bricks: 1
+< 1,  0  - FloorPtn: 7
+< 4,  0  - FloorPtn: 8
+< 4,  4  - Bricks: 1
+< 8,  0  - FloorPtn: 6
+< 8,  4  - DirtH: 2
+< 8,  3  - DirtH: 3
+< 8,  2  - DirtH: 4
+< 9,  5  - Sandcastle
+< 12, 2  - Spade
+< 13, 2  - Trunk: 7
+< 11, 8  - PTLeaf: 5
+< 1,  13 - Cloud: 8
+< 3,  10 - Bird
+< 4,  11 - Bird
+< 9,  10 - Cloud: 4
+
+> 2,  2  - Sandcastle
+> 4,  0  - FloorPtn: 7
+> 6,  0  - Pillar: 3
+> 8,  0  - Pillar: 2
+> 11, 0  - Pillar: 3
+> 12, 1  - Bricks: 3
+> 0,  11 - Cloud: 10
+> 3,  12 - Cloud: 3
+> 7,  10 - Cloud: 2
+> 4,  8  - Bird
+> 5,  8  - Bird
+> 12, 8  - Cloud: 3
+
+< 3,  2  - Bricks: 1
+< 4,  2  - Bridge: 2
+< 5,  0  - FloorPtn: 6
+< 5,  2  - DirtH: 3
+< 7,  2  - Bush: 2
+< 11, 2  - Ladder: 5
+< 12, 5  - DirtH: 2
+< 12, 6  - DirtH: 3
+< 12, 0  - FloorPtn: 7
+< 0,  10 - Cloud: 2
+< 3,  9  - Cloud: 3
+< 7,  11 - Cloud: 4
+< 9,  10 - Cloud: 4
+
+> 2,  5  - Ladder: 6
+> 3,  10 - DirtH: 4
+> 4,  9  - DirtH: 2
+> 5,  11 - Sandcastle
+> 9,  9  - PTLeaf: 7
+> 12, 0  - Trunk: 10
+> 0,  7  - Cloud: 2
+> 1, 13  - Cloud: 5
+> 5, 12  - Cloud: 2
+> 10, 5  - Cloud: 4
+
+
+< 5,  0  - Pillar: 5
+< 6,  0  - FloorPtn: 8
+< 12, 0  - FloorPtn: 6
+< 12, 0  - Pillar: 5
+< 13, 4  - Bricks: 1
+< 13, 3  - Bricks: 2
+< 13, 2  - Bricks: 3
+< 0,  7  - Bird
+< 1,  8  - Bird
+< 2,  7  - Bird
+< 4,  11 - Cloud: 5
+< 6,  10 - Cloud: 4
+< 8,  9  - Cloud: 4
+< 11, 10 - Cloud: 2
+< 14, 9  - Cloud: 2
+
+> 2,  2  - Spade
+> 4,  2  - Bricks: 3
+> 5,  3  - Bush: 2
+> 9,  2  - StoneBlk
+> 10, 2  - StoneBlk
+> 11, 2  - StoneBlk
+> 11, 5  - StoneW: 5
+> 12, 0  - FloorPtn: 4
+> 12, 2  - StoneBlk
+> 12, 5  - Stone: 6
+> 13, 2  - StoneBlk
+> 13, 5  - Stone: 6
+> 14, 0  - FloorPtn: 3
+> 2,  10 - Cloud: 5
+> 3,  9  - Cloud: 5
+> 4,  11 - Cloud: 5
+
+# Cave 2 (automn)
+< 6,  0  - PalleteChng: 2
 
 # Offscreen tiles so it ends with a blank screen
 . 0,  0  - FloorPtn: 0

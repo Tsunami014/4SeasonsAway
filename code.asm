@@ -230,12 +230,15 @@ CacheIdxToAddr:  ; Exactly what it sounds like.
 
 FloorPatterns:
   ; Each one is 14 bytes; each set of 4 bits is a tile
-  .db $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-  .db $44,$42,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-  .db $44,$44,$44,$44,$42,$00,$00,$00,$00,$00,$00,$00,$00,$00
-  .db $DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD
-  .db $DD,$DD,$11,$11,$11,$11,$11,$11,$11,$11,$11,$DD,$DD,$DD
-  .db $DD,$DD,$DD,$DD,$DD,$DD,$11,$11,$11,$11,$11,$DD,$DD,$DD
+  .db $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00  ; 0 - empty
+  .db $44,$42,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00  ; 1 - Grass until 2
+  .db $44,$44,$44,$44,$42,$00,$00,$00,$00,$00,$00,$00,$00,$00  ; 2 - Grass until 5
+  .db $DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD  ; 3 - Cave entirely filled
+  .db $DD,$DD,$11,$11,$11,$11,$11,$11,$11,$11,$11,$DD,$DD,$DD  ; 4 - Cave until 2, and ceiling from 12
+  .db $DD,$DD,$DD,$DD,$DD,$DD,$11,$11,$11,$11,$11,$DD,$DD,$DD  ; 5 - Cave until 6, and ceiling from 12
+  .db $44,$44,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00  ; 6 - Sand until 2
+  .db $88,$87,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00  ; 7 - Water until 2
+  .db $88,$87,$00,$00,$05,$00,$00,$00,$00,$00,$00,$00,$00,$00  ; 8 - Water until 2, bridge at 5
 
 FloorPatternIdxs:  ; Indexes into the FloorPatterns table - basically, multiples of 14. This is offset by 1.
   .db $0E,$1C,$2A,$38,$46,$54,$62,$70,$7E,$8C,$9A,$A8

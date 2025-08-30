@@ -88,6 +88,9 @@ It is like a vertical line of blocks, but offscreen (Y=15) so I can use this as 
 | VineTop   | 2 |
 | Mark      | 3 |
 | StoneBlk  | 4 |
+| Sandcastle| 5 |
+| Spade     | 6 |
+| Bird      | 7 |
 
 ### Structures (D=0, I=0)
 | Obj name  | hex type |
@@ -101,11 +104,12 @@ It is like a vertical line of blocks, but offscreen (Y=15) so I can use this as 
 | Bricks    | 2 |
 | Cloud     | 3 |
 | Leaf      | 4 |
-| Bush      | 5 |
-| Bridge    | 6 |
-| CBridge   | 7 |
-| Spikes    | 8 |
-| Log       | 9 |
+| PTLeaf    | 5 |
+| Bush      | 6 |
+| Bridge    | 7 |
+| CBridge   | 8 |
+| Spikes    | 9 |
+| Log       | A |
 
 ### Vertical objects (D=1, I=1)
 | Obj name  | hex type |

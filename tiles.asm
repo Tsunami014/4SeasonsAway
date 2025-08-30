@@ -5,11 +5,13 @@ MACRO HandleTile  ; Handle drawing a tile. Is a macro as this is only used once 
   LDY #$00
   LDA (tmpPtr),Y
   TAX  ; Now the first byte is in X for ease of access later
-  BMI +
+  BMI ++
   AND #%00000001
-  BEQ Struct
+  BEQ @Struct
   JMP Horiz
-+ ; Skip if x != tile x
+@Struct:
+  JMP Struct  ; Too far away
+++ ; Skip if x != tile x
   AND #%00111110
   STA tmp3
   LDA tmp1
@@ -37,8 +39,8 @@ Single:  ; A single block
   LDY #$01
   LDA (tmpPtr),Y
   TAX  ; Keep for later
-  AND #$0F
-  CMP #15
+  AND #$0F  ; Do not draw if is a pallete change object
+  CMP #$0E
   BCS AftS
   ; Draw the tile to the right Y!
   ASL
@@ -282,23 +284,23 @@ ENDM
 
 SingleType:  ; Type of object (defines what SingleTiles ans SingleTiles2 do)
 ; 0 = all,unused - 1 = top,bottom - 2 = top left corner,unused (rest untouched)
-  ;   dirtS,fruit,vinetop,mark,stoneblk
-  .db $01,  $02,  $02,    $02, $01
+  ;   dirtS,fruit,vinetop,mark,stoneblk,sandcastle,spade,bird
+  .db $01,  $02,  $02,    $02, $01,     $02,       $02,  $02
 SingleTiles:
-  .db $04,  $1B,  $1E,    $1F, $0D
+  .db $04,  $1B,  $1E,    $1F, $0D,     $20,       $21,  $14
 SingleTiles2:
-  .db $04,  $1B,  $1E,    $1F, $0D
+  .db $04,  $1B,  $1E,    $1F, $0D,     $20,       $21,  $14
 
 ; A set of 5 is a set of 5 tiles in order in the character rom: middle, bottom left, top left, top right, bottom right.
 ; A 'looping' set of 5 does not use the middle tile; it just loops between the left and right ones.
 HorizType:  ; Type of object (defines what HorizTiles and HorizTiles2 are used for)
 ; 0 = all,unused - 1 = top,bottom - 2 = start tile of a set of 5,unused - 3 = start of a looping set of 5,unused
-  ;   grass,dirtH,bricks,cloud,leaf,bush,bridge,cbridge,spikes,log
-  .db $01,  $00,  $03,   $02,  $02, $02, $01,   $01,    $01,   $02
+  ;   grass,dirtH,bricks,cloud,leaf,ptleaf,bush,bridge,cbridge,spikes,log
+  .db $01,  $00,  $03,   $02,  $02, $02,   $02, $01,   $01,    $01,   $02
 HorizTiles:
-  .db $02,  $04,  $36,   $26,  $16, $46, $05,   $06,    $01,   $56
+  .db $02,  $04,  $36,   $26,  $16, $66,   $46, $05,   $06,    $01,   $56
 HorizTiles2:
-  .db $04,  $04,  $36,   $26,  $16, $46, $00,   $01,    $0F,   $56
+  .db $04,  $04,  $36,   $26,  $16, $66,   $46, $00,   $01,    $0F,   $56
 
 VertType:   ; Type of object the vertical ones are (defines what the values in VertTiles are useed for)
 ; 0 = all,unused = 1 = middle,top - 2 = left,right
