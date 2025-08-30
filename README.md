@@ -2,6 +2,13 @@
 ![Banner](./Banner.png)
 A platformer for the NES about finding a friend.
 
+This project is written in assembly for the NES. Yes, THE 40 year old NES. The console the original Mario bros was made on. The NES stopped being supported in 1995. Yes, I did have to write it in assembly. The assembly code specific to the NES' specific microcontroller that is probably not being made anymore.
+
+This project was going to be a side-scrolling platformer. Turns out this stuff is hard. So it devolved to not having enemies, not having the player, and now not being able to go left. So now, it's just the platforms. Close enough, right? But I reckon getting anything to work on this thing is a grand feat in itself.
+
+This project was somewhat made with AI. I wrote all of the code myself (that's why it works and looks readable), but I used AI for debugging. But an annoyingly large amount of the time (I'd put it at 95%), debugging myself was either faster or the only way to do it as AI just could not figure out the problem, however simple. And you've never seen debugging be hard until you've debugged assembly. AI can be helpful *occasionally*, but it can also be a big waste of time stating things that are not the problem or are not the solution (and I only know that because I wrote my own code). So I probably wasted more time using it than I would've than if I just did it all myself. Such is life.
+
+# Please note
 Because the game is incomplete, please note:
 1. The friend does not exist yet. (But the house does!)
 2. You cannot go left. Implementing the 2 functions required would take me too much time. But the code is built around the idea that one day if I implement it I can easily go left without modifying too much other stuff.
@@ -12,10 +19,12 @@ Because the game is incomplete, please note:
 
 Built using the ASM6 compiler.
 
-## "I just want to run the code"
+# "I just want to run the code"
+1. Download repo however
 1. Run `build.bat` or `./buildLinux` (double click in file explorer or run in terminal, I don't care)
 2. Ensure it created a file `code.nes`
-3. Run an NES emulator (such as the provided `nester.exe`) and select Open ROM and select the `code.nes`
+3. Run said file in an NES emulator (such as the provided `nester.exe`)
+    - In the provided nester emulator, select Open ROM and select the `code.nes` to run it. Also, there is a 'double size' option in the 'Options' menu if you want :)
 4. Play!
 
 ## Editing/Running
@@ -23,7 +32,7 @@ Built using the ASM6 compiler.
 
 **To edit the tileset**: A program such as yychr is required. Use it to edit `tiles.chr`.
 
-**To build**: Run `build.bash` or `./buildLinux` depending on your OS.
+**To build**: Run `build.bat` or `./buildLinux` depending on your OS.
 
 **To run**: Run `code.nes` using an NES emulator (after building). `nester.exe` is provided, but for debugging another such as [FCEUX](https://fceux.com/web/download.html) is recommended.
 
