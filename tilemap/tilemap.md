@@ -80,6 +80,9 @@ Because I need some way of storing floor patterns where there are 2 patterns; on
 It is like a vertical line of blocks, but offscreen (Y=15) so I can use this as a floor pattern. The first lot of T is the floor pattern when going backwards and the second is when going forwards.
 
 ## Object table
+### Special stuff
+- If you have `FloorPtn` as the object, it will set the floor pattern. (The Y position will be overridden, so I just set it to 0 coz y not.) Floor patterns can be found in `code.asm` down the very bottom.
+- A `PalleteChng` object changes the pallete. Y does not matter again. The pallete is a value between 0-3, and again they can be found in `code.asm` at the bottom. But basically, 0=spring, 1=summer, 2=automn, 3=winter.
 ### Single objects (D=0, I=1)
 | Obj name  | hex type |
 |-----------|---|
