@@ -25,11 +25,16 @@ Please note in this video the game is not lagging or stuttering, that is me lett
 https://github.com/user-attachments/assets/e6633d12-9f4f-47b6-8527-3d61760c32d1
 
 # "I just want to run the code"
+## Easy way
+1. Go to the [releases](https://github.com/Tsunami014/4SeasonsAway/releases)
+2. Download the demo exe of the latest release and play! (Tested; wine works on it too)
+    - The exe runs a precompiled version of the code with the `nester.exe` emulator. There is a 'double size' option in the 'Options' menu if you want :)
+## Build the source code way
 1. Download repo however
 1. Run `build.bat` or `./buildLinux` (double click in file explorer or run in terminal, I don't care)
 2. Ensure it created a file `code.nes`
 3. Run said file in an NES emulator (such as the provided `nester.exe`)
-    - In the provided nester emulator, select Open ROM and select the `code.nes` to run it. Also, there is a 'double size' option in the 'Options' menu if you want :)
+    - In the provided nester emulator, select Open ROM and select the `code.nes` to run it. Again, there is the double size option if required
 4. Play!
 
 ## Editing/Running
