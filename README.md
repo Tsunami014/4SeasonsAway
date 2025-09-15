@@ -37,6 +37,9 @@ https://github.com/user-attachments/assets/e6633d12-9f4f-47b6-8527-3d61760c32d1
     - In the provided nester emulator, select Open ROM and select the `code.nes` to run it. Again, there is the double size option if required
 4. Play!
 
+## Controls
+While the controls varies depending on what emulator you use to run it, the arrow keys should be the ones you usually use (at least they are for the provided `nester`). Saying that, only the right button would work anyway (right arrow key) as I have not added functionality to go left, and a player does not exist so the up arrow is also pointless (and so are the rest of the buttons)
+
 ## Editing/Running
 **To edit the code**: Edit the `.asm` files in the main folder. `code.asm` is the main file which includes other files in the folder.
 
