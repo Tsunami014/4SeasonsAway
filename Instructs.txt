@@ -116,33 +116,23 @@ especially useful for forward and reverse branches.
    +here  nop
         
 FYI these don't mix well with temporary labels, best to keep them separate.
-I think the way to put it is after the definition for the nameless label (not the usage `BNE +` but the definition `+ ...`) then there's a new context and temporary labels are no longer in scope. Or something like that.
+I think the reason this is is nameless labels must act like global labels, so local labels defined after must be in a different context
 
 Simplified example: (also works with `JMP`)
 ```
 ; Does work
+Main:
 BEQ +
 BNE @label
 @label:
-+
++ ; Local label defined in the Main context
 
 ; Does NOT work
+Main:
 BEQ @label
 BNE +
-+
++ ; local label defined after, in the + context, not the Main context so the BEQ cannot see the local label
 @label:
-
-; Does work
-BEQ @nxt
-BNE +
-@nxt:
-+
-
-; Does NOT work
-BEQ +
-BNE @nxt
-+
-@nxt:
 ```
 
 --------------------------------------------------------------
@@ -339,3 +329,4 @@ ERROR
         
 --------------------------------------------------------------
 <EOF>
+
