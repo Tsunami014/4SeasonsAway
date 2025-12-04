@@ -3,6 +3,8 @@ ASM6 (v1.6)
 A 6502 assembler by loopy (loopy at mm.st)
 --------------------------------------------------------------
 
+These instructions have been taken from the original assembler and have been slightly modified.
+
 Yes, it's another 6502 assembler.  I built it to do NES development, but you
 can probably use it for just about anything.  Why use this instead of one of
 the other zillion assemblers out there?  I don't know, but choice is good,
@@ -329,4 +331,5 @@ ERROR
         
 --------------------------------------------------------------
 <EOF>
+
 
